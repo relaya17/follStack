@@ -1,0 +1,26 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./apps/web" },
+    { "path": "./apps/api" },
+    { "path": "./packages/shared" },
+    { "path": "./packages/ui" }
+  ],
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@fullstack-hub/shared": ["./packages/shared/src"],
+      "@fullstack-hub/ui": ["./packages/ui/src"],
+      "@/*": ["./packages/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist", ".next"]
+}

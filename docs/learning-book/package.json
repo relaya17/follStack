@@ -1,0 +1,11 @@
+{
+    "name": "learning-book",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "pdf": "node export-pdf.mjs"
+    },
+    "dependencies": {
+        "puppeteer": "22.15.0"
+    }
+}

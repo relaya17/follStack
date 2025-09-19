@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FullStack Learning Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Top Navigation -->
+    <nav class="bg-white/80 backdrop-blur border-b">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-center space-x-8 space-x-reverse">
+            <a href="#home" class="flex items-center text-blue-600 hover:text-blue-800 transition-colors">
+                <span class="text-lg mr-2">🏠</span>
+                <span class="font-medium">בית</span>
+            </a>
+            <a href="#courses" class="flex items-center text-gray-700 hover:text-blue-600 transition-colors">
+                <span class="text-lg mr-2">📚</span>
+                <span class="font-medium">קורסים</span>
+            </a>
+            <a href="#ai" class="flex items-center text-gray-700 hover:text-blue-600 transition-colors">
+                <span class="text-lg mr-2">🤖</span>
+                <span class="font-medium">AI</span>
+            </a>
+            <a href="#profile" class="flex items-center text-gray-700 hover:text-blue-600 transition-colors">
+                <span class="text-lg mr-2">👤</span>
+                <span class="font-medium">פרופיל</span>
+            </a>
+            <span class="text-sm text-gray-500 font-light">FullStack Learning Hub</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Hero -->
+        <div class="text-center mb-10">
+            <h2 class="text-4xl font-bold text-gray-900 mb-3">🚀 ברוכים הבאים למערכת הלמידה</h2>
+        </div>
+
+        <!-- Colorful Quick Buttons -->
+        <div id="courses" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto mb-10">
+            <a href="courses/js-workbook.html"
+                class="bg-yellow-500 hover:bg-yellow-600 text-white p-5 rounded-xl transition-colors">
+                <div class="text-3xl mb-1">📝</div>
+                <div class="font-bold text-lg">חוברת JS</div>
+                <div class="text-sm opacity-90">תרגילים ופתרונות</div>
+            </a>
+            <a href="courses/react.html"
+                class="bg-cyan-500 hover:bg-cyan-600 text-white p-5 rounded-xl transition-colors">
+                <div class="text-3xl mb-1">⚛️</div>
+                <div class="font-bold text-lg">React</div>
+                <div class="text-sm opacity-90">קורס מלא</div>
+            </a>
+            <a href="courses/material-ui.html"
+                class="bg-green-500 hover:bg-green-600 text-white p-5 rounded-xl transition-colors">
+                <div class="text-3xl mb-1">🎨</div>
+                <div class="font-bold text-lg">Material-UI</div>
+                <div class="text-sm opacity-90">קומפוננטים</div>
+            </a>
+            <a href="courses/typescript.html"
+                class="bg-blue-600 hover:bg-blue-700 text-white p-5 rounded-xl transition-colors">
+                <div class="text-3xl mb-1">🟦</div>
+                <div class="font-bold text-lg">TypeScript</div>
+                <div class="text-sm opacity-90">טיפוסים מתקדמים</div>
+            </a>
+            <a href="courses/sass.html"
+                class="bg-pink-500 hover:bg-pink-600 text-white p-5 rounded-xl transition-colors">
+                <div class="text-3xl mb-1">🎨</div>
+                <div class="font-bold text-lg">SASS</div>
+                <div class="text-sm opacity-90">CSS מתקדם</div>
+            </a>
+            <a href="courses/rest-api.html"
+                class="bg-purple-500 hover:bg-purple-600 text-white p-5 rounded-xl transition-colors">
+                <div class="text-3xl mb-1">🌐</div>
+                <div class="font-bold text-lg">REST API</div>
+                <div class="text-sm opacity-90">API מתקדם</div>
+            </a>
+        </div>
+
+        <!-- הוסרו כרטיסי סטטוס והודעת הצלחה לפי בקשה -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-8 mt-16">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex flex-wrap justify-center gap-4 mb-4">
+                <a href="courses/js-workbook.html" class="text-gray-300 hover:text-white text-sm">📝 חוברת JS</a>
+                <a href="courses/react.html" class="text-gray-300 hover:text-white text-sm">⚛️ React</a>
+                <a href="courses/material-ui.html" class="text-gray-300 hover:text-white text-sm">🎨 Material-UI</a>
+                <a href="courses/typescript.html" class="text-gray-300 hover:text-white text-sm">🟦 TypeScript</a>
+                <a href="courses/sass.html" class="text-gray-300 hover:text-white text-sm">🎨 SASS</a>
+                <a href="courses/rest-api.html" class="text-gray-300 hover:text-white text-sm">🌐 REST API</a>
+            </div>
+            <div
+                class="text-center text-gray-400 text-sm border-t border-gray-700 pt-4 flex flex-wrap gap-4 justify-center">
+                <span>© 2024 FullStack Learning Hub</span>
+                <a href="/policy/security.html" class="hover:text-white">מדיניות אבטחה</a>
+                <a href="/policy/privacy.html" class="hover:text-white">מדיניות פרטיות</a>
+                <a href="/policy/terms.html" class="hover:text-white">תנאי שימוש</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

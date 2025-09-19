@@ -1,0 +1,614 @@
+{
+    "course": {
+        "title": {
+            "he": "קורס SASS - Syntactically Awesome Style Sheets",
+            "ar": "دورة SASS - أوراق الأنماط الرائعة نحويًا"
+        },
+        "description": {
+            "he": "מדריך מקיף ל-SASS: משתנים, קינון, מיקסינים, פונקציות ועוד",
+            "ar": "دليل شامل لـ SASS: المتغيرات، التداخل، الميكسينز، الوظائف والمزيد"
+        },
+        "totalSlides": 25,
+        "slides": [
+            {
+                "id": 1,
+                "type": "title",
+                "icon": "🎨",
+                "title": {
+                    "he": "SASS - Syntactically Awesome Style Sheets",
+                    "ar": "SASS - أوراق الأنماط الرائعة نحويًا"
+                },
+                "content": {
+                    "he": "קדם-מעבד CSS מתקדם עם תכונות חזקות",
+                    "ar": "معالج CSS متقدم مع ميزات قوية"
+                },
+                "backgroundColor": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+            },
+            {
+                "id": 2,
+                "type": "definition",
+                "icon": "📖",
+                "title": {
+                    "he": "מה זה SASS?",
+                    "ar": "ما هو SASS؟"
+                },
+                "items": [
+                    {
+                        "he": "SASS הוא קדם-מעבד (preprocessor) של CSS",
+                        "ar": "SASS هو معالج CSS مسبق"
+                    },
+                    {
+                        "he": "מאפשר שימוש בתכונות שאינן קיימות ב-CSS רגיל",
+                        "ar": "يسمح باستخدام ميزات غير موجودة في CSS العادي"
+                    },
+                    {
+                        "he": "מקל על כתיבת CSS נקי, מאורגן וקל לתחזוקה",
+                        "ar": "يسهل كتابة CSS نظيف ومنظم وسهل الصيانة"
+                    },
+                    {
+                        "he": "מתאים במיוחד לפרויקטים גדולים ומורכבים",
+                        "ar": "مناسب بشكل خاص للمشاريع الكبيرة والمعقدة"
+                    }
+                ],
+                "backgroundColor": "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
+            },
+            {
+                "id": 3,
+                "type": "variables",
+                "icon": "🔧",
+                "title": {
+                    "he": "משתנים (Variables)",
+                    "ar": "المتغيرات"
+                },
+                "code": {
+                    "scss": "// הגדרת משתנים\n$primary-color: #3498db;\n$secondary-color: #2ecc71;\n$font-size-base: 16px;\n$font-family: 'Arial', sans-serif;\n\n// שימוש במשתנים\n.button {\n  background-color: $primary-color;\n  font-size: $font-size-base;\n  font-family: $font-family;\n}\n\n.header {\n  color: $secondary-color;\n  font-size: $font-size-base * 1.5;\n}"
+                },
+                "content": {
+                    "he": "מאפשרים לאחסן ערכים כמו צבעים, פונטים או מידות לשימוש חוזר ברחבי קבצי ה-CSS",
+                    "ar": "تسمح بتخزين قيم مثل الألوان والخطوط أو الأبعاد للاستخدام المتكرر عبر ملفات CSS"
+                },
+                "backgroundColor": "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
+            },
+            {
+                "id": 4,
+                "type": "nesting",
+                "icon": "🔗",
+                "title": {
+                    "he": "קינון (Nesting)",
+                    "ar": "التداخل"
+                },
+                "code": {
+                    "scss": "// קינון בסלקטורים\n.navbar {\n  background-color: #333;\n  padding: 1rem;\n  \n  .nav-item {\n    display: inline-block;\n    margin-right: 1rem;\n    \n    a {\n      color: white;\n      text-decoration: none;\n      \n      &:hover {\n        color: #3498db;\n        text-decoration: underline;\n      }\n    }\n  }\n  \n  .logo {\n    font-size: 1.5rem;\n    font-weight: bold;\n  }\n}"
+                },
+                "content": {
+                    "he": "מאפשר לכתוב סלקטורי CSS מקוננים בתוך סלקטורים אחרים, בדומה להיררכיית ה-HTML",
+                    "ar": "يسمح بكتابة محددات CSS متداخلة داخل محددات أخرى، مشابهة لتسلسل HTML"
+                },
+                "backgroundColor": "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"
+            },
+            {
+                "id": 5,
+                "type": "mixins",
+                "icon": "🔀",
+                "title": {
+                    "he": "מיקסינים (Mixins)",
+                    "ar": "الميكسينز"
+                },
+                "code": {
+                    "scss": "// הגדרת מיקסין\n@mixin button-style($bg-color, $text-color, $padding: 10px) {\n  background-color: $bg-color;\n  color: $text-color;\n  padding: $padding;\n  border: none;\n  border-radius: 4px;\n  cursor: pointer;\n  \n  &:hover {\n    opacity: 0.8;\n  }\n}\n\n// שימוש במיקסין\n.primary-button {\n  @include button-style(#3498db, white, 15px);\n}\n\n.secondary-button {\n  @include button-style(#95a5a6, white);\n}\n\n.danger-button {\n  @include button-style(#e74c3c, white, 20px);\n}"
+                },
+                "content": {
+                    "he": "מאפשרים ליצור קבוצות של הצהרות CSS לשימוש חוזר, ואף להעביר להם פרמטרים",
+                    "ar": "تسمح بإنشاء مجموعات من تعليمات CSS للاستخدام المتكرر، وحتى تمرير معاملات إليها"
+                },
+                "backgroundColor": "linear-gradient(135deg, #fa709a 0%, #fee140 100%)"
+            },
+            {
+                "id": 6,
+                "type": "extend",
+                "icon": "📋",
+                "title": {
+                    "he": "ירושה (Extend/Inheritance)",
+                    "ar": "الوراثة"
+                },
+                "code": {
+                    "scss": "// הגדרת סלקטור בסיס\n%message-base {\n  padding: 15px;\n  margin: 10px 0;\n  border-radius: 4px;\n  font-weight: bold;\n}\n\n// שימוש ב-extend\n.success-message {\n  @extend %message-base;\n  background-color: #d4edda;\n  color: #155724;\n  border: 1px solid #c3e6cb;\n}\n\n.error-message {\n  @extend %message-base;\n  background-color: #f8d7da;\n  color: #721c24;\n  border: 1px solid #f5c6cb;\n}\n\n.warning-message {\n  @extend %message-base;\n  background-color: #fff3cd;\n  color: #856404;\n  border: 1px solid #ffeaa7;\n}"
+                },
+                "content": {
+                    "he": "מאפשרת לשתף סט של מאפייני CSS בין סלקטורים שונים, ולקדם כתיבת קוד יעילה ללא שכפולים",
+                    "ar": "تسمح بمشاركة مجموعة من خصائص CSS بين محددات مختلفة، وتعزز كتابة كود فعال بدون تكرار"
+                },
+                "backgroundColor": "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)"
+            },
+            {
+                "id": 7,
+                "type": "modules",
+                "icon": "📁",
+                "title": {
+                    "he": "מודולים (Modules)",
+                    "ar": "الوحدات"
+                },
+                "code": {
+                    "scss": "// _variables.scss\n$primary-color: #3498db;\n$secondary-color: #2ecc71;\n$font-size-base: 16px;\n\n// _mixins.scss\n@mixin flex-center {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n\n// _components.scss\n.button {\n  @include flex-center;\n  background-color: $primary-color;\n  color: white;\n  padding: 10px 20px;\n  border: none;\n  border-radius: 4px;\n}\n\n// main.scss\n@use 'variables' as *;\n@use 'mixins' as *;\n@use 'components';\n\nbody {\n  font-size: $font-size-base;\n  color: $primary-color;\n}"
+                },
+                "content": {
+                    "he": "מאפשרים לפצל את קוד ה-Sass לקבצים קטנים יותר (partials) ולייבא אותם לפי צורך",
+                    "ar": "تسمح بتقسيم كود Sass إلى ملفات أصغر (partials) واستيرادها حسب الحاجة"
+                },
+                "backgroundColor": "linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)"
+            },
+            {
+                "id": 8,
+                "type": "functions",
+                "icon": "⚙️",
+                "title": {
+                    "he": "פונקציות (Functions)",
+                    "ar": "الوظائف"
+                },
+                "code": {
+                    "scss": "// פונקציה לחישוב rem\n@function rem($pixels) {\n  @return $pixels / 16px * 1rem;\n}\n\n// פונקציה לחישוב אחוזים\n@function percentage($value, $total) {\n  @return ($value / $total) * 100%;\n}\n\n// פונקציה לחישוב צבעים\n@function lighten-color($color, $amount) {\n  @return mix(white, $color, $amount);\n}\n\n// שימוש בפונקציות\n.container {\n  width: percentage(800px, 1200px); // 66.67%\n  font-size: rem(18px); // 1.125rem\n  background-color: lighten-color(#3498db, 20%);\n}\n\n.card {\n  padding: rem(20px); // 1.25rem\n  margin: rem(10px); // 0.625rem\n}"
+                },
+                "content": {
+                    "he": "מאפשרות ליצור פונקציות מותאמות אישית לחישובים וחוזרים על עצמם",
+                    "ar": "تسمح بإنشاء وظائف مخصصة للحسابات والتكرار"
+                },
+                "backgroundColor": "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)"
+            },
+            {
+                "id": 9,
+                "type": "loops",
+                "icon": "🔄",
+                "title": {
+                    "he": "לולאות (Loops)",
+                    "ar": "الحلقات"
+                },
+                "code": {
+                    "scss": "// לולאת @for\n@for $i from 1 through 5 {\n  .col-#{$i} {\n    width: percentage($i, 5);\n    float: left;\n    padding: 0 10px;\n  }\n}\n\n// לולאת @each\n$colors: red, green, blue, yellow, purple;\n\n@each $color in $colors {\n  .text-#{$color} {\n    color: $color;\n  }\n}\n\n// לולאת @while\n$i: 1;\n@while $i <= 3 {\n  .item-#{$i} {\n    margin-bottom: #{$i * 10}px;\n  }\n  $i: $i + 1;\n}"
+                },
+                "content": {
+                    "he": "מאפשרות ליצור קוד CSS חוזר בצורה אוטומטית",
+                    "ar": "تسمح بإنشاء كود CSS متكرر تلقائيًا"
+                },
+                "backgroundColor": "linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)"
+            },
+            {
+                "id": 10,
+                "type": "conditionals",
+                "icon": "❓",
+                "title": {
+                    "he": "תנאים (Conditionals)",
+                    "ar": "الشروط"
+                },
+                "code": {
+                    "scss": "// פונקציה עם תנאים\n@function get-text-color($bg-color) {\n  @if lightness($bg-color) > 50% {\n    @return #000;\n  } @else {\n    @return #fff;\n  }\n}\n\n// מיקסין עם תנאים\n@mixin button-variant($type) {\n  @if $type == 'primary' {\n    background-color: #3498db;\n    color: white;\n  } @else if $type == 'secondary' {\n    background-color: #95a5a6;\n    color: white;\n  } @else if $type == 'danger' {\n    background-color: #e74c3c;\n    color: white;\n  } @else {\n    background-color: #ecf0f1;\n    color: #2c3e50;\n  }\n}\n\n// שימוש\n.primary-btn {\n  @include button-variant('primary');\n  color: get-text-color(#3498db);\n}"
+                },
+                "content": {
+                    "he": "מאפשרות ליצור לוגיקה מותנית ב-CSS",
+                    "ar": "تسمح بإنشاء منطق شرطي في CSS"
+                },
+                "backgroundColor": "linear-gradient(135deg, #d299c2 0%, #fef9d7 100%)"
+            },
+            {
+                "id": 11,
+                "type": "advanced-mixins",
+                "icon": "🎯",
+                "title": {
+                    "he": "מיקסינים מתקדמים",
+                    "ar": "ميكسينز متقدمة"
+                },
+                "code": {
+                    "scss": "// מיקסין עם פרמטרים מרובים\n@mixin flex-layout($direction: row, $justify: center, $align: center, $wrap: nowrap) {\n  display: flex;\n  flex-direction: $direction;\n  justify-content: $justify;\n  align-items: $align;\n  flex-wrap: $wrap;\n}\n\n// מיקסין עם רשימת פרמטרים\n@mixin box-shadow($shadows...) {\n  box-shadow: $shadows;\n}\n\n// מיקסין עם מפת פרמטרים\n@mixin button($params) {\n  background-color: map-get($params, bg-color);\n  color: map-get($params, text-color);\n  padding: map-get($params, padding);\n  border-radius: map-get($params, radius);\n  \n  @if map-has-key($params, hover-color) {\n    &:hover {\n      background-color: map-get($params, hover-color);\n    }\n  }\n}\n\n// שימוש\n.container {\n  @include flex-layout(column, space-between, stretch, wrap);\n}\n\n.card {\n  @include box-shadow(0 2px 4px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.1));\n}\n\n.custom-button {\n  @include button((\n    bg-color: #3498db,\n    text-color: white,\n    padding: 15px 30px,\n    radius: 8px,\n    hover-color: #2980b9\n  ));\n}"
+                },
+                "content": {
+                    "he": "מיקסינים עם פרמטרים מתקדמים, רשימות ומפות",
+                    "ar": "ميكسينز مع معاملات متقدمة وقوائم وخرائط"
+                },
+                "backgroundColor": "linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)"
+            },
+            {
+                "id": 12,
+                "type": "color-functions",
+                "icon": "🌈",
+                "title": {
+                    "he": "פונקציות צבעים",
+                    "ar": "وظائف الألوان"
+                },
+                "code": {
+                    "scss": "$primary-color: #3498db;\n$secondary-color: #2ecc71;\n\n// פונקציות צבעים מובנות\n.color-palette {\n  .original {\n    background-color: $primary-color;\n  }\n  \n  .lighten {\n    background-color: lighten($primary-color, 20%);\n  }\n  \n  .darken {\n    background-color: darken($primary-color, 20%);\n  }\n  \n  .saturate {\n    background-color: saturate($primary-color, 30%);\n  }\n  \n  .desaturate {\n    background-color: desaturate($primary-color, 30%);\n  }\n  \n  .mix {\n    background-color: mix($primary-color, $secondary-color, 50%);\n  }\n  \n  .complement {\n    background-color: complement($primary-color);\n  }\n  \n  .invert {\n    background-color: invert($primary-color);\n  }\n}\n\n// פונקציה מותאמת אישית\n@function get-contrast-color($color) {\n  @if lightness($color) > 50% {\n    @return #000;\n  } @else {\n    @return #fff;\n  }\n}\n\n.button {\n  background-color: $primary-color;\n  color: get-contrast-color($primary-color);\n}"
+                },
+                "content": {
+                    "he": "פונקציות מובנות לעבודה עם צבעים וערבוב",
+                    "ar": "وظائف مدمجة للعمل مع الألوان والخلط"
+                },
+                "backgroundColor": "linear-gradient(135deg, #fdbb2d 0%, #22c1c3 100%)"
+            },
+            {
+                "id": 13,
+                "type": "responsive-mixins",
+                "icon": "📱",
+                "title": {
+                    "he": "מיקסינים רספונסיביים",
+                    "ar": "ميكسينز متجاوبة"
+                },
+                "code": {
+                    "scss": "// משתני breakpoints\n$breakpoints: (\n  'small': 480px,\n  'medium': 768px,\n  'large': 1024px,\n  'xlarge': 1200px\n);\n\n// פונקציה לבדיקת breakpoint\n@function breakpoint($size) {\n  @return map-get($breakpoints, $size);\n}\n\n// מיקסין ל-media queries\n@mixin respond-to($breakpoint) {\n  @if map-has-key($breakpoints, $breakpoint) {\n    @media (min-width: map-get($breakpoints, $breakpoint)) {\n      @content;\n    }\n  } @else {\n    @warn \"Breakpoint #{$breakpoint} not found in $breakpoints\";\n  }\n}\n\n// מיקסין ל-grid רספונסיבי\n@mixin grid($columns: 12, $gap: 20px) {\n  display: grid;\n  grid-template-columns: repeat($columns, 1fr);\n  gap: $gap;\n  \n  @include respond-to('small') {\n    grid-template-columns: repeat(2, 1fr);\n  }\n  \n  @include respond-to('medium') {\n    grid-template-columns: repeat(3, 1fr);\n  }\n  \n  @include respond-to('large') {\n    grid-template-columns: repeat($columns, 1fr);\n  }\n}\n\n// שימוש\n.container {\n  @include grid(4, 30px);\n}\n\n.card {\n  padding: 20px;\n  \n  @include respond-to('medium') {\n    padding: 30px;\n  }\n  \n  @include respond-to('large') {\n    padding: 40px;\n  }\n}"
+                },
+                "content": {
+                    "he": "מיקסינים ליצירת עיצוב רספונסיבי בקלות",
+                    "ar": "ميكسينز لإنشاء تصميم متجاوب بسهولة"
+                },
+                "backgroundColor": "linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)"
+            },
+            {
+                "id": 14,
+                "type": "best-practices",
+                "icon": "⭐",
+                "title": {
+                    "he": "המלצות וטיפים",
+                    "ar": "التوصيات والنصائح"
+                },
+                "items": [
+                    {
+                        "he": "השתמש במשתנים לערכים שחוזרים על עצמם",
+                        "ar": "استخدم المتغيرات للقيم المتكررة"
+                    },
+                    {
+                        "he": "אל תגזים בקינון - מקסימום 3-4 רמות",
+                        "ar": "لا تبالغ في التداخل - حد أقصى 3-4 مستويات"
+                    },
+                    {
+                        "he": "צור מיקסינים לסטיילים שחוזרים על עצמם",
+                        "ar": "أنشئ ميكسينز للأنماط المتكررة"
+                    },
+                    {
+                        "he": "השתמש ב-partials לארגון הקוד",
+                        "ar": "استخدم partials لتنظيم الكود"
+                    },
+                    {
+                        "he": "הימנע מ-@import, השתמש ב-@use במקום",
+                        "ar": "تجنب @import، استخدم @use بدلاً من ذلك"
+                    },
+                    {
+                        "he": "תעד את הקוד עם הערות ברורות",
+                        "ar": "وثق الكود بتعليقات واضحة"
+                    }
+                ],
+                "backgroundColor": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+            },
+            {
+                "id": 15,
+                "type": "qa-basic",
+                "icon": "❓",
+                "title": {
+                    "he": "שאלות ותשובות - רמה בסיסית",
+                    "ar": "أسئلة وأجوبة - مستوى أساسي"
+                },
+                "items": [
+                    {
+                        "he": "Q: מה ההבדל בין SASS ל-SCSS?",
+                        "ar": "س: ما الفرق بين SASS و SCSS؟"
+                    },
+                    {
+                        "he": "A: SCSS משתמש בסינטקס דומה ל-CSS עם סוגריים מסולסלים, בעוד SASS משתמש בהזחה",
+                        "ar": "ج: SCSS يستخدم صيغة مشابهة لـ CSS مع أقواس مجعدة، بينما SASS يستخدم المسافات البادئة"
+                    },
+                    {
+                        "he": "Q: איך מגדירים משתנה ב-SASS?",
+                        "ar": "س: كيف نعرف متغير في SASS؟"
+                    },
+                    {
+                        "he": "A: $variable-name: value;",
+                        "ar": "ج: $variable-name: value;"
+                    },
+                    {
+                        "he": "Q: מה זה nesting ב-SASS?",
+                        "ar": "س: ما هو التداخل في SASS؟"
+                    },
+                    {
+                        "he": "A: כתיבת סלקטורים מקוננים בתוך סלקטורים אחרים",
+                        "ar": "ج: كتابة محددات متداخلة داخل محددات أخرى"
+                    }
+                ],
+                "backgroundColor": "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
+            },
+            {
+                "id": 16,
+                "type": "qa-advanced",
+                "icon": "🧠",
+                "title": {
+                    "he": "שאלות ותשובות - רמה מתקדמת",
+                    "ar": "أسئلة وأجوبة - مستوى متقدم"
+                },
+                "items": [
+                    {
+                        "he": "Q: מה ההבדל בין @extend ל-@mixin?",
+                        "ar": "س: ما الفرق بين @extend و @mixin؟"
+                    },
+                    {
+                        "he": "A: @extend יוצר סלקטור אחד עם כל המאפיינים, @mixin מכפיל את הקוד בכל מקום",
+                        "ar": "ج: @extend ينشئ محدد واحد مع جميع الخصائص، @mixin يكرر الكود في كل مكان"
+                    },
+                    {
+                        "he": "Q: איך יוצרים פונקציה מותאמת אישית?",
+                        "ar": "س: كيف ننشئ وظيفة مخصصة؟"
+                    },
+                    {
+                        "he": "A: @function function-name($param) { @return value; }",
+                        "ar": "ج: @function function-name($param) { @return value; }"
+                    },
+                    {
+                        "he": "Q: מה זה @content ב-mixin?",
+                        "ar": "س: ما هو @content في mixin؟"
+                    },
+                    {
+                        "he": "A: @content מאפשר להעביר בלוק של קוד לתוך mixin",
+                        "ar": "ج: @content يسمح بتمرير كتلة من الكود إلى mixin"
+                    }
+                ],
+                "backgroundColor": "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
+            },
+            {
+                "id": 17,
+                "type": "installation",
+                "icon": "⬇️",
+                "title": {
+                    "he": "התקנה והגדרה",
+                    "ar": "التثبيت والإعداد"
+                },
+                "steps": [
+                    {
+                        "he": "התקנה דרך npm: npm install -g sass",
+                        "ar": "التثبيت عبر npm: npm install -g sass"
+                    },
+                    {
+                        "he": "התקנה דרך yarn: yarn global add sass",
+                        "ar": "التثبيت عبر yarn: yarn global add sass"
+                    },
+                    {
+                        "he": "קומפילציה: sass input.scss output.css",
+                        "ar": "التجميع: sass input.scss output.css"
+                    },
+                    {
+                        "he": "מעקב אחר שינויים: sass --watch input.scss:output.css",
+                        "ar": "مراقبة التغييرات: sass --watch input.scss:output.css"
+                    },
+                    {
+                        "he": "קומפילציה עם דחיסה: sass --style compressed input.scss output.css",
+                        "ar": "التجميع مع الضغط: sass --style compressed input.scss output.css"
+                    }
+                ],
+                "backgroundColor": "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"
+            },
+            {
+                "id": 18,
+                "type": "project-structure",
+                "icon": "📁",
+                "title": {
+                    "he": "מבנה פרויקט מומלץ",
+                    "ar": "هيكل مشروع موصى به"
+                },
+                "fileStructure": {
+                    "scss": {
+                        "abstracts": {
+                            "_variables.scss": "file",
+                            "_functions.scss": "file",
+                            "_mixins.scss": "file"
+                        },
+                        "base": {
+                            "_reset.scss": "file",
+                            "_typography.scss": "file",
+                            "_utilities.scss": "file"
+                        },
+                        "components": {
+                            "_buttons.scss": "file",
+                            "_cards.scss": "file",
+                            "_forms.scss": "file"
+                        },
+                        "layout": {
+                            "_header.scss": "file",
+                            "_footer.scss": "file",
+                            "_grid.scss": "file"
+                        },
+                        "pages": {
+                            "_home.scss": "file",
+                            "_about.scss": "file"
+                        },
+                        "main.scss": "file"
+                    }
+                },
+                "content": {
+                    "he": "מבנה מומלץ לארגון קבצי SASS בפרויקט גדול",
+                    "ar": "هيكل موصى به لتنظيم ملفات SASS في مشروع كبير"
+                },
+                "backgroundColor": "linear-gradient(135deg, #fa709a 0%, #fee140 100%)"
+            },
+            {
+                "id": 19,
+                "type": "performance",
+                "icon": "⚡",
+                "title": {
+                    "he": "ביצועים ואופטימיזציה",
+                    "ar": "الأداء والتحسين"
+                },
+                "items": [
+                    {
+                        "he": "השתמש ב-@use במקום @import לביצועים טובים יותר",
+                        "ar": "استخدم @use بدلاً من @import لأداء أفضل"
+                    },
+                    {
+                        "he": "הימנע מ-@extend עם סלקטורים רבים",
+                        "ar": "تجنب @extend مع محددات كثيرة"
+                    },
+                    {
+                        "he": "דחוס את הקוד הסופי עם --style compressed",
+                        "ar": "اضغط الكود النهائي مع --style compressed"
+                    },
+                    {
+                        "he": "השתמש ב-source maps לפיתוח",
+                        "ar": "استخدم source maps للتطوير"
+                    },
+                    {
+                        "he": "ארגן את הקבצים בצורה לוגית",
+                        "ar": "نظم الملفات بشكل منطقي"
+                    }
+                ],
+                "backgroundColor": "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)"
+            },
+            {
+                "id": 20,
+                "type": "common-errors",
+                "icon": "⚠️",
+                "title": {
+                    "he": "שגיאות נפוצות ופתרונות",
+                    "ar": "أخطاء شائعة وحلول"
+                },
+                "items": [
+                    {
+                        "he": "שגיאה: Undefined variable - בדוק שהמשתנה מוגדר לפני השימוש",
+                        "ar": "خطأ: متغير غير محدد - تأكد من تعريف المتغير قبل الاستخدام"
+                    },
+                    {
+                        "he": "שגיאה: Invalid CSS - בדוק את הסינטקס של ה-CSS",
+                        "ar": "خطأ: CSS غير صالح - تحقق من صيغة CSS"
+                    },
+                    {
+                        "he": "שגיאה: Circular dependency - הימנע מ-@import מעגלי",
+                        "ar": "خطأ: اعتماد دائري - تجنب @import دائري"
+                    },
+                    {
+                        "he": "שגיאה: Mixin not found - בדוק שהמיקסין מוגדר",
+                        "ar": "خطأ: mixin غير موجود - تأكد من تعريف mixin"
+                    }
+                ],
+                "backgroundColor": "linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)"
+            },
+            {
+                "id": 21,
+                "type": "practical-example",
+                "icon": "💼",
+                "title": {
+                    "he": "דוגמה מעשית - כפתור רספונסיבי",
+                    "ar": "مثال عملي - زر متجاوب"
+                },
+                "code": {
+                    "scss": "// משתנים\n$primary-color: #3498db;\n$secondary-color: #2ecc71;\n$danger-color: #e74c3c;\n$border-radius: 4px;\n$transition: all 0.3s ease;\n\n// מיקסין לכפתור בסיסי\n@mixin button-base {\n  display: inline-block;\n  padding: 12px 24px;\n  border: none;\n  border-radius: $border-radius;\n  cursor: pointer;\n  font-size: 16px;\n  font-weight: 500;\n  text-decoration: none;\n  text-align: center;\n  transition: $transition;\n  \n  &:focus {\n    outline: none;\n    box-shadow: 0 0 0 3px rgba($primary-color, 0.3);\n  }\n  \n  &:disabled {\n    opacity: 0.6;\n    cursor: not-allowed;\n  }\n}\n\n// מיקסין לווריאנטים\n@mixin button-variant($bg-color, $text-color: white) {\n  background-color: $bg-color;\n  color: $text-color;\n  \n  &:hover:not(:disabled) {\n    background-color: darken($bg-color, 10%);\n    transform: translateY(-2px);\n    box-shadow: 0 4px 8px rgba($bg-color, 0.3);\n  }\n  \n  &:active {\n    transform: translateY(0);\n  }\n}\n\n// מיקסין לגדלים\n@mixin button-size($padding, $font-size) {\n  padding: $padding;\n  font-size: $font-size;\n}\n\n// כפתורים\n.btn {\n  @include button-base;\n  \n  // ווריאנטים\n  &--primary {\n    @include button-variant($primary-color);\n  }\n  \n  &--secondary {\n    @include button-variant($secondary-color);\n  }\n  \n  &--danger {\n    @include button-variant($danger-color);\n  }\n  \n  // גדלים\n  &--small {\n    @include button-size(8px 16px, 14px);\n  }\n  \n  &--large {\n    @include button-size(16px 32px, 18px);\n  }\n  \n  // רספונסיבי\n  @media (max-width: 768px) {\n    width: 100%;\n    margin-bottom: 10px;\n  }\n}"
+                },
+                "content": {
+                    "he": "דוגמה מעשית ליצירת מערכת כפתורים רספונסיבית עם SASS",
+                    "ar": "مثال عملي لإنشاء نظام أزرار متجاوب مع SASS"
+                },
+                "backgroundColor": "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)"
+            },
+            {
+                "id": 22,
+                "type": "integration",
+                "icon": "🔗",
+                "title": {
+                    "he": "שילוב עם כלים אחרים",
+                    "ar": "التكامل مع أدوات أخرى"
+                },
+                "items": [
+                    {
+                        "he": "Webpack - sass-loader לטעינת קבצי SASS",
+                        "ar": "Webpack - sass-loader لتحميل ملفات SASS"
+                    },
+                    {
+                        "he": "Gulp - gulp-sass לעיבוד קבצים",
+                        "ar": "Gulp - gulp-sass لمعالجة الملفات"
+                    },
+                    {
+                        "he": "VS Code - Sass extension לתמיכה בסינטקס",
+                        "ar": "VS Code - امتداد Sass لدعم الصيغة"
+                    },
+                    {
+                        "he": "PostCSS - postcss-sass לעיבוד נוסף",
+                        "ar": "PostCSS - postcss-sass للمعالجة الإضافية"
+                    },
+                    {
+                        "he": "Bootstrap - שילוב עם מערכת grid",
+                        "ar": "Bootstrap - التكامل مع نظام الشبكة"
+                    }
+                ],
+                "backgroundColor": "linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)"
+            },
+            {
+                "id": 23,
+                "type": "future-trends",
+                "icon": "🚀",
+                "title": {
+                    "he": "מגמות עתידיות",
+                    "ar": "الاتجاهات المستقبلية"
+                },
+                "items": [
+                    {
+                        "he": "CSS Custom Properties (CSS Variables) - חלופה למשתני SASS",
+                        "ar": "خصائص CSS المخصصة - بديل لمتغيرات SASS"
+                    },
+                    {
+                        "he": "CSS Modules - ארגון קוד CSS מודולרי",
+                        "ar": "وحدات CSS - تنظيم كود CSS معياري"
+                    },
+                    {
+                        "he": "Styled Components - CSS-in-JS",
+                        "ar": "مكونات منسقة - CSS-in-JS"
+                    },
+                    {
+                        "he": "Tailwind CSS - utility-first CSS framework",
+                        "ar": "Tailwind CSS - إطار عمل CSS utility-first"
+                    },
+                    {
+                        "he": "SASS עדיין רלוונטי לפרויקטים גדולים",
+                        "ar": "SASS لا يزال ذا صلة للمشاريع الكبيرة"
+                    }
+                ],
+                "backgroundColor": "linear-gradient(135deg, #d299c2 0%, #fef9d7 100%)"
+            },
+            {
+                "id": 24,
+                "type": "summary",
+                "icon": "📋",
+                "title": {
+                    "he": "סיכום הקורס",
+                    "ar": "ملخص الدورة"
+                },
+                "items": [
+                    {
+                        "he": "SASS הוא כלי חזק לכתיבת CSS מתקדם",
+                        "ar": "SASS أداة قوية لكتابة CSS متقدم"
+                    },
+                    {
+                        "he": "משתנים, קינון ומיקסינים הם הבסיס",
+                        "ar": "المتغيرات والتداخل والميكسينز هي الأساس"
+                    },
+                    {
+                        "he": "פונקציות ולולאות מאפשרות לוגיקה מתקדמת",
+                        "ar": "الوظائف والحلقات تسمح بمنطق متقدم"
+                    },
+                    {
+                        "he": "ארגון נכון של קבצים חשוב לפרויקטים גדולים",
+                        "ar": "التنظيم الصحيح للملفات مهم للمشاريع الكبيرة"
+                    },
+                    {
+                        "he": "ביצועים ואופטימיזציה חשובים לייצור",
+                        "ar": "الأداء والتحسين مهمان للإنتاج"
+                    }
+                ],
+                "backgroundColor": "linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)"
+            },
+            {
+                "id": 25,
+                "type": "end-slide",
+                "icon": "🎉",
+                "title": {
+                    "he": "תודה על הלימוד!",
+                    "ar": "شكرًا على التعلم!"
+                },
+                "content": {
+                    "he": "המשך לתרגל ולהיות מפתח SASS מקצועי!",
+                    "ar": "استمر في الممارسة وكن مطور SASS محترف!"
+                },
+                "backgroundColor": "linear-gradient(135deg, #fdbb2d 0%, #22c1c3 100%)"
+            }
+        ]
+    }
+}

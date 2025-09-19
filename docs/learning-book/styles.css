@@ -1,0 +1,545 @@
+@font-face {
+  font-family: Heebo;
+  src: local("Heebo"), local("Segoe UI"), local("Arial");
+}
+
+:root {
+  /* Material Design Colors */
+  --md-primary: #1976d2;
+  --md-primary-dark: #1565c0;
+  --md-primary-light: #42a5f5;
+  --md-secondary: #ff4081;
+  --md-accent: #ff9800;
+  --md-success: #4caf50;
+  --md-warning: #ff9800;
+  --md-error: #f44336;
+  --md-info: #2196f3;
+  
+  /* Material Design Elevation */
+  --md-elevation-1: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  --md-elevation-2: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  --md-elevation-4: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+  --md-elevation-8: 0 20px 40px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+  
+  /* Material Design Transitions */
+  --md-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --md-transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Original Colors (Enhanced) */
+  --bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --fg: #212121;
+  --muted: #757575;
+  --accent: var(--md-primary);
+  --card: rgba(255, 255, 255, 0.95);
+  --card-dark: rgba(18, 18, 18, 0.95);
+  --border: rgba(0, 0, 0, 0.12);
+  --success: var(--md-success);
+  --warning: var(--md-warning);
+  --error: var(--md-error);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: 'Roboto', Heebo, system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+  direction: rtl;
+  text-align: right;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px;
+  background: var(--card);
+  border-radius: 16px;
+  box-shadow: var(--md-elevation-4);
+  margin-top: 24px;
+  margin-bottom: 24px;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  transition: var(--md-transition);
+}
+
+.container:hover {
+  box-shadow: var(--md-elevation-8);
+  transform: translateY(-2px);
+}
+
+h1, h2, h3 {
+  margin: 0 0 16px;
+  color: var(--md-primary);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 300;
+}
+
+h2 {
+  font-size: 1.75rem;
+  margin-top: 32px;
+  border-bottom: 2px solid var(--md-primary);
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 8px;
+}
+
+h3 {
+  font-size: 20px;
+  margin-top: 24px;
+  color: var(--fg);
+}
+
+.subtitle {
+  color: var(--muted);
+  text-align: center;
+  font-size: 18px;
+  margin-bottom: 32px;
+}
+
+.small {
+  font-size: 14px;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+/* תוכן עניינים */
+#toc {
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.1), rgba(59, 130, 246, 0.1));
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+
+#toc ol {
+  columns: 2;
+  column-gap: 32px;
+}
+
+#toc a {
+  color: var(--accent);
+  text-decoration: none;
+  display: block;
+  padding: 4px 0;
+  transition: color 0.2s;
+}
+
+#toc a:hover {
+  color: var(--fg);
+  text-decoration: underline;
+}
+
+/* Material Design Cards */
+section {
+  background: var(--card);
+  padding: 24px;
+  border-radius: 8px;
+  margin: 24px 0;
+  border: none;
+  box-shadow: var(--md-elevation-1);
+  transition: var(--md-transition);
+  position: relative;
+}
+
+section:hover {
+  box-shadow: var(--md-elevation-2);
+  transform: translateY(-1px);
+}
+
+/* טבלאות */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  background: var(--card);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+table th,
+table td {
+  padding: 12px 16px;
+  text-align: right;
+  border-bottom: 1px solid var(--border);
+}
+
+table th {
+  background: var(--accent);
+  color: #00202a;
+  font-weight: 600;
+}
+
+table tr:hover {
+  background: rgba(34, 211, 238, 0.05);
+}
+
+/* קוד */
+pre {
+  background: var(--card);
+  padding: 20px;
+  border-radius: 8px;
+  overflow: auto;
+  border: 1px solid var(--border);
+  margin: 16px 0;
+  position: relative;
+}
+
+pre::before {
+  content: "קוד";
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  background: var(--accent);
+  color: #00202a;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+code {
+  font-family: 'Fira Code', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* רשימות */
+ul, ol {
+  margin: 16px 0;
+  padding-right: 24px;
+}
+
+li {
+  margin: 8px 0;
+}
+
+/* Material Design Buttons */
+button {
+  background: var(--md-primary);
+  border: 0;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: var(--md-transition);
+  box-shadow: var(--md-elevation-2);
+  position: relative;
+  overflow: hidden;
+}
+
+button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+button:hover::before {
+  left: 100%;
+}
+
+button:hover {
+  background: var(--md-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--md-elevation-4);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: var(--md-elevation-1);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* טריוויה */
+.quiz {
+  counter-reset: quiz-counter;
+}
+
+.quiz li {
+  counter-increment: quiz-counter;
+  background: var(--card);
+  padding: 16px;
+  border-radius: 8px;
+  margin: 12px 0;
+  border: 1px solid var(--border);
+  position: relative;
+}
+
+.quiz li::before {
+  content: counter(quiz-counter);
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--accent);
+  color: #00202a;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.quiz li:hover {
+  border-color: var(--accent);
+  background: rgba(34, 211, 238, 0.05);
+}
+
+/* משחק זיכרון */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.card {
+  background: var(--card);
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+  border: 2px solid var(--border);
+  transition: all 0.3s;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+}
+
+.card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(34, 211, 238, 0.2);
+}
+
+.card.flipped {
+  border-color: var(--success);
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success);
+}
+
+/* תוצאות */
+#quiz-result {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-align: center;
+}
+
+#quiz-result.success {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid var(--success);
+  color: var(--success);
+}
+
+#quiz-result.error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid var(--error);
+  color: var(--error);
+}
+
+/* פוטר */
+footer {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+/* הדפסה */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 12px;
+  }
+  
+  .container {
+    max-width: none;
+    margin: 0;
+    padding: 20px;
+  }
+  
+  section {
+    background: white !important;
+    border: 1px solid #ccc;
+    margin: 10px 0;
+    padding: 15px;
+    page-break-inside: avoid;
+  }
+  
+  pre {
+    background: #f5f5f5 !important;
+    border: 1px solid #ddd;
+    padding: 10px;
+    font-size: 10px;
+  }
+  
+  button, .grid {
+    display: none;
+  }
+  
+  h1, h2, h3 {
+    color: black !important;
+  }
+  
+  .muted {
+    color: #666 !important;
+  }
+  
+  table {
+    background: white;
+  }
+  
+  table th {
+    background: #f0f0f0 !important;
+    color: black !important;
+  }
+}
+
+/* Material Design Form Elements */
+input, textarea, select {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--muted);
+  padding: 12px 0;
+  font-size: 16px;
+  color: var(--fg);
+  transition: var(--md-transition);
+  width: 100%;
+  margin: 8px 0;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-bottom-color: var(--md-primary);
+  box-shadow: 0 1px 0 0 var(--md-primary);
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--muted);
+  transition: var(--md-transition);
+}
+
+input:focus::placeholder, textarea:focus::placeholder {
+  color: transparent;
+}
+
+/* Material Design Radio Buttons */
+input[type="radio"] {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--muted);
+  border-radius: 50%;
+  margin: 0 8px 0 0;
+  position: relative;
+  cursor: pointer;
+}
+
+input[type="radio"]:checked {
+  border-color: var(--md-primary);
+}
+
+input[type="radio"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  background: var(--md-primary);
+  border-radius: 50%;
+}
+
+/* Material Design Checkboxes */
+input[type="checkbox"] {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--muted);
+  border-radius: 2px;
+  margin: 0 8px 0 0;
+  position: relative;
+  cursor: pointer;
+}
+
+input[type="checkbox"]:checked {
+  background: var(--md-primary);
+  border-color: var(--md-primary);
+}
+
+input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* רספונסיביות */
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+  
+  h1 {
+    font-size: 24px;
+  }
+  
+  h2 {
+    font-size: 20px;
+  }
+  
+  #toc ol {
+    columns: 1;
+  }
+  
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  
+  pre {
+    padding: 12px;
+    font-size: 12px;
+  }
+}

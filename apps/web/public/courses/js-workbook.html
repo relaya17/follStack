@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>חוברת עבודה - JavaScript</title>
+    <style>
+        /* הסגנון בדף זה מיועד לחוברת עבודה בעברית/ערבית */
+        :root {
+            --bg: #0b132b;
+            --card: #1c2541;
+            --muted: #3a506b;
+            --text: #f1f5f9;
+            --accent: #5bc0be;
+            --accent-2: #ffd166;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 20px;
+            position: sticky;
+            top: 0;
+            background: linear-gradient(180deg, rgba(11, 19, 43, 0.98), rgba(11, 19, 43, 0.92));
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            z-index: 10;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: .3px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .input,
+        .select,
+        .btn {
+            background: var(--card);
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 12px;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        .input {
+            min-width: 230px;
+        }
+
+        .btn {
+            cursor: pointer;
+            transition: transform .08s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn.primary {
+            background: var(--accent);
+            color: #062925;
+            border: none;
+            font-weight: 700;
+        }
+
+        .btn.secondary {
+            background: var(--muted);
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 24px auto;
+            padding: 0 16px 40px;
+        }
+
+        section {
+            margin: 18px 0 28px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 18px;
+            margin: 0;
+            font-weight: 800;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 14px 14px;
+            margin: 10px 0;
+        }
+
+        .qline {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            align-items: start;
+        }
+
+        .qtext {
+            font-weight: 600;
+            line-height: 1.6;
+        }
+
+        .answer {
+            margin-top: 8px;
+            background: #0f1a3a;
+            border: 1px dashed rgba(255, 255, 255, 0.18);
+            padding: 12px;
+            border-radius: 10px;
+            display: none;
+            white-space: pre-wrap;
+        }
+
+        .meta {
+            font-size: 12px;
+            opacity: .8;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 99px;
+            background: var(--accent-2);
+            color: #442;
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        footer {
+            text-align: center;
+            opacity: .7;
+            padding: 20px;
+        }
+
+        .muted {
+            color: #cbd5e1;
+            opacity: .9;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="title">חוברת עבודה — JavaScript</div>
+        <div class="controls">
+            <!-- תיבת חיפוש שאלות -->
+            <input id="search" class="input" type="search" placeholder="חיפוש שאלה/מילה..." />
+            <!-- בחירת שפה -->
+            <select id="lang" class="select" aria-label="בחירת שפה לתצוגה">
+                <option value="he">עברית</option>
+                <option value="ar">العربية</option>
+            </select>
+            <!-- פתיחה/סגירה מהירה של תשובות -->
+            <button id="expandAll" class="btn secondary">הצג הכל</button>
+            <button id="collapseAll" class="btn secondary">הסתר הכל</button>
+            <button id="print" class="btn primary">הדפס/שמירה כ-PDF</button>
+        </div>
+    </header>
+
+    <main>
+        <div id="meta" class="meta muted"></div>
+        <div id="content"></div>
+    </main>
+
+    <footer class="meta">כל הזכויות שמורות. התוכן דו-לשוני ומוצג מקובץ הנתונים.</footer>
+
+    <script>
+        // תמיכה דו-לשונית בסיסית: כרגע התוכן בעברית; שדה השפה מאפשר הכנה לתרגום עתידי לערבית
+        const state = { lang: 'he', data: null };
+
+        const $ = (sel) => document.querySelector(sel);
+
+        async function loadData() {
+            // טעינת קובץ הנתונים של החוברת
+            const res = await fetch('../data/js-workbook.json');
+            if (!res.ok) throw new Error('שגיאה בטעינת הנתונים');
+            state.data = await res.json();
+            render();
+        }
+
+        function render() {
+            const root = $('#content');
+            root.innerHTML = '';
+            const search = ($('#search').value || '').trim().toLowerCase();
+
+            $('#meta').textContent = `${state.data.title} • ${new Date().toLocaleDateString('he-IL')} • ${countQuestions(state.data)} שאלות`;
+
+            for (const section of state.data.sections) {
+                const sectionEl = document.createElement('section');
+
+                const header = document.createElement('div');
+                header.className = 'section-header';
+                const h2 = document.createElement('h2');
+                h2.textContent = section.title;
+                const badge = document.createElement('span');
+                badge.className = 'badge';
+                badge.textContent = `${section.questions.length} שאלות`;
+                header.appendChild(h2); header.appendChild(badge);
+                sectionEl.appendChild(header);
+
+                for (const [idx, qa] of section.questions.entries()) {
+                    const textForSearch = (qa.q + ' ' + qa.a).toLowerCase();
+                    if (search && !textForSearch.includes(search)) continue;
+
+                    const card = document.createElement('div');
+                    card.className = 'card';
+
+                    const row = document.createElement('div');
+                    row.className = 'qline';
+                    const q = document.createElement('div');
+                    q.className = 'qtext';
+                    q.textContent = `שאלה ${idx + 1}: ${qa.q}`;
+                    const toggle = document.createElement('button');
+                    toggle.className = 'btn secondary';
+                    toggle.textContent = 'הצג תשובה';
+                    row.appendChild(q); row.appendChild(toggle);
+
+                    const ans = document.createElement('div');
+                    ans.className = 'answer';
+                    ans.textContent = qa.a;
+
+                    toggle.addEventListener('click', () => {
+                        const open = ans.style.display === 'block';
+                        ans.style.display = open ? 'none' : 'block';
+                        toggle.textContent = open ? 'הצג תשובה' : 'הסתר תשובה';
+                    });
+
+                    card.appendChild(row);
+                    card.appendChild(ans);
+                    sectionEl.appendChild(card);
+                }
+
+                // אם לאחר סינון לא נשארו שאלות – לא מציגים את הסקשן
+                if (sectionEl.querySelectorAll('.card').length) {
+                    root.appendChild(sectionEl);
+                }
+            }
+        }
+
+        function countQuestions(data) {
+            return data.sections.reduce((sum, s) => sum + (s.questions?.length || 0), 0);
+        }
+
+        // אירועים גלובליים
+        $('#search').addEventListener('input', () => render());
+        $('#expandAll').addEventListener('click', () => {
+            document.querySelectorAll('.answer').forEach(el => { el.style.display = 'block'; });
+            document.querySelectorAll('.qline .btn').forEach(btn => { if (btn.textContent.includes('הצג')) btn.textContent = 'הסתר תשובה'; });
+        });
+        $('#collapseAll').addEventListener('click', () => {
+            document.querySelectorAll('.answer').forEach(el => { el.style.display = 'none'; });
+            document.querySelectorAll('.qline .btn').forEach(btn => { if (btn.textContent.includes('הסתר')) btn.textContent = 'הצג תשובה'; });
+        });
+        $('#print').addEventListener('click', () => window.print());
+        $('#lang').addEventListener('change', (e) => {
+            state.lang = e.target.value;
+            // לעת עתה אין תוכן בערבית – המבנה תומך. בעתיד ניתן להרחיב את ה-JSON לשדות ar.
+            document.documentElement.lang = state.lang;
+            document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'rtl';
+            render();
+        });
+
+        loadData().catch(err => {
+            $('#content').innerHTML = `<div class="card">שגיאה: ${err.message}</div>`;
+        });
+    </script>
+</body>
+
+</html>

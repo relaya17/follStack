@@ -1,0 +1,457 @@
+{
+    "course": {
+        "title": {
+            "he": "קורס TypeScript - מהבסיס ועד הפרקטיקה",
+            "ar": "دورة TypeScript - من الأساسيات إلى التطبيق"
+        },
+        "description": {
+            "he": "סדנת TypeScript: למה, איך, וכלים לעבודה יומיומית",
+            "ar": "ورشة TypeScript: لماذا، كيف، وأدوات للعمل اليومي"
+        },
+        "totalSlides": 42,
+        "slides": [
+            {
+                "id": 1,
+                "type": "title",
+                "icon": "🟦",
+                "title": {
+                    "he": "TypeScript",
+                    "ar": "TypeScript"
+                },
+                "content": {
+                    "he": "A JavaScript Superset",
+                    "ar": "مجموعة فائقة لـ JavaScript"
+                },
+                "backgroundColor": "linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%)"
+            },
+            {
+                "id": 2,
+                "type": "definition",
+                "icon": "⚙️",
+                "title": {
+                    "he": "TypeScript Definition",
+                    "ar": "تعريف TypeScript"
+                },
+                "items": [
+                    {
+                        "he": "SUPERSET של JS - ספרייה שלוקחת את שפת JAVASCRIPT ומוסיפה לה פונקציונאליות חדשה",
+                        "ar": "SUPERSET للـ JS - مكتبة تأخذ لغة JAVASCRIPT وتضيف لها وظائف جديدة"
+                    },
+                    {
+                        "he": "היא משמשת ככלי למתכנת ונועדה לעזור לו לכתוב קוד נקי ולאתר שגיאות תוך כדי תהליך הכתיבה",
+                        "ar": "تستخدم كأداة للمبرمج وتهدف لمساعدته في كتابة كود نظيف واكتشاف الأخطاء أثناء عملية الكتابة"
+                    },
+                    {
+                        "he": "TYPESCRIPT הופכת את JAVASCRIPT משפה פלואידית לשפה שהיא STRONG TYPE כלומר שפה המחייבת להגדיר את סוגי הערכים של המשתנים בעת יצירתם",
+                        "ar": "TYPESCRIPT تحول JAVASCRIPT من لغة مرنة إلى لغة STRONG TYPE أي لغة تتطلب تعريف أنواع قيم المتغيرات عند إنشائها"
+                    },
+                    {
+                        "he": "הסיומת של קובץ שנכתב בעזרת תיקייה זאת יהיו TS",
+                        "ar": "امتداد الملف المكتوب باستخدام هذه المكتبة سيكون TS"
+                    },
+                    {
+                        "he": "הקבצים שיכתבו עם סיומת זאת יעברו תהליך של קומפילציה בטרם יוגשו לדפדפן בו יומר הקוד לשפת JAVASCRIPT",
+                        "ar": "الملفات المكتوبة بهذا الامتداد ستمر بعملية تجميع قبل تقديمها للمتصفح حيث يتحول الكود إلى لغة JAVASCRIPT"
+                    }
+                ],
+                "link": "https://www.typescriptlang.org/",
+                "backgroundColor": "linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)"
+            },
+            {
+                "id": 3,
+                "type": "playground",
+                "icon": "▶️",
+                "title": {
+                    "he": "TypeScript Playground",
+                    "ar": "ساحة لعب TypeScript"
+                },
+                "content": {
+                    "he": "קישור לסביבה בה אפשר לנסות קוד ולהמיר TS ל-JS בזמן אמת",
+                    "ar": "رابط لبيئة لتجربة الكود وتحويل TS إلى JS لحظيًا"
+                },
+                "link": "https://www.typescriptlang.org/play",
+                "backgroundColor": "linear-gradient(135deg, #232526 0%, #414345 100%)"
+            },
+            {
+                "id": 4,
+                "type": "search",
+                "icon": "🔎",
+                "title": {
+                    "he": "DefinitelyTyped Search",
+                    "ar": "البحث في DefinitelyTyped"
+                },
+                "content": {
+                    "he": "מציאת טיפוסים לספריות NPM שלא נכתבו ב-TS",
+                    "ar": "العثور على تعريفات الأنماط لحزم NPM غير المكتوبة بـ TS"
+                },
+                "link": "https://www.typescriptlang.org/dt/search?search=",
+                "backgroundColor": "linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)"
+            },
+            {
+                "id": 5,
+                "type": "code-example",
+                "icon": "💡",
+                "title": {
+                    "he": "דוגמה לניקוי קוד שנכתב ב-TYPESCRIPT ומומר ל-JAVASCRIPT",
+                    "ar": "مثال لتنظيف الكود المكتوب بـ TYPESCRIPT والمحول إلى JAVASCRIPT"
+                },
+                "code": {
+                    "ts": "const FIRST_NUM = document.getElementById('firstNum') as HTMLInputElement;\nconst SECOND_NUM = document.getElementById('secondNum') as HTMLInputElement;\nconst BTN = document.getElementById('btn') as HTMLButtonElement;\nconst RESULT = document.getElementById('result') as HTMLDivElement;\n\nconst sum = (firstNum: number, secondNum: number): number => {\n    return firstNum + secondNum;\n};\n\nconst printNum = (): void => {\n    const result = sum(Number(FIRST_NUM.value), Number(SECOND_NUM.value));\n    RESULT.innerHTML = String(result);\n};\n\nBTN.addEventListener('click', printNum);",
+                    "js": "\"use strict\";\nconst FIRST_NUM = document.getElementById('firstNum');\nconst SECOND_NUM = document.getElementById('secondNum');\nconst BTN = document.getElementById('btn');\nconst RESULT = document.getElementById('result');\n\nconst sum = (firstNum, secondNum) => {\n    return firstNum + secondNum;\n};\n\nconst printNum = () => {\n    const result = sum(Number(FIRST_NUM.value), Number(SECOND_NUM.value));\n    RESULT.innerHTML = String(result);\n};\n\nBTN.addEventListener('click', printNum);"
+                },
+                "backgroundColor": "linear-gradient(135deg, #283048 0%, #859398 100%)"
+            },
+            {
+                "id": 6,
+                "type": "vscode-ext",
+                "icon": "🧩",
+                "title": {
+                    "he": "תוסף ל-VSCode",
+                    "ar": "إضافة VSCode"
+                },
+                "content": {
+                    "he": "JavaScript and TypeScript Nightly – תמיכה עדכנית ב-TS",
+                    "ar": "JavaScript and TypeScript Nightly – دعم محدث لـ TS"
+                },
+                "backgroundColor": "linear-gradient(135deg, #373B44 0%, #4286f4 100%)"
+            },
+            {
+                "id": 7,
+                "type": "steps",
+                "icon": "⬇️",
+                "title": {
+                    "he": "יצירת פרויקט חדש",
+                    "ar": "إنشاء مشروع جديد"
+                },
+                "steps": [
+                    {
+                        "he": "קישור להורדת הספרייה: https://www.npmjs.com/package/typescript",
+                        "ar": "رابط تحميل المكتبة: https://www.npmjs.com/package/typescript"
+                    },
+                    {
+                        "he": "בעזרת הפקודה: npm i -g typescript - נוריד כלי לעבודה עם הספרייה אל המחשב",
+                        "ar": "باستخدام الأمر: npm i -g typescript - سنحمل أداة للعمل مع المكتبة إلى الكمبيوتر"
+                    },
+                    {
+                        "he": "בעזרת הפקודה: npm ls -g --depth=0 - נבדוק שהכלי הורד במקום הנכון במחשב",
+                        "ar": "باستخدام الأمر: npm ls -g --depth=0 - سنتحقق من أن الأداة تم تحميلها في المكان الصحيح"
+                    },
+                    {
+                        "he": "בעזרת הפקודה: tsc --init - ניצור קובץ קונפיגורציות חדש לעבודה עם TS",
+                        "ar": "باستخدام الأمر: tsc --init - سننشئ ملف إعدادات جديد للعمل مع TS"
+                    }
+                ],
+                "backgroundColor": "linear-gradient(135deg, #1f4037 0%, #99f2c8 100%)"
+            },
+            {
+                "id": 8,
+                "type": "tsconfig",
+                "icon": "🛠️",
+                "title": {
+                    "he": "TSCONFIG.JSON - הגדרות חשובות",
+                    "ar": "TSCONFIG.JSON - إعدادات مهمة"
+                },
+                "code": {
+                    "json": "{\n  \"compilerOptions\": {\n    \"target\": \"esnext\",\n    \"module\": \"ESNext\",\n    \"rootDir\": \"./ts\",\n    \"outDir\": \"./src\",\n    \"removeComments\": true,\n    \"strict\": true,\n    \"forceConsistentCasingInFileNames\": true,\n    \"noUnusedLocals\": true,\n    \"noImplicitThis\": true,\n    \"noUnusedParameters\": true,\n    \"noImplicitReturns\": true,\n    \"esModuleInterop\": true,\n    \"skipLibCheck\": true,\n    \"lib\": [\"DOM\", \"esnext\"]\n  }\n}"
+                },
+                "items": [
+                    {
+                        "he": "target - קובע איזה גרסה של JS להשתמש (ESNEXT זאת הגרסה העדכנית)",
+                        "ar": "target - يحدد أي إصدار من JS للاستخدام (ESNEXT هو الإصدار الأحدث)"
+                    },
+                    {
+                        "he": "module - באיזה מודל של JS להשתמש",
+                        "ar": "module - أي نموذج JS للاستخدام"
+                    },
+                    {
+                        "he": "rootDir - התיקייה בה נכתוב את קבצי ה-TS",
+                        "ar": "rootDir - المجلد الذي نكتب فيه ملفات TS"
+                    },
+                    {
+                        "he": "outDir - התיקייה בה ייכתבו קבצי ה-JS לאחר תהליך הקומפילציה",
+                        "ar": "outDir - المجلد الذي ستُكتب فيه ملفات JS بعد عملية التجميع"
+                    },
+                    {
+                        "he": "removeComments - הורדת הערות מקבצי ה-JS שעברו קומפילציה",
+                        "ar": "removeComments - إزالة التعليقات من ملفات JS التي مرت بالتجميع"
+                    },
+                    {
+                        "he": "strict - להשתמש ב-STRICT MODE",
+                        "ar": "strict - استخدام STRICT MODE"
+                    },
+                    {
+                        "he": "forceConsistentCasingInFileNames - לבדוק עקביות בשמות קבצים מיובאים",
+                        "ar": "forceConsistentCasingInFileNames - فحص الاتساق في أسماء الملفات المستوردة"
+                    },
+                    {
+                        "he": "noUnusedLocals - בודק אם נוצר משתנה שלא קראו לו",
+                        "ar": "noUnusedLocals - يفحص إذا تم إنشاء متغير لم يتم استخدامه"
+                    },
+                    {
+                        "he": "noImplicitThis - UNDEFINED לא מחזיר THIS - בודק",
+                        "ar": "noImplicitThis - UNDEFINED لا يعيد THIS - يفحص"
+                    },
+                    {
+                        "he": "noUnusedParameters - בודק שאין פרמטרים שלא השתמשו בהם בפונקציה",
+                        "ar": "noUnusedParameters - يفحص أنه لا توجد معاملات لم يتم استخدامها في الدالة"
+                    },
+                    {
+                        "he": "noImplicitReturns - בודק שהפונקציה מחזירה את מה שהגדרנו שהיא צריכה להחזיר",
+                        "ar": "noImplicitReturns - يفحص أن الدالة تعيد ما عرفناه أنها تحتاج لإرجاعه"
+                    },
+                    {
+                        "he": "lib - אלמנטים נוספים ב-JS שאנו מעוניינים ש-TS תכיר",
+                        "ar": "lib - عناصر إضافية في JS نريد أن TS تتعرف عليها"
+                    }
+                ],
+                "backgroundColor": "linear-gradient(135deg, #603813 0%, #b29f94 100%)"
+            },
+            {
+                "id": 9,
+                "type": "architecture",
+                "icon": "📁",
+                "title": {
+                    "he": "TYPESCRIPT ARCHITECTURE",
+                    "ar": "معمارية TYPESCRIPT"
+                },
+                "content": {
+                    "he": "לפי הגדרות הקונפיגורציה שכתבנו, כל תיקייה וקובץ שנכתוב בתיקיית ה-TS ייכתב בתיקיית ה-SRC",
+                    "ar": "حسب إعدادات التكوين التي كتبناها، كل مجلد وملف نكتبه في مجلد TS سيكتب في مجلد SRC"
+                },
+                "fileStructure": {
+                    "public": {
+                        "assets": {},
+                        "index.html": "file"
+                    },
+                    "src": {
+                        "app.js": "file",
+                        "ts": {
+                            "app.ts": "file",
+                            "tsconfig.json": "file"
+                        }
+                    }
+                },
+                "backgroundColor": "linear-gradient(135deg, #2C3E50 0%, #4CA1AF 100%)"
+            },
+            {
+                "id": 10,
+                "type": "next-topics",
+                "icon": "📚",
+                "title": {
+                    "he": "מה נלמד בשיעורים הבאים",
+                    "ar": "ماذا سنتعلم لاحقًا"
+                },
+                "items": [
+                    {
+                        "he": "טיפוסים בסיסיים ומתקדמים",
+                        "ar": "الأنواع الأساسية والمتقدمة"
+                    },
+                    {
+                        "he": "Generics, Utility Types",
+                        "ar": "Generics و Utility Types"
+                    },
+                    {
+                        "he": "שילוב TypeScript עם React",
+                        "ar": "دمج TypeScript مع React"
+                    }
+                ],
+                "backgroundColor": "linear-gradient(135deg, #1d4350 0%, #a43931 100%)"
+            },
+            {
+                "id": 11,
+                "type": "any-type",
+                "icon": "🔓",
+                "title": {
+                    "he": "ANY",
+                    "ar": "ANY"
+                },
+                "code": {
+                    "ts": "let any: any;\nany = \"any\";\nany = 0;\nany = true;\nany = {};\nany = [];"
+                },
+                "content": {
+                    "he": "סוג מידע זה למעשה מבטל את בדיקת הערכים על המשתנה שהוא מושם בו מאחר ו - ANY יכול לקבל כל סוג של ערך",
+                    "ar": "هذا النوع من البيانات يلغي فعليًا فحص القيم على المتغير الذي يتم وضعه فيه لأن ANY يمكنه قبول أي نوع من القيم"
+                },
+                "backgroundColor": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+            },
+            {
+                "id": 12,
+                "type": "string-type",
+                "icon": "📝",
+                "title": {
+                    "he": "STRING",
+                    "ar": "STRING"
+                },
+                "code": {
+                    "ts": "let string: string = \"I am a string!\";\nstring = 'I am also a string!';\nstring = `Yep i am a string two!`;\nstring = 5; // This line is marked with a red wavy underline, indicating a type error."
+                },
+                "content": {
+                    "he": "ניתן להשתמש בכל תצורות מחרוזות התווים ולשנות את תוכן הערך למחרוזת תווים אחרת אולם לא ניתן לשנות את סוג הערך של המשתנה לסוג ערך אחר",
+                    "ar": "يمكن استخدام جميع تكوينات سلاسل الأحرف وتغيير محتوى القيمة إلى سلسلة أحرف أخرى ولكن لا يمكن تغيير نوع قيمة المتغير إلى نوع قيمة آخر"
+                },
+                "backgroundColor": "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
+            },
+            {
+                "id": 13,
+                "type": "number-type",
+                "icon": "🔢",
+                "title": {
+                    "he": "NUMBER",
+                    "ar": "NUMBER"
+                },
+                "code": {
+                    "ts": "let number: number = 5;\nnumber = 5.5;\nnumber = -5;\nnumber = 0;"
+                },
+                "content": {
+                    "he": "ניתן להשתמש בכל סוגי המספרים",
+                    "ar": "يمكن استخدام جميع أنواع الأرقام"
+                },
+                "backgroundColor": "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
+            },
+            {
+                "id": 14,
+                "type": "boolean-type",
+                "icon": "✅",
+                "title": {
+                    "he": "BOOLEAN",
+                    "ar": "BOOLEAN"
+                },
+                "code": {
+                    "ts": "let boolean: boolean = true;\nboolean = false;"
+                },
+                "content": {
+                    "he": "ניתן להגדיר ערכים של אמת ולא אמת",
+                    "ar": "يمكن تعريف قيم الصواب والخطأ"
+                },
+                "backgroundColor": "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"
+            },
+            {
+                "id": 15,
+                "type": "union-type",
+                "icon": "🔗",
+                "title": {
+                    "he": "UNION TYPE",
+                    "ar": "UNION TYPE"
+                },
+                "code": {
+                    "ts": "let union: (string | number) = \"hallo\"\nunion = 5"
+                },
+                "content": {
+                    "he": "ניתן להגדיר בעזרתם מס' סוגי ערכים למשתנה. את סוגי הערכים יש לעטוף בסוגריים מעוגלים ולחצוץ בין סוג ערך לסוג ערך הבא בעזרת הסימן | (PIPE)",
+                    "ar": "يمكن تعريف عدة أنواع من القيم للمتغير باستخدامها. يجب لف أنواع القيم بين أقواس دائرية وفصل نوع قيمة عن نوع القيمة التالي باستخدام الرمز | (PIPE)"
+                },
+                "backgroundColor": "linear-gradient(135deg, #fa709a 0%, #fee140 100%)"
+            },
+            {
+                "id": 16,
+                "type": "alias-type",
+                "icon": "🏷️",
+                "title": {
+                    "he": "ALIAS",
+                    "ar": "ALIAS"
+                },
+                "code": {
+                    "ts": "type combined = string | number | boolean;\nlet text: combined = \"hallo\"\ntext = 5\ntext = false"
+                },
+                "content": {
+                    "he": "ניתן להגדיר שם ערך חדש שיכיל בתוכו מספר סוגי ערכים",
+                    "ar": "يمكن تعريف اسم قيمة جديد سيحتوي على عدة أنواع من القيم"
+                },
+                "backgroundColor": "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)"
+            },
+            {
+                "id": 17,
+                "type": "object-intro",
+                "icon": "📦",
+                "title": {
+                    "he": "OBJECT",
+                    "ar": "OBJECT"
+                },
+                "content": {
+                    "he": "הדרכים להגדרת אובייקט",
+                    "ar": "طرق تعريف الكائن"
+                },
+                "backgroundColor": "linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)"
+            },
+            {
+                "id": 18,
+                "type": "type-object",
+                "icon": "📋",
+                "title": {
+                    "he": "TYPE OBJECT",
+                    "ar": "TYPE OBJECT"
+                },
+                "code": {
+                    "ts": "const object: object = {age: 43, hear: \"black\"}\nobject.name = \"david\""
+                },
+                "content": {
+                    "he": "הדרך הראשונה היא להשתמש בסוג הערך OBJECT. החיסרון בשיטה זאת היא שברגע שאתחלנו אובייקט עם מפתחות וערכים לא ניתן להכניס אליו מפתחות חדשים או לשנות את ערכם",
+                    "ar": "الطريقة الأولى هي استخدام نوع القيمة OBJECT. عيب هذه الطريقة هو أنه بمجرد تهيئة كائن بمفاتيح وقيم، لا يمكن إدخال مفاتيح جديدة إليه أو تغيير قيمها"
+                },
+                "backgroundColor": "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)"
+            },
+            {
+                "id": 19,
+                "type": "object-keys",
+                "icon": "🔑",
+                "title": {
+                    "he": "הגדרת מפתחות באובייקט וסוג הערך שלהם",
+                    "ar": "تعريف المفاتيح في الكائن ونوع قيمتها"
+                },
+                "code": {
+                    "ts": "const obj: { name: string; age: number } = {name: \"shola\", age: 79};\nobj.name = \"david\";\nobj.name = \"other name\";"
+                },
+                "backgroundColor": "linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)"
+            },
+            {
+                "id": 20,
+                "type": "optional-values",
+                "icon": "❓",
+                "title": {
+                    "he": "ערכים אופציונאליים",
+                    "ar": "القيم الاختيارية"
+                },
+                "code": {
+                    "ts": "const obj: { name?: string; age?: number } = {};\nobj.name = \"david\";\nobj.name = \"other name\";"
+                },
+                "content": {
+                    "he": "על ידי הוספת סימן השאלה לפני הנקודותיים ניתן להגדיר מפתח מסוים באובייקט כאופציונאלי",
+                    "ar": "بإضافة علامة الاستفهام قبل النقطتين يمكن تعريف مفتاح معين في الكائن كاختياري"
+                },
+                "backgroundColor": "linear-gradient(135deg, #d299c2 0%, #fef9d7 100%)"
+            },
+            {
+                "id": 21,
+                "type": "interface",
+                "icon": "🔧",
+                "title": {
+                    "he": "INTERFACE",
+                    "ar": "INTERFACE"
+                },
+                "code": {
+                    "ts": "interface user {\n  name: string;\n  age: number;\n}\n\nconst user: user = {\n  name: \"david\",\n  age: 43,\n};",
+                    "js": "\"use strict\";\nconst user = {\n  name: \"david\",\n  age: 43,\n};"
+                },
+                "content": {
+                    "he": "TYPESCRIPT מאפשרת לנו להגדיר תבנית של אובייקט על ידי שימוש ב – INTERFACE. לאחר תהליך הקומפילציה לא נראה בקובץ ה – JS את ה - INTERFACE",
+                    "ar": "TYPESCRIPT تسمح لنا بتعريف قالب للكائن باستخدام INTERFACE. بعد عملية التجميع لن نرى في ملف JS الـ INTERFACE"
+                },
+                "backgroundColor": "linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)"
+            },
+            {
+                "id": 22,
+                "type": "interface-task",
+                "icon": "📋",
+                "title": {
+                    "he": "משימת INTERFACE",
+                    "ar": "مهمة INTERFACE"
+                },
+                "content": {
+                    "he": "צרו INTERFACE בשם COSTUMER שישמש כתבנית לאובייקט. צרו אובייקט עם המפתחות הבאים: ID: string (אופציונאלי), FIRSTNAME: string, LASTNAME: string, EMAIL: string, PHONE: string, CREATEDAT: Date של יצירת האובייקט, ADDRESS: מפתח אופציונאלי שהוא אובייקט עם המפתחות הבאים: STATE: string (אופציונאלי), COUNTRY: string, CITY: string, STREET: string, HOUSENUMBER: number, ZIP: number. הדפיסו את האובייקט שנוצר לקונסול.",
+                    "ar": "أنشئوا INTERFACE باسم COSTUMER سيخدم كقالب للكائن. أنشئوا كائن بالمفاتيح التالية: ID: string (اختياري), FIRSTNAME: string, LASTNAME: string, EMAIL: string, PHONE: string, CREATEDAT: Date لإنشاء الكائن, ADDRESS: مفتاح اختياري وهو كائن بالمفاتيح التالية: STATE: string (اختياري), COUNTRY: string, CITY: string, STREET: string, HOUSENUMBER: number, ZIP: number. اطبعوا الكائن المُنشأ في الكونسول."
+                },
+                "backgroundColor": "linear-gradient(135deg, #fdbb2d 0%, #22c1c3 100%)"
+            }
+        ]
+    }
+}

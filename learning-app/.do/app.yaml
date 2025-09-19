@@ -1,0 +1,23 @@
+name: learning-app
+services:
+  - name: web
+    source_dir: /
+    github:
+      repo: your-username/learning-app
+      branch: main
+    run_command: npm run build:web && npx serve dist
+    environment_slug: node-js
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    routes:
+      - path: /
+    static_sites:
+      - name: static
+        source_dir: /
+        github:
+          repo: your-username/learning-app
+          branch: main
+        build_command: npm run build:web
+        output_dir: dist
+        routes:
+          - path: /

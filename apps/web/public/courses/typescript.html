@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" id="html-root">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-he="קורס TypeScript - FullStack Learning Hub" data-ar="دورة TypeScript - مركز التعلم FullStack">קורס
+        TypeScript -
+        FullStack Learning Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .slide-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 2rem;
+        }
+
+        .slide-content {
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .error-message {
+            background: rgba(255, 0, 0, 0.1);
+            border: 2px solid #ff0000;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            color: #ff0000;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 20px;
+        }
+
+        .slide-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .slide-icon {
+            font-size: 4rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.5));
+        }
+
+        .slide-description {
+            font-size: 1.2rem;
+            text-align: center;
+            color: #a0a0a0;
+            margin-bottom: 3rem;
+            line-height: 1.6;
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(102, 126, 234, 0.2);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-btn:hover {
+            background: rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .code-block {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+
+        .highlight {
+            background: rgba(102, 126, 234, 0.2);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .topic-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .topic-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .topic-item .icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .topic-item h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .language-switcher {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 1000;
+        }
+
+        .lang-btn {
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+
+        .lang-btn:hover {
+            background: rgba(102, 126, 234, 0.4);
+        }
+
+        .lang-btn.active {
+            background: rgba(102, 126, 234, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .slide-title {
+                font-size: 2rem;
+            }
+
+            .slide-content {
+                padding: 2rem;
+            }
+
+            .slide-counter {
+                top: 1rem;
+                right: 1rem;
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .navigation {
+                bottom: 1rem;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="language-switcher">
+        <button class="lang-btn active" onclick="switchLanguage('he')">עברית</button>
+        <button class="lang-btn" onclick="switchLanguage('ar')">العربية</button>
+    </div>
+
+    <div class="slide-counter">
+        <span id="currentSlide">1</span> / <span id="totalSlides">42</span>
+    </div>
+
+    <div id="slides-container"></div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn" onclick="previousSlide()">
+            <i class="fas fa-chevron-right"></i> הקודם
+        </button>
+        <button class="nav-btn" id="nextBtn" onclick="nextSlide()">
+            הבא <i class="fas fa-chevron-left"></i>
+        </button>
+    </div>
+
+    <script>
+        let courseData = null;
+        let currentSlideIndex = 0;
+        let currentLanguage = 'he';
+
+        // Load course data
+        async function loadCourseData() {
+            try {
+                console.log('Loading TypeScript course data...');
+                const response = await fetch('../data/typescript-course-data.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                courseData = await response.json();
+                console.log('TypeScript course data loaded:', courseData);
+                document.getElementById('totalSlides').textContent = courseData.course.totalSlides;
+                generateSlides();
+            } catch (error) {
+                console.error('Error loading TypeScript course data:', error);
+                document.getElementById('slides-container').innerHTML = `
+                    <div class="slide-container">
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">❌</div>
+                            <h1 class="slide-title">שגיאה בטעינת הקורס</h1>
+                            <p class="slide-description">לא ניתן לטעון את נתוני הקורס. אנא רענן את הדף.</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Generate slides dynamically
+        function generateSlides() {
+            console.log('Generating slides...', courseData);
+            const container = document.getElementById('slides-container');
+            if (!container) {
+                console.error('slides-container element not found!');
+                return;
+            }
+            container.innerHTML = '';
+
+            if (!courseData || !courseData.course || !courseData.course.slides) {
+                console.error('Invalid course data structure:', courseData);
+                container.innerHTML = '<div class="error-message">שגיאה במבנה נתוני הקורס</div>';
+                return;
+            }
+
+            courseData.course.slides.forEach((slide, index) => {
+                const slideElement = createSlideElement(slide, index + 1);
+                container.appendChild(slideElement);
+            });
+
+            showSlide(0);
+        }
+
+        // Create slide element based on type
+        function createSlideElement(slide, slideNumber) {
+            const slideDiv = document.createElement('div');
+            slideDiv.className = 'slide-container';
+            slideDiv.style.display = 'none';
+
+            let content = '';
+
+            switch (slide.type) {
+                case 'title':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <p class="slide-description" data-he="${slide.description.he}" data-ar="${slide.description.ar}">${slide.description.he}</p>
+                        </div>
+                    `;
+                    break;
+
+                case 'content':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="slide-description" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'code':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="code-block">
+                                <pre><code>${escapeHtml(slide.code)}</code></pre>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'any-type':
+                case 'string-type':
+                case 'number-type':
+                case 'boolean-type':
+                case 'union-type':
+                case 'alias-type':
+                case 'type-object':
+                case 'object-keys':
+                case 'optional-values':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            ${slide.content ? `<div class="slide-description" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>` : ''}
+                            ${slide.code ? `<div class="code-block">
+                                <pre><code>${escapeHtml(slide.code.ts || slide.code)}</code></pre>
+                            </div>` : ''}
+                        </div>
+                    `;
+                    break;
+
+                case 'interface':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            ${slide.content ? `<div class="slide-description" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>` : ''}
+                            ${slide.code ? `
+                                <div class="code-block">
+                                    <h3>TypeScript:</h3>
+                                    <pre><code>${escapeHtml(slide.code.ts)}</code></pre>
+                                </div>
+                                <div class="code-block">
+                                    <h3>JavaScript (After Compilation):</h3>
+                                    <pre><code>${escapeHtml(slide.code.js)}</code></pre>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                    break;
+
+                case 'object-intro':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="slide-description" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'interface-task':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="slide-description" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                default:
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="slide-description" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                        </div>
+                    `;
+            }
+
+            slideDiv.innerHTML = content;
+            return slideDiv;
+        }
+
+        // Show specific slide
+        function showSlide(index) {
+            const slides = document.querySelectorAll('.slide-container');
+
+            slides.forEach((slide, i) => {
+                slide.style.display = i === index ? 'flex' : 'none';
+            });
+
+            currentSlideIndex = index;
+            document.getElementById('currentSlide').textContent = index + 1;
+
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === slides.length - 1;
+
+            // Update language for current slide
+            updateLanguage();
+        }
+
+        // Navigation functions
+        function nextSlide() {
+            if (currentSlideIndex < courseData.course.totalSlides - 1) {
+                showSlide(currentSlideIndex + 1);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlideIndex > 0) {
+                showSlide(currentSlideIndex - 1);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                previousSlide();
+            }
+        });
+
+        // Language switching
+        function switchLanguage(lang) {
+            currentLanguage = lang;
+
+            // Update language buttons
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            updateLanguage();
+        }
+
+        function updateLanguage() {
+            const elements = document.querySelectorAll('[data-he][data-ar]');
+            elements.forEach(element => {
+                if (currentLanguage === 'he') {
+                    element.textContent = element.getAttribute('data-he');
+                } else {
+                    element.textContent = element.getAttribute('data-ar');
+                }
+            });
+        }
+
+        // Utility function to escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('DOM loaded, starting to load course data...');
+            loadCourseData();
+        });
+    </script>
+</body>
+
+</html>

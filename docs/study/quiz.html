@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>חידון – 50 שאלות</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            margin: 24px;
+        }
+
+        h1 {
+            margin-bottom: 8px;
+        }
+
+        .meta {
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .q {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .opts {
+            display: grid;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        button.primary {
+            background: #0ea5e9;
+            color: #fff;
+            border-color: #0ea5e9;
+        }
+
+        .row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .result {
+            margin-top: 16px;
+            font-weight: 600;
+        }
+
+        .correct {
+            color: #059669;
+        }
+
+        .wrong {
+            color: #dc2626;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>חידון אינטראקטיבי – 50 שאלות</h1>
+    <div class="meta">טען את השאלות מ־mcq_bank.json וענה. בסוף תקבל ציון.</div>
+
+    <div class="row" style="margin-bottom: 16px;">
+        <button id="start" class="primary">התחל חידון</button>
+        <button id="prev" disabled>הקודם</button>
+        <button id="check" disabled>בדוק שאלה</button>
+        <button id="next" disabled>הבא</button>
+        <button id="submit" disabled>בדוק תשובות</button>
+        <button id="reset" disabled>איפוס</button>
+    </div>
+
+    <div id="container"></div>
+    <div id="summary" class="result"></div>
+
+    <script>
+        const STORAGE_KEY = 'quiz_state_v1';
+        const state = { questions: [], answers: {}, currentIndex: 0, checked: {} };
+
+        async function loadQuestions() {
+            const res = await fetch('./mcq_bank.json');
+            if (!res.ok) throw new Error('טעינת השאלות נכשלה');
+            const data = await res.json();
+            return data;
+        }
+
+        function shuffle(array) {
+            const a = array.slice();
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function save() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                questions: state.questions,
+                answers: state.answers,
+                currentIndex: state.currentIndex,
+                checked: state.checked
+            }));
+        }
+
+        function loadSaved() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return false;
+                const data = JSON.parse(raw);
+                if (!Array.isArray(data.questions)) return false;
+                state.questions = data.questions;
+                state.answers = data.answers || {};
+                state.currentIndex = data.currentIndex || 0;
+                state.checked = data.checked || {};
+                return true;
+            } catch { return false; }
+        }
+
+        function render() {
+            const container = document.getElementById('container');
+            container.innerHTML = '';
+            if (state.questions.length === 0) return;
+            const q = state.questions[state.currentIndex];
+            const wrap = document.createElement('div');
+            wrap.className = 'q';
+            const pos = `${state.currentIndex + 1} / ${state.questions.length}`;
+            const title = document.createElement('div');
+            title.innerHTML = `<strong>${pos}.</strong> ${q.question}`;
+            wrap.appendChild(title);
+            const opts = document.createElement('div');
+            opts.className = 'opts';
+            q.options.forEach((opt) => {
+                const lab = document.createElement('label');
+                const checked = state.answers[q.id] === opt ? 'checked' : '';
+                const disabled = state.checked[q.id] ? 'disabled' : '';
+                lab.innerHTML = `<input type="radio" name="q_${q.id}" value="${opt}" ${checked} ${disabled}> ${opt}`;
+                const input = lab.querySelector('input');
+                input.addEventListener('change', (e) => {
+                    state.answers[q.id] = e.target.value;
+                    save();
+                });
+                if (state.checked[q.id]) {
+                    if (opt === q.answer) {
+                        lab.style.color = '#059669';
+                        lab.style.fontWeight = '600';
+                    } else if (state.answers[q.id] === opt) {
+                        lab.style.color = '#dc2626';
+                        lab.style.textDecoration = 'line-through';
+                    }
+                }
+                opts.appendChild(lab);
+            });
+            wrap.appendChild(opts);
+            container.appendChild(wrap);
+
+            document.getElementById('prev').disabled = state.currentIndex === 0;
+            document.getElementById('next').disabled = state.currentIndex >= state.questions.length - 1;
+            document.getElementById('check').disabled = !state.answers[q.id] || !!state.checked[q.id];
+        }
+
+        function grade() {
+            let correct = 0;
+            state.questions.forEach(q => {
+                if (state.answers[q.id] === q.answer) correct++;
+            });
+            const total = state.questions.length;
+            const summary = document.getElementById('summary');
+            summary.innerHTML = `ענית נכון על ${correct} מתוך ${total} (` + Math.round((correct / total) * 100) + `%).`;
+            summary.classList.add('correct');
+        }
+
+        document.getElementById('start').addEventListener('click', async () => {
+            try {
+                const hadSaved = loadSaved();
+                if (!hadSaved) {
+                    const data = await loadQuestions();
+                    const shuffled = shuffle(data).map(q => ({ ...q, options: shuffle(q.options) }));
+                    state.questions = shuffled;
+                    state.answers = {};
+                    state.checked = {};
+                    state.currentIndex = 0;
+                    save();
+                }
+                render();
+                document.getElementById('submit').disabled = false;
+                document.getElementById('reset').disabled = false;
+                document.getElementById('prev').disabled = state.currentIndex === 0;
+                document.getElementById('next').disabled = state.currentIndex >= state.questions.length - 1;
+                document.getElementById('check').disabled = false;
+            } catch (e) {
+                alert(e.message);
+            }
+        });
+
+        document.getElementById('prev').addEventListener('click', () => {
+            if (state.currentIndex > 0) {
+                state.currentIndex--;
+                save();
+                render();
+            }
+        });
+
+        document.getElementById('next').addEventListener('click', () => {
+            if (state.currentIndex < state.questions.length - 1) {
+                state.currentIndex++;
+                save();
+                render();
+            }
+        });
+
+        document.getElementById('check').addEventListener('click', () => {
+            const q = state.questions[state.currentIndex];
+            if (!state.answers[q.id]) return;
+            state.checked[q.id] = true;
+            save();
+            render();
+        });
+
+        document.getElementById('submit').addEventListener('click', () => {
+            grade();
+        });
+
+        document.getElementById('reset').addEventListener('click', () => {
+            localStorage.removeItem(STORAGE_KEY);
+            state.answers = {};
+            state.checked = {};
+            state.currentIndex = 0;
+            document.getElementById('summary').textContent = '';
+            render();
+        });
+    </script>
+</body>
+
+</html>

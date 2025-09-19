@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" id="html-root">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-he="קורס React - FullStack Learning Hub" data-ar="دورة React - مركز التعلم FullStack">קורס React -
+        FullStack Learning Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .slide-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 2rem;
+        }
+
+        .slide-content {
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .slide-title {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #61dafb, #21a1c4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .slide-subtitle {
+            font-size: 1.1rem;
+            text-align: center;
+            color: #e2e8f0;
+            margin-bottom: 2rem;
+        }
+
+        .definition-content {
+            font-size: 1rem;
+            line-height: 1.6;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            color: #e2e8f0;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .benefit-item {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .benefit-item:hover {
+            transform: translateY(-10px);
+            border-color: #61dafb;
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.3);
+        }
+
+        .benefit-item h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .implementations-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .implementation-item {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .implementation-item:hover {
+            transform: scale(1.05);
+            border-color: #ff6b9d;
+            box-shadow: 0 25px 50px rgba(255, 0, 212, 0.3);
+        }
+
+        .implementation-item .icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .implementation-item h3 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .explanation-content {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .explanation-link {
+            display: inline-block;
+            margin-top: 2rem;
+            color: #61dafb;
+            text-decoration: none;
+            font-size: 1.1rem;
+            border: 1px solid #00d4ff;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .explanation-link:hover {
+            background: #00d4ff;
+            color: #000;
+        }
+
+        .installation-command {
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 12px;
+            padding: 2rem;
+            font-family: 'Courier New', monospace;
+            font-size: 1.5rem;
+            text-align: center;
+            color: #4ade80;
+            margin: 2rem 0;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .project-steps {
+            display: grid;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .project-step {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .terminal-output {
+            background: #0a0a0a;
+            border: 2px solid #333;
+            border-radius: 12px;
+            padding: 2rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #4ade80;
+            margin: 2rem 0;
+            white-space: pre-line;
+            overflow-x: auto;
+        }
+
+        .language-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.8);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .lang-btn {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: white;
+        }
+
+        .lang-btn.active {
+            background: linear-gradient(135deg, #61dafb, #ff6b9d);
+            color: white;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            padding: 15px 30px;
+            background: rgba(0, 0, 0, 0.8);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: linear-gradient(135deg, #61dafb, #ff6b9d);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .home-btn {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .home-btn:hover {
+            background: linear-gradient(135deg, #61dafb, #ff6b9d);
+            color: white;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        /* New slide types CSS */
+        .error-indicators {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .error-indicator {
+            background: rgba(255, 107, 107, 0.1);
+            border: 2px solid rgba(255, 107, 107, 0.3);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .error-indicator .icon {
+            font-size: 2rem;
+            color: #ff6b6b;
+        }
+
+        .terminal-errors,
+        .problems-tab {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .terminal-errors h3,
+        .problems-tab h3 {
+            color: #61dafb;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .terminal-error,
+        .problem-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .terminal-error .icon,
+        .problem-item .icon {
+            font-size: 1.5rem;
+        }
+
+        .browser-result {
+            background: rgba(0, 212, 255, 0.1);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 1rem 0;
+        }
+
+        .browser-result-section {
+            margin-top: 2rem;
+        }
+
+        .browser-result-section h3 {
+            color: #61dafb;
+            margin-bottom: 1rem;
+        }
+
+        .results {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .result-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            border-left: 4px solid #00d4ff;
+        }
+
+        .styles-types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .style-type-item {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .style-type-item:hover {
+            transform: translateY(-5px);
+            border-color: #61dafb;
+        }
+
+        .style-type-item .icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .note-section {
+            background: rgba(255, 193, 7, 0.1);
+            border: 2px solid rgba(255, 193, 7, 0.3);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .note-content {
+            color: #ffc107;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-icon {
+            font-size: 3.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #61dafb;
+            filter: drop-shadow(0 0 10px rgba(97, 218, 251, 0.3));
+        }
+
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .topic-item {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 2rem 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .topic-item:hover {
+            transform: translateY(-5px);
+            border-color: #61dafb;
+            box-shadow: 0 15px 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .topic-item .icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .topic-item h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .slide-title {
+                font-size: 2rem;
+            }
+
+            .implementations-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .slide-content {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Language Switcher -->
+    <div class="language-switcher">
+        <button class="lang-btn active" onclick="switchLanguage('he')" data-he="עברית" data-ar="العربية">עברית</button>
+        <button class="lang-btn" onclick="switchLanguage('ar')" data-he="عربية" data-ar="English">عربية</button>
+    </div>
+
+    <!-- Home Button -->
+    <a href="/" class="home-btn" data-he="חזרה לדף הבית" data-ar="العودة للصفحة الرئيسية">חזרה לדף הבית</a>
+
+    <!-- Slide Counter -->
+    <div class="slide-counter" data-he="שקף 1 מתוך 110" data-ar="شريحة 1 من 110">שקף 1 מתוך 110</div>
+
+    <!-- Slides will be dynamically generated here -->
+    <div id="slides-container"></div>
+
+    <!-- Navigation -->
+    <div class="navigation">
+        <button class="nav-btn" onclick="previousSlide()" data-he="הקודם" data-ar="السابق">הקודם</button>
+        <button class="nav-btn" onclick="nextSlide()" data-he="הבא" data-ar="التالي">הבא</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        let totalSlides = 99;
+        let currentLanguage = 'he';
+        let courseData = null;
+
+        // Load course data
+        async function loadCourseData() {
+            try {
+                const response = await fetch('../data/react-course-data.json');
+                courseData = await response.json();
+                totalSlides = courseData.course.totalSlides;
+                generateSlides();
+                showSlide(1);
+            } catch (error) {
+                console.error('Error loading course data:', error);
+            }
+        }
+
+        // Generate slides dynamically
+        function generateSlides() {
+            const container = document.getElementById('slides-container');
+            container.innerHTML = '';
+
+            courseData.course.slides.forEach((slide, index) => {
+                const slideElement = createSlideElement(slide, index + 1);
+                container.appendChild(slideElement);
+            });
+        }
+
+        // Create slide element based on type
+        function createSlideElement(slide, slideNumber) {
+            const slideDiv = document.createElement('div');
+            slideDiv.className = `slide-container hidden`;
+            slideDiv.id = `slide-${slideNumber}`;
+            slideDiv.style.background = slide.backgroundColor;
+
+            let content = '';
+
+            switch (slide.type) {
+                case 'definition':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="definition-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'benefits':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="benefits-grid">
+                                ${slide.items ? slide.items.map(item => `
+                                    <div class="benefit-item">
+                                        <h3 data-he="${item.he}" data-ar="${item.ar}">${item.he}</h3>
+                                    </div>
+                                `).join('') : ''}
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'implementations':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="implementations-grid">
+                                ${slide.items ? slide.items.map(item => `
+                                    <div class="implementation-item">
+                                        <div class="icon">${item.icon}</div>
+                                        <h3 data-he="${item.he}" data-ar="${item.ar}">${item.he}</h3>
+                                    </div>
+                                `).join('') : ''}
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'explanation':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                            ${slide.link ? `<a href="${slide.link}" target="_blank" class="explanation-link" data-he="קישור נוסף" data-ar="رابط إضافي">קישור נוסף</a>` : ''}
+                        </div>
+                    `;
+                    break;
+
+                case 'installation':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="installation-command">${slide.command}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'project-creation':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="project-steps">
+                                ${slide.steps ? slide.steps.map(step => `
+                                    <div class="project-step" data-he="${step.he}" data-ar="${step.ar}">${step.he}</div>
+                                `).join('') : ''}
+                            </div>
+                            <div class="terminal-output" data-he="${slide.terminalOutput.he}" data-ar="${slide.terminalOutput.ar}">${slide.terminalOutput.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'file-structure':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="slide-subtitle" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                            <div class="benefits-grid">
+                                ${slide.items ? slide.items.map(item => `
+                                    <div class="benefit-item">
+                                        <div class="icon">${item.icon}</div>
+                                        <h3 data-he="${item.he}" data-ar="${item.ar}">${item.he}</h3>
+                                    </div>
+                                `).join('') : ''}
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'public-folder':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="slide-subtitle" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                            <div class="benefits-grid">
+                                ${slide.items ? slide.items.map(item => `
+                                    <div class="benefit-item">
+                                        <div class="icon">${item.icon}</div>
+                                        <h3 data-he="${item.he}" data-ar="${item.ar}">${item.he}</h3>
+                                    </div>
+                                `).join('') : ''}
+                            </div>
+                            ${slide.link ? `<a href="${slide.link}" target="_blank" class="explanation-link" data-he="קישור נוסף" data-ar="رابط إضافي">קישור נוסף</a>` : ''}
+                        </div>
+                    `;
+                    break;
+
+                case 'index-html':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="slide-subtitle" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                            <div class="terminal-output">${slide.code}</div>
+                            <div class="project-steps">
+                                ${slide.explanations ? slide.explanations.map(explanation => `
+                                    <div class="project-step" data-he="${explanation.he}" data-ar="${explanation.ar}">${explanation.he}</div>
+                                `).join('') : ''}
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'src-folder':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="slide-subtitle" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                            <div class="benefits-grid">
+                                ${slide.items ? slide.items.map(item => `
+                                    <div class="benefit-item">
+                                        <div class="icon">${item.icon}</div>
+                                        <h3 data-he="${item.he}" data-ar="${item.ar}">${item.he}</h3>
+                                    </div>
+                                `).join('') : ''}
+                            </div>
+                            ${slide.link ? `<a href="${slide.link}" target="_blank" class="explanation-link" data-he="קישור נוסף" data-ar="رابط إضافي">קישור נוסף</a>` : ''}
+                        </div>
+                    `;
+                    break;
+
+                case 'app-js':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="slide-subtitle" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                            <div class="terminal-output">${slide.code}</div>
+                            <div class="project-steps">
+                                ${slide.explanations ? slide.explanations.map(explanation => `
+                                    <div class="project-step" data-he="${explanation.he}" data-ar="${explanation.ar}">${explanation.he}</div>
+                                `).join('') : ''}
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'index-js':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="slide-subtitle" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                            <div class="terminal-output">${slide.code}</div>
+                            <div class="project-steps">
+                                ${slide.explanations ? slide.explanations.map(explanation => `
+                                    <div class="project-step" data-he="${explanation.he}" data-ar="${explanation.ar}">${explanation.he}</div>
+                                `).join('') : ''}
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'react-server':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                            <div class="installation-command">${slide.command}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'dev-tools-components':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="slide-subtitle" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                            <div class="benefits-grid">
+                                ${slide.items ? slide.items.map(item => `
+                                    <div class="benefit-item">
+                                        <div class="icon">${item.icon}</div>
+                                        <h3 data-he="${item.he}" data-ar="${item.ar}">${item.he}</h3>
+                                    </div>
+                                `).join('') : ''}
+                            </div>
+                            ${slide.note ? `<div class="explanation-content" data-he="${slide.note.he}" data-ar="${slide.note.ar}">${slide.note.he}</div>` : ''}
+                        </div>
+                    `;
+                    break;
+
+                case 'dev-tools-profiler':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="slide-subtitle" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                            <div class="project-steps">
+                                ${slide.steps ? slide.steps.map(step => `
+                                    <div class="project-step" data-he="${step.he}" data-ar="${step.ar}">${step.he}</div>
+                                `).join('') : ''}
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'cleaning-app':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="slide-subtitle" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                            <div class="project-steps">
+                                ${slide.steps ? slide.steps.map(step => `
+                                    <div class="project-step" data-he="${step.he}" data-ar="${step.ar}">${step.he}</div>
+                                `).join('') : ''}
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'css-setup':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="slide-subtitle" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                            <div class="project-steps">
+                                ${slide.steps ? slide.steps.map(step => `
+                                    <div class="project-step" data-he="${step.he}" data-ar="${step.ar}">${step.he}</div>
+                                `).join('') : ''}
+                            </div>
+                            ${slide.cssExample ? `<div class="terminal-output">${slide.cssExample}</div>` : ''}
+                        </div>
+                    `;
+                    break;
+
+                case 'infrastructure-prep':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="slide-subtitle" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                            <div class="project-steps">
+                                ${slide.steps ? slide.steps.map(step => `
+                                    <div class="project-step" data-he="${step.he}" data-ar="${step.ar}">${step.he}</div>
+                                `).join('') : ''}
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'template':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'creating-components':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="slide-subtitle" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                            ${slide.code ? `
+                                <div class="code-examples">
+                                    ${slide.code.pageHeader ? `
+                                        <div class="code-block">
+                                            <h3 data-he="PageHeader.jsx" data-ar="PageHeader.jsx">PageHeader.jsx</h3>
+                                            <pre><code>${slide.code.pageHeader}</code></pre>
+                                        </div>
+                                    ` : ''}
+                                    ${slide.code.app ? `
+                                        <div class="code-block">
+                                            <h3 data-he="App.js" data-ar="App.js">App.js</h3>
+                                            <pre><code>${slide.code.app}</code></pre>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            ` : ''}
+                            ${slide.explanations ? `
+                                <div class="explanations">
+                                    ${slide.explanations ? slide.explanations.map(exp => `
+                                        <div class="explanation-item" data-he="${exp.he}" data-ar="${exp.ar}">${exp.he}</div>
+                                    `).join('') : ''}
+                                </div>
+                            ` : ''}
+                            ${slide.notes ? `
+                                <div class="notes">
+                                    ${slide.notes ? slide.notes.map(note => `
+                                        <div class="note-item" data-he="${note.he}" data-ar="${note.ar}">${note.he}</div>
+                                    `).join('') : ''}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                    break;
+
+                case 'browser-result':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="slide-subtitle" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                            ${slide.result ? `<div class="browser-result">${slide.result}</div>` : ''}
+                            ${slide.explanation ? `
+                                <div class="explanation-content" data-he="${slide.explanation.he}" data-ar="${slide.explanation.ar}">${slide.explanation.he}</div>
+                            ` : ''}
+                        </div>
+                    `;
+                    break;
+
+                case 'compilation-error':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'error-detection':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="slide-subtitle" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                            <div class="error-indicators">
+                                ${slide.errorIndicators ? slide.errorIndicators.map(indicator => `
+                                    <div class="error-indicator">
+                                        <div class="icon">${indicator.icon}</div>
+                                        <div class="text" data-he="${indicator.he}" data-ar="${indicator.ar}">${indicator.he}</div>
+                                    </div>
+                                `).join('') : ''}
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'vscode-terminal':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="slide-subtitle" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                            ${slide.terminalErrors ? `
+                                <div class="terminal-errors">
+                                    <h3 data-he="בלשונית TERMINAL" data-ar="في تبويب TERMINAL">בלשונית TERMINAL</h3>
+                                    ${slide.terminalErrors ? slide.terminalErrors.map(error => `
+                                        <div class="terminal-error">
+                                            <div class="icon">${error.icon}</div>
+                                            <div class="text" data-he="${error.he}" data-ar="${error.ar}">${error.he}</div>
+                                        </div>
+                                    `).join('') : ''}
+                                </div>
+                            ` : ''}
+                            ${slide.problemsTab ? `
+                                <div class="problems-tab">
+                                    <h3 data-he="בלשונית PROBLEMS" data-ar="في تبويب PROBLEMS">בלשונית PROBLEMS</h3>
+                                    ${slide.problemsTab ? slide.problemsTab.map(problem => `
+                                        <div class="problem-item">
+                                            <div class="icon">${problem.icon}</div>
+                                            <div class="text" data-he="${problem.he}" data-ar="${problem.ar}">${problem.he}</div>
+                                        </div>
+                                    `).join('') : ''}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                    break;
+
+                case 'adding-logic':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="slide-subtitle" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                            ${slide.explanation ? `
+                                <div class="explanation-content" data-he="${slide.explanation.he}" data-ar="${slide.explanation.ar}">${slide.explanation.he}</div>
+                            ` : ''}
+                            ${slide.code ? `
+                                <div class="code-examples">
+                                    <div class="code-block">
+                                        <h3 data-he="PageHeader.jsx" data-ar="PageHeader.jsx">PageHeader.jsx</h3>
+                                        <pre><code>${slide.code.component}</code></pre>
+                                    </div>
+                                </div>
+                            ` : ''}
+                            ${slide.steps ? `
+                                <div class="project-steps">
+                                    ${slide.steps ? slide.steps.map(step => `
+                                        <div class="project-step" data-he="${step.he}" data-ar="${step.ar}">${step.he}</div>
+                                    `).join('') : ''}
+                                </div>
+                            ` : ''}
+                            ${slide.browserResult ? `
+                                <div class="browser-result-section">
+                                    <h3 data-he="${slide.browserResult.he}" data-ar="${slide.browserResult.ar}">${slide.browserResult.he}</h3>
+                                    ${slide.results ? `
+                                        <div class="results">
+                                            ${slide.results ? slide.results.map(result => `
+                                                <div class="result-item" data-he="${result.he}" data-ar="${result.ar}">${result.he}</div>
+                                            `).join('') : ''}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                    break;
+
+                case 'string-interpolation':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="slide-subtitle" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                            ${slide.explanation ? `
+                                <div class="explanation-content" data-he="${slide.explanation.he}" data-ar="${slide.explanation.ar}">${slide.explanation.he}</div>
+                            ` : ''}
+                            ${slide.code ? `
+                                <div class="code-examples">
+                                    <div class="code-block">
+                                        <h3 data-he="PageHeader.jsx" data-ar="PageHeader.jsx">PageHeader.jsx</h3>
+                                        <pre><code>${slide.code.component}</code></pre>
+                                    </div>
+                                </div>
+                            ` : ''}
+                            ${slide.steps ? `
+                                <div class="project-steps">
+                                    ${slide.steps ? slide.steps.map(step => `
+                                        <div class="project-step" data-he="${step.he}" data-ar="${step.ar}">${step.he}</div>
+                                    `).join('') : ''}
+                                </div>
+                            ` : ''}
+                            ${slide.browserResult ? `
+                                <div class="browser-result-section">
+                                    <h3 data-he="${slide.browserResult.he}" data-ar="${slide.browserResult.ar}">${slide.browserResult.he}</h3>
+                                    ${slide.results ? `
+                                        <div class="results">
+                                            ${slide.results ? slide.results.map(result => `
+                                                <div class="result-item" data-he="${result.he}" data-ar="${result.ar}">${result.he}</div>
+                                            `).join('') : ''}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                    break;
+
+                case 'styles':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'styles-types':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="slide-subtitle" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                            <div class="styles-types-grid">
+                                ${slide.items ? slide.items.map(item => `
+                                    <div class="style-type-item">
+                                        <div class="icon">${item.icon}</div>
+                                        <h3 data-he="${item.he}" data-ar="${item.ar}">${item.he}</h3>
+                                    </div>
+                                `).join('') : ''}
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'inline-style':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'external-libraries':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'material-ui':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                            ${slide.link ? `<a href="${slide.link}" target="_blank" class="explanation-link" data-he="קישור לאתר" data-ar="رابط الموقع">${slide.link}</a>` : ''}
+                            ${slide.note ? `
+                                <div class="note-section">
+                                    <div class="note-content" data-he="${slide.note.he}" data-ar="${slide.note.ar}">${slide.note.he}</div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                    break;
+
+                case 'useState-complex-objects':
+                case 'useState-array':
+                case 'render-slide':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                            ${slide.code ? `<pre class="bg-gray-800 text-white p-4 rounded-lg overflow-x-auto mb-4"><code class="language-javascript">${escapeHtml(slide.code.component)}</code></pre>` : ''}
+                            ${slide.explanations ? `<ul class="list-disc list-inside">${slide.explanations.map(exp => `<li data-he="${exp.he}" data-ar="${exp.ar}">${exp.he}</li>`).join('')}</ul>` : ''}
+                        </div>
+                    `;
+                    break;
+
+                case 'browser-result-tasks':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                            ${slide.explanations ? `<ul class="list-disc list-inside">${slide.explanations.map(exp => `<li data-he="${exp.he}" data-ar="${exp.ar}">${exp.he}</li>`).join('')}</ul>` : ''}
+                        </div>
+                    `;
+                    break;
+
+                case 'hooks-sandbox':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                            ${slide.steps ? `<ol class="list-decimal list-inside">${slide.steps.map(step => `<li data-he="${step.he}" data-ar="${step.ar}">${step.he}</li>`).join('')}</ol>` : ''}
+                        </div>
+                    `;
+                    break;
+
+                case 'layout-slide':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'signup':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'infrastructure-preparation-signup':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'initial-signup-form-js':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="code-container">
+                                <pre><code class="language-${slide.code.language}">${slide.code.content}</code></pre>
+                            </div>
+                            <div class="explanation-content" data-he="${slide.explanation.he}" data-ar="${slide.explanation.ar}">${slide.explanation.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'normalize-user':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'normalize-user-js':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="code-container">
+                                <pre><code class="language-${slide.code.language}">${slide.code.content}</code></pre>
+                            </div>
+                            <div class="explanation-content" data-he="${slide.explanation.he}" data-ar="${slide.explanation.ar}">${slide.explanation.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'joi-schema':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'signup-schema-js':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="code-container">
+                                <pre><code class="language-${slide.code.language}">${slide.code.content}</code></pre>
+                            </div>
+                            <div class="explanation-content" data-he="${slide.explanation.he}" data-ar="${slide.explanation.ar}">${slide.explanation.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'mycardspage-jsx':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'mycardspage-return':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="code-container">
+                                <pre><code class="language-${slide.code.language}">${slide.code.content}</code></pre>
+                            </div>
+                            <div class="explanation-content" data-he="${slide.explanation.he}" data-ar="${slide.explanation.ar}">${slide.explanation.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'create-card-task':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="topics-grid">
+                                ${slide.items ? slide.items.map(item => `
+                                    <div class="topic-item">
+                                        <div class="icon">📋</div>
+                                        <h3 data-he="${item.he}" data-ar="${item.ar}">${item.he}</h3>
+                                    </div>
+                                `).join('') : ''}
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'delete-card':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'delete-card-emphasis':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'infrastructure-preparation-delete':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'carddeletedialog-jsx':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="code-container">
+                                <pre><code class="language-${slide.code.language}">${slide.code.content}</code></pre>
+                            </div>
+                            <div class="explanation-content" data-he="${slide.explanation.he}" data-ar="${slide.explanation.ar}">${slide.explanation.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'cardactionbar-jsx':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="code-container">
+                                <pre><code class="language-${slide.code.language}">${slide.code.content}</code></pre>
+                            </div>
+                            <div class="explanation-content" data-he="${slide.explanation.he}" data-ar="${slide.explanation.ar}">${slide.explanation.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'card-jsx':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="code-container">
+                                <pre><code class="language-${slide.code.language}">${slide.code.content}</code></pre>
+                            </div>
+                            <div class="explanation-content" data-he="${slide.explanation.he}" data-ar="${slide.explanation.ar}">${slide.explanation.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'browser-result-delete-dialog':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'business-cards-app-delete-task':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="topics-grid">
+                                ${slide.items ? slide.items.map(item => `
+                                    <div class="topic-item">
+                                        <div class="icon">📋</div>
+                                        <h3 data-he="${item.he}" data-ar="${item.ar}">${item.he}</h3>
+                                    </div>
+                                `).join('') : ''}
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'cardspage-jsx':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="code-container">
+                                <pre><code class="language-${slide.code.language}">${slide.code.content}</code></pre>
+                            </div>
+                            <div class="explanation-content" data-he="${slide.explanation.he}" data-ar="${slide.explanation.ar}">${slide.explanation.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'browser-result-delete-dialog-success':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'browser-result-delete-success':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'delete-card-task':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'edit-card':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'infrastructure-preparation-edit':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'maptomodel':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'mapcardtomodel-js':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="code-container">
+                                <pre><code class="language-${slide.code.language}">${slide.code.content}</code></pre>
+                            </div>
+                            <div class="explanation-content" data-he="${slide.explanation.he}" data-ar="${slide.explanation.ar}">${slide.explanation.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'normalizecard-js':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="code-container">
+                                <pre><code class="language-${slide.code.language}">${slide.code.content}</code></pre>
+                            </div>
+                            <div class="explanation-content" data-he="${slide.explanation.he}" data-ar="${slide.explanation.ar}">${slide.explanation.he}</div>
+                        </div>
+                    `;
+                    break;
+
+                case 'business-cards-app-edit-task':
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="topics-grid">
+                                ${slide.items ? slide.items.map(item => `
+                                    <div class="topic-item">
+                                        <div class="icon">📋</div>
+                                        <h3 data-he="${item.he}" data-ar="${item.ar}">${item.he}</h3>
+                                    </div>
+                                `).join('') : ''}
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                default:
+                    content = `
+                        <div class="slide-content fade-in">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+                            <div class="topics-grid">
+                                ${slide.items ? slide.items.map(item => `
+                                    <div class="topic-item">
+                                        <div class="icon">${item.icon || '📦'}</div>
+                                        <h3 data-he="${item.he}" data-ar="${item.ar}">${item.he}</h3>
+                                    </div>
+                                `).join('') : ''}
+                            </div>
+                        </div>
+                    `;
+            }
+
+            slideDiv.innerHTML = content;
+            return slideDiv;
+        }
+
+        function showSlide(slideNumber) {
+            // Hide all slides
+            for (let i = 1; i <= totalSlides; i++) {
+                const slide = document.getElementById(`slide-${i}`);
+                if (slide) {
+                    slide.classList.add('hidden');
+                }
+            }
+
+            // Show current slide
+            const currentSlideElement = document.getElementById(`slide-${slideNumber}`);
+            if (currentSlideElement) {
+                currentSlideElement.classList.remove('hidden');
+            }
+
+            // Update counter
+            const counter = document.querySelector('.slide-counter');
+            if (currentLanguage === 'he') {
+                counter.textContent = `שקף ${slideNumber} מתוך ${totalSlides}`;
+            } else {
+                counter.textContent = `شريحة ${slideNumber} من ${totalSlides}`;
+            }
+
+            // Update navigation buttons
+            const prevBtn = document.querySelector('.nav-btn:first-child');
+            const nextBtn = document.querySelector('.nav-btn:last-child');
+
+            prevBtn.disabled = slideNumber === 1;
+            nextBtn.disabled = slideNumber === totalSlides;
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        function switchLanguage(lang) {
+            currentLanguage = lang;
+
+            // Update language buttons
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update HTML attributes
+            document.documentElement.lang = lang;
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'rtl';
+
+            // Update all text content
+            document.querySelectorAll('[data-he][data-ar]').forEach(element => {
+                element.textContent = element.getAttribute(`data-${lang}`);
+            });
+
+            // Update title
+            document.title = document.querySelector('title').getAttribute(`data-${lang}`);
+
+            // Update slide counter
+            const counter = document.querySelector('.slide-counter');
+            counter.textContent = lang === 'he' ?
+                `שקף ${currentSlide} מתוך ${totalSlides}` :
+                `شريحة ${currentSlide} من ${totalSlides}`;
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                previousSlide();
+            }
+        });
+
+        // Initialize
+        loadCourseData();
+    </script>
+</body>
+
+</html>

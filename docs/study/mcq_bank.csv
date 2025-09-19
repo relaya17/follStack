@@ -1,0 +1,52 @@
+id,question,optionA,optionB,optionC,optionD,answer,topic
+1,מה היתרון המרכזי של שימוש ב־React ב־SPA לעומת HTML סטטי?,ביצועים גבוהים יותר תמיד,ניהול סטייט ו־UI דינאמי,פחות קוד בשרת,אין יתרון ממשי,B,React
+2,מה תפקידה של ספריית Axios בפרויקט?,ניהול סטייט גלובלי,ביצוע קריאות HTTP לשרת,ניהול עיצוב רספונסיבי,הצפנת סיסמאות,B,HTTP
+3,מה המשמעות של Controlled Component בטפסים ב־React?,הקלט מנוהל ע"י הדפדפן,הקלט מנוהל ע"י ה־state של React,הקלט נשמר במסד הנתונים,אין קשר בין הטופס ל־state,B,React
+4,למה חשוב להשתמש ב־alt לכל תמונה באתר?,כדי לשפר SEO ונגישות,כדי להקטין את גודל התמונה,כדי להוסיף אנימציה,זה לא חובה,A,Web
+5,יתרון מרכזי בחלוקת CSS למודולים?,טעינה מהירה יותר,קוד מסודר וקריא יותר,מאפשר שימוש ב־Hooks,חוסך Bootstrap,B,CSS
+6,למה להגדיר title ייחודי בכל עמוד React?,כדי לאפשר ניווט,לשפר נגישות ו־SEO,למנוע באגים ב־useEffect,לטעון ספריות צד ג',B,Web
+7,מה ההבדל בין props ל־state?,props משתנה ישירות,props מהורה ו־state פנימי,אין הבדל,props רק ב־Class,B,React
+8,מה קורה בלי key ייחודי ברשימות?,הרשימה לא נטענת,רינדור לא יעיל ועקיבה בעייתית,שגיאת שרת,זה לא משנה,B,React
+9,איך מבטיחים רספונסיביות?,CSS Grid/Flexbox,תמונות איכותיות,טעינת Hooks,console.log,A,CSS
+10,מהו useEffect ב־React?,Hook ל־Side Effects,Hook לסטייט גלובלי,ספריית CSS,פונקציית הצפנה,A,React
+11,למה נשתמש ב־JWT?,אחסון סיסמאות,אימות משתמשים,עיצוב רספונסיבי,הצפנת מסד,B,Auth
+12,איפה לשמור JWT בצד לקוח?,בקובץ config,במסד הנתונים,localStorage או sessionStorage,בתוך ה־DOM,C,Auth
+13,יתרון middleware ב־Express?,מקצר routes,שכבות לוגיקה בין בקשה לתגובה,מחליף מסד נתונים,משפר רינדור React,B,Express
+14,תפקיד bcrypt?,קריאות HTTP,הצפנת סיסמאות לפני שמירה,ניהול סטייט,ולידציית טפסים,B,Security
+15,מהי Authorization?,אימות זהות,בדיקת הרשאות פעולה,הצפנת נתונים,שליחת טוקן,B,Auth
+16,ללא ולידציה בצד שרת?,לא יקרה כלום,חשיפה ל־SQL/NoSQL Injection,UX טוב יותר,הדפדפן יקרוס,B,Security
+17,למה try & catch בקריאות לשרת?,למנוע קריסת הקוד בשגיאה,לשפר ביצועים,להצפין נתונים,לשמור Token,A,Node
+18,תפקיד dotenv?,ולידציות טפסים,משתני סביבה רגישים,סטייט ב־React,יצירת Logger,B,Node
+19,למה async/await לעיתים עדיף?,מונע שגיאות שרת,קוד קריא יותר,מצפין סיסמאות,תמיד מהיר יותר,B,JS
+20,מה תפקיד CORS?,למנוע הרשאות Admin,לאפשר/לחסום קריאות בין דומיינים,להצפין JWT,להגדיר ראוטרים,B,Security
+21,MongoDB מול Mongoose?,DB מול ODM/ORM לניהול סכמות,Mongoose DB מהיר,שניהם זהים,Mongoose שרת Node,A,DB
+22,למה Schema ב־Mongoose?,להציג תמונות,להגדיר מבנה נתונים ברור,לשפר עיצוב,להגדיר Token,B,DB
+23,יתרון ObjectId?,הצפנת סיסמאות,מזהה ייחודי למסמך,צמצום CSS,מניעת JWT תקף,B,DB
+24,קשרים בין קולקציות?,באמצעות populate,הצפנת מסמכים,console.log,לא אפשרי,A,DB
+25,find מול findOne?,find מחזיר מערך, findOne מסמך יחיד,find יחיד, findOne מערך,אין הבדל,find מוחק,A,DB
+26,למה לא לשמור סיסמאות כטקסט?,לחסוך מקום,זה מסוכן וחשוף לפריצה,לשפר ביצועים,למנוע JWT,B,Security
+27,למה להגביל ניסיונות התחברות?,למנוע Brute Force,לחסוך מקום,לשפר UX,לנהל Tokens,A,Security
+28,מהו XSS?,הזרקת JS זדוני לאתר,התקפה על DB,הצפנת מידע,bad Hooks,A,Security
+29,מהו Rate Limiting?,הגבלת בקשות בזמן,הצפנת JWT,שיפור ביצועי React,שמירה על רספונסיביות,A,Security
+30,הגנה מ־DDoS?,Rate limit, Cache, Firewalls,console.log,CSS Grid,לא להשתמש ב־MongoDB,A,Security
+31,CRUD משמעות?,Create, Read, Update, Delete,Create, Run, Update, Debug,Cache, Read, Upload, Delete,אין משמעות,A,API
+32,Authn מול Authz?,Authn אימות זהות, Authz בדיקת הרשאות,שניהם אותו דבר,Authn ל־MongoDB בלבד,Authz התחברות,A,Auth
+33,למה role ב־JWT?,להגדיר הרשאות משתמש,להצפין נתונים,לשמור סיסמאות,לנהל state,A,Auth
+34,מה עושה PUT?,יצירה בלבד,עדכון/יצירה אם לא קיים,קריאה בלבד,מחיקה,B,API
+35,PUT מול PATCH?,PUT מחליף מסמך, PATCH מעדכן חלק,PUT תמיד מהיר,PATCH מוחק,אין הבדל,A,API
+36,למה קוד נקי?,שהמשתמש יבין,תחזוקה והרחבה על ידי מפתחים,קטנת bundle,להוסיף JWT,B,Craft
+37,למה Controllers/Routes/Models?,הפרדת אחריות וסדר,להקטין קוד,לאפשר JWT,להחליף MongoDB,A,Architecture
+38,למה Morgan/Logger?,להציג קריאות HTTP ל־Debug,להצפין נתונים,להחליף bcrypt,לנהל state,A,Ops
+39,מהו seed?,נתוני דמו לבדיקות,הצפנת JWT,ניהול הרשאות,עיצוב טפסים,A,DB
+40,למה GitHub?,גרסאות קוד ועבודה בצוות,הצפנת סיסמאות,ניהול state,עדכון Token,A,Ops
+41,למה Virtual DOM מהיר?,דיפרנציאציה ועדכון מינימלי ל־DOM,כי הוא בענן,כי הוא ב־C,כי הוא ב־WebAssembly,A,React
+42,יתרון useReducer לסטייט מורכב?,ניהול עם actions ו־reducer,פחות זיכרון תמיד,מהיר מכל דבר,לא דורש טיפוסים,A,React
+43,יתרון React Router?,ניווט SPA עם URLs,החלפת Redux,אבטחת JWT,הצפנת DB,A,React
+44,למה לאפס טוקן אחרי X שעות?,הקטנת סיכון שימוש לרעה,שיפור ביצועי DB,כדי לאפשר CORS,כדי להחליף Logger,A,Security
+45,Session מול JWT?,Session בשרת, JWT סטייטלס בלקוח,שניהם זהים,JWT תמיד מוצפן,Session תמיד לא מאובטח,A,Auth
+46,איך Redux משתלב?,סטייט גלובלי מחוץ לרכיבים,מחליף לגמרי את Express,DB חלופי,ספריית CSS,A,State
+47,למה MongoDB לפרויקט כזה?,גמישות סכמות ו־JSON דמוי,תמיד מהיר מ־SQL,כי אין טרנזקציות,כי React דורש,A,DB
+48,מהי CSRF והגנה?,בקשות מזויפות; הגנה ב־SameSite/CSRF Token,הזרקת JS; CSP בלבד,הצפנת JWT,שימוש ב־Redux,A,Security
+49,למה לא console.log בפרודקשן?,לוגים מזהמים/דליפות; עדיף structured logging,כי אסור תקנית,כי מאט SSR תמיד,כי שובר React,A,Ops
+50,איך לממש Search יעיל גדול?,אינדקסים, סינון, pagination, Atlas Search,Regex בלי אינדקס,להביא הכל לזיכרון,ללא Pagination,A,DB
+

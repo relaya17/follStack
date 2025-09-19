@@ -1,0 +1,759 @@
+{
+    "course": {
+        "title": {
+            "he": "קורס REST API - Representational State Transfer",
+            "ar": "دورة REST API - نقل الحالة التمثيلي"
+        },
+        "description": {
+            "he": "מדריך מקיף ל-REST API: עקרונות, HTTP methods, status codes, authentication ועוד",
+            "ar": "دليل شامل لـ REST API: المبادئ، طرق HTTP، رموز الحالة، المصادقة والمزيد"
+        },
+        "totalSlides": 30,
+        "slides": [
+            {
+                "id": 1,
+                "type": "title",
+                "icon": "🌐",
+                "title": {
+                    "he": "REST API - Representational State Transfer",
+                    "ar": "REST API - نقل الحالة التمثيلي"
+                },
+                "content": {
+                    "he": "מדריך מקיף ליצירת ושימוש ב-API מודרני",
+                    "ar": "دليل شامل لإنشاء واستخدام API حديث"
+                },
+                "backgroundColor": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+            },
+            {
+                "id": 2,
+                "type": "definition",
+                "icon": "📖",
+                "title": {
+                    "he": "מה זה REST API?",
+                    "ar": "ما هو REST API؟"
+                },
+                "items": [
+                    {
+                        "he": "REST = Representational State Transfer",
+                        "ar": "REST = نقل الحالة التمثيلي"
+                    },
+                    {
+                        "he": "ארכיטקטורה לשרותי אינטרנט",
+                        "ar": "معمارية لخدمات الويب"
+                    },
+                    {
+                        "he": "מבוסס על פרוטוקול HTTP",
+                        "ar": "مبني على بروتوكول HTTP"
+                    },
+                    {
+                        "he": "מאפשר תקשורת בין מערכות שונות",
+                        "ar": "يسمح بالتواصل بين أنظمة مختلفة"
+                    },
+                    {
+                        "he": "סטנדרט פתוח ועצמאי מפלטפורמה",
+                        "ar": "معيار مفتوح ومستقل عن المنصة"
+                    }
+                ],
+                "backgroundColor": "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
+            },
+            {
+                "id": 3,
+                "type": "principles",
+                "icon": "🏗️",
+                "title": {
+                    "he": "עקרונות REST",
+                    "ar": "مبادئ REST"
+                },
+                "items": [
+                    {
+                        "he": "Stateless - כל בקשה עצמאית",
+                        "ar": "بدون حالة - كل طلب مستقل"
+                    },
+                    {
+                        "he": "Client-Server - הפרדה בין לקוח לשרת",
+                        "ar": "عميل-خادم - فصل بين العميل والخادم"
+                    },
+                    {
+                        "he": "Cacheable - תגובות ניתנות לשמירה",
+                        "ar": "قابل للتخزين المؤقت - الاستجابات قابلة للحفظ"
+                    },
+                    {
+                        "he": "Uniform Interface - ממשק אחיד",
+                        "ar": "واجهة موحدة"
+                    },
+                    {
+                        "he": "Layered System - מערכת שכבות",
+                        "ar": "نظام طبقي"
+                    },
+                    {
+                        "he": "Code on Demand - קוד לפי דרישה (אופציונלי)",
+                        "ar": "كود عند الطلب (اختياري)"
+                    }
+                ],
+                "backgroundColor": "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
+            },
+            {
+                "id": 4,
+                "type": "http-methods",
+                "icon": "🔧",
+                "title": {
+                    "he": "HTTP Methods",
+                    "ar": "طرق HTTP"
+                },
+                "code": {
+                    "http": "GET    /api/users          - קבלת רשימת משתמשים\nPOST   /api/users          - יצירת משתמש חדש\nGET    /api/users/123      - קבלת משתמש ספציפי\nPUT    /api/users/123      - עדכון מלא של משתמש\nPATCH  /api/users/123      - עדכון חלקי של משתמש\nDELETE /api/users/123      - מחיקת משתמש"
+                },
+                "content": {
+                    "he": "הפעולות הבסיסיות שניתן לבצע על משאבים",
+                    "ar": "العمليات الأساسية التي يمكن تنفيذها على الموارد"
+                },
+                "backgroundColor": "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"
+            },
+            {
+                "id": 5,
+                "type": "get-method",
+                "icon": "📥",
+                "title": {
+                    "he": "GET - קבלת נתונים",
+                    "ar": "GET - استرجاع البيانات"
+                },
+                "code": {
+                    "http": "GET /api/users HTTP/1.1\nHost: api.example.com\nAccept: application/json\n\n// תגובה\nHTTP/1.1 200 OK\nContent-Type: application/json\n\n{\n  \"users\": [\n    {\n      \"id\": 1,\n      \"name\": \"John Doe\",\n      \"email\": \"john@example.com\"\n    },\n    {\n      \"id\": 2,\n      \"name\": \"Jane Smith\",\n      \"email\": \"jane@example.com\"\n    }\n  ],\n  \"total\": 2\n}"
+                },
+                "content": {
+                    "he": "שיטה בטוחה לקבלת נתונים מהשרת",
+                    "ar": "طريقة آمنة لاسترجاع البيانات من الخادم"
+                },
+                "backgroundColor": "linear-gradient(135deg, #fa709a 0%, #fee140 100%)"
+            },
+            {
+                "id": 6,
+                "type": "post-method",
+                "icon": "📤",
+                "title": {
+                    "he": "POST - יצירת משאב חדש",
+                    "ar": "POST - إنشاء مورد جديد"
+                },
+                "code": {
+                    "http": "POST /api/users HTTP/1.1\nHost: api.example.com\nContent-Type: application/json\n\n{\n  \"name\": \"New User\",\n  \"email\": \"newuser@example.com\",\n  \"age\": 25\n}\n\n// תגובה\nHTTP/1.1 201 Created\nLocation: /api/users/3\nContent-Type: application/json\n\n{\n  \"id\": 3,\n  \"name\": \"New User\",\n  \"email\": \"newuser@example.com\",\n  \"age\": 25,\n  \"created_at\": \"2024-01-15T10:30:00Z\"\n}"
+                },
+                "content": {
+                    "he": "שיטה ליצירת משאבים חדשים בשרת",
+                    "ar": "طريقة لإنشاء موارد جديدة في الخادم"
+                },
+                "backgroundColor": "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)"
+            },
+            {
+                "id": 7,
+                "type": "put-method",
+                "icon": "🔄",
+                "title": {
+                    "he": "PUT - עדכון מלא",
+                    "ar": "PUT - تحديث كامل"
+                },
+                "code": {
+                    "http": "PUT /api/users/123 HTTP/1.1\nHost: api.example.com\nContent-Type: application/json\n\n{\n  \"name\": \"Updated User\",\n  \"email\": \"updated@example.com\",\n  \"age\": 30\n}\n\n// תגובה\nHTTP/1.1 200 OK\nContent-Type: application/json\n\n{\n  \"id\": 123,\n  \"name\": \"Updated User\",\n  \"email\": \"updated@example.com\",\n  \"age\": 30,\n  \"updated_at\": \"2024-01-15T11:00:00Z\"\n}"
+                },
+                "content": {
+                    "he": "שיטה לעדכון מלא של משאב קיים",
+                    "ar": "طريقة لتحديث كامل لمورد موجود"
+                },
+                "backgroundColor": "linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)"
+            },
+            {
+                "id": 8,
+                "type": "patch-method",
+                "icon": "✏️",
+                "title": {
+                    "he": "PATCH - עדכון חלקי",
+                    "ar": "PATCH - تحديث جزئي"
+                },
+                "code": {
+                    "http": "PATCH /api/users/123 HTTP/1.1\nHost: api.example.com\nContent-Type: application/json\n\n{\n  \"email\": \"newemail@example.com\"\n}\n\n// תגובה\nHTTP/1.1 200 OK\nContent-Type: application/json\n\n{\n  \"id\": 123,\n  \"name\": \"Updated User\",\n  \"email\": \"newemail@example.com\",\n  \"age\": 30,\n  \"updated_at\": \"2024-01-15T11:15:00Z\"\n}"
+                },
+                "content": {
+                    "he": "שיטה לעדכון חלקי של משאב קיים",
+                    "ar": "طريقة لتحديث جزئي لمورد موجود"
+                },
+                "backgroundColor": "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)"
+            },
+            {
+                "id": 9,
+                "type": "delete-method",
+                "icon": "🗑️",
+                "title": {
+                    "he": "DELETE - מחיקת משאב",
+                    "ar": "DELETE - حذف مورد"
+                },
+                "code": {
+                    "http": "DELETE /api/users/123 HTTP/1.1\nHost: api.example.com\n\n// תגובה\nHTTP/1.1 204 No Content\n\n// או\nHTTP/1.1 200 OK\nContent-Type: application/json\n\n{\n  \"message\": \"User deleted successfully\",\n  \"deleted_id\": 123\n}"
+                },
+                "content": {
+                    "he": "שיטה למחיקת משאב מהשרת",
+                    "ar": "طريقة لحذف مورد من الخادم"
+                },
+                "backgroundColor": "linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)"
+            },
+            {
+                "id": 10,
+                "type": "status-codes",
+                "icon": "📊",
+                "title": {
+                    "he": "HTTP Status Codes",
+                    "ar": "رموز حالة HTTP"
+                },
+                "items": [
+                    {
+                        "he": "200 OK - הצלחה",
+                        "ar": "200 OK - نجح"
+                    },
+                    {
+                        "he": "201 Created - נוצר בהצלחה",
+                        "ar": "201 Created - تم الإنشاء بنجاح"
+                    },
+                    {
+                        "he": "204 No Content - הצלחה ללא תוכן",
+                        "ar": "204 No Content - نجح بدون محتوى"
+                    },
+                    {
+                        "he": "400 Bad Request - בקשה שגויה",
+                        "ar": "400 Bad Request - طلب خاطئ"
+                    },
+                    {
+                        "he": "401 Unauthorized - לא מורשה",
+                        "ar": "401 Unauthorized - غير مخول"
+                    },
+                    {
+                        "he": "403 Forbidden - אסור",
+                        "ar": "403 Forbidden - محظور"
+                    },
+                    {
+                        "he": "404 Not Found - לא נמצא",
+                        "ar": "404 Not Found - غير موجود"
+                    },
+                    {
+                        "he": "500 Internal Server Error - שגיאת שרת",
+                        "ar": "500 Internal Server Error - خطأ في الخادم"
+                    }
+                ],
+                "backgroundColor": "linear-gradient(135deg, #d299c2 0%, #fef9d7 100%)"
+            },
+            {
+                "id": 11,
+                "type": "url-design",
+                "icon": "🔗",
+                "title": {
+                    "he": "עיצוב URL",
+                    "ar": "تصميم URL"
+                },
+                "code": {
+                    "urls": "// טוב - ברור ועקבי\nGET    /api/v1/users\nGET    /api/v1/users/123\nGET    /api/v1/users/123/posts\nGET    /api/v1/users/123/posts/456\n\n// רע - לא עקבי\nGET    /api/getUsers\nGET    /api/user/123\nGET    /api/users/123/getPosts\n\n// טוב - פילטרים\nGET    /api/v1/users?page=1&limit=10\nGET    /api/v1/users?search=john&status=active\n\n// טוב - מיון\nGET    /api/v1/users?sort=name&order=asc"
+                },
+                "content": {
+                    "he": "עקרונות לעיצוב URL ברור ועקבי",
+                    "ar": "مبادئ لتصميم URL واضح ومتسق"
+                },
+                "backgroundColor": "linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)"
+            },
+            {
+                "id": 12,
+                "type": "authentication",
+                "icon": "🔐",
+                "title": {
+                    "he": "אימות (Authentication)",
+                    "ar": "المصادقة"
+                },
+                "code": {
+                    "auth": "// Basic Authentication\nAuthorization: Basic dXNlcjpwYXNzd29yZA==\n\n// Bearer Token (JWT)\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\n\n// API Key\nX-API-Key: your-api-key-here\n\n// Custom Header\nX-Auth-Token: your-custom-token"
+                },
+                "content": {
+                    "he": "שיטות שונות לאימות בקשות API",
+                    "ar": "طرق مختلفة لمصادقة طلبات API"
+                },
+                "backgroundColor": "linear-gradient(135deg, #fdbb2d 0%, #22c1c3 100%)"
+            },
+            {
+                "id": 13,
+                "type": "jwt-auth",
+                "icon": "🎫",
+                "title": {
+                    "he": "JWT Authentication",
+                    "ar": "مصادقة JWT"
+                },
+                "code": {
+                    "jwt": "// שליחת JWT\nPOST /api/auth/login\nContent-Type: application/json\n\n{\n  \"username\": \"user@example.com\",\n  \"password\": \"password123\"\n}\n\n// תגובה\n{\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c\",\n  \"expires_in\": 3600,\n  \"user\": {\n    \"id\": 123,\n    \"name\": \"John Doe\",\n    \"email\": \"user@example.com\"\n  }\n}\n\n// שימוש ב-JWT\nGET /api/users/profile\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                },
+                "content": {
+                    "he": "שימוש ב-JWT לאימות stateless",
+                    "ar": "استخدام JWT للمصادقة بدون حالة"
+                },
+                "backgroundColor": "linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)"
+            },
+            {
+                "id": 14,
+                "type": "error-handling",
+                "icon": "⚠️",
+                "title": {
+                    "he": "טיפול בשגיאות",
+                    "ar": "معالجة الأخطاء"
+                },
+                "code": {
+                    "errors": "// שגיאה כללית\n{\n  \"error\": {\n    \"code\": \"VALIDATION_ERROR\",\n    \"message\": \"Validation failed\",\n    \"details\": [\n      {\n        \"field\": \"email\",\n        \"message\": \"Email is required\"\n      },\n      {\n        \"field\": \"password\",\n        \"message\": \"Password must be at least 8 characters\"\n      }\n    ]\n  }\n}\n\n// שגיאה פשוטה\n{\n  \"error\": {\n    \"message\": \"User not found\",\n    \"code\": 404\n  }\n}\n\n// שגיאה עם מידע נוסף\n{\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"code\": 500,\n    \"request_id\": \"req_123456789\",\n    \"timestamp\": \"2024-01-15T12:00:00Z\"\n  }\n}"
+                },
+                "content": {
+                    "he": "עיצוב תגובות שגיאה ברורות ומועילות",
+                    "ar": "تصميم استجابات خطأ واضحة ومفيدة"
+                },
+                "backgroundColor": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+            },
+            {
+                "id": 15,
+                "type": "pagination",
+                "icon": "📄",
+                "title": {
+                    "he": "עימוד (Pagination)",
+                    "ar": "التصفح"
+                },
+                "code": {
+                    "pagination": "// בקשה עם עימוד\nGET /api/users?page=2&limit=10\n\n// תגובה עם עימוד\n{\n  \"data\": [\n    {\n      \"id\": 11,\n      \"name\": \"User 11\",\n      \"email\": \"user11@example.com\"\n    },\n    // ... עוד 9 משתמשים\n  ],\n  \"pagination\": {\n    \"current_page\": 2,\n    \"per_page\": 10,\n    \"total\": 100,\n    \"total_pages\": 10,\n    \"has_next\": true,\n    \"has_prev\": true,\n    \"next_page\": 3,\n    \"prev_page\": 1\n  }\n}\n\n// או עם cursor-based pagination\nGET /api/users?cursor=eyJpZCI6MTB9&limit=10\n\n{\n  \"data\": [...],\n  \"pagination\": {\n    \"next_cursor\": \"eyJpZCI6MjB9\",\n    \"has_next\": true\n  }\n}"
+                },
+                "content": {
+                    "he": "שיטות לעימוד נתונים גדולים",
+                    "ar": "طرق لتصفح البيانات الكبيرة"
+                },
+                "backgroundColor": "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
+            },
+            {
+                "id": 16,
+                "type": "filtering-sorting",
+                "icon": "🔍",
+                "title": {
+                    "he": "סינון ומיון",
+                    "ar": "الفلترة والترتيب"
+                },
+                "code": {
+                    "filtering": "// סינון בסיסי\nGET /api/users?status=active\nGET /api/users?age_min=18&age_max=65\nGET /api/users?city=Tel Aviv\n\n// סינון מתקדם\nGET /api/users?filter[status]=active&filter[role]=admin\nGET /api/users?search=john&search_fields=name,email\n\n// מיון\nGET /api/users?sort=name&order=asc\nGET /api/users?sort=-created_at  // מיון יורד\nGET /api/users?sort=name,email   // מיון מרובה\n\n// שילוב\nGET /api/users?status=active&sort=name&order=asc&page=1&limit=20"
+                },
+                "content": {
+                    "he": "פרמטרים לסינון ומיון נתונים",
+                    "ar": "معاملات لفلترة وترتيب البيانات"
+                },
+                "backgroundColor": "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
+            },
+            {
+                "id": 17,
+                "type": "rate-limiting",
+                "icon": "⏱️",
+                "title": {
+                    "he": "הגבלת קצב (Rate Limiting)",
+                    "ar": "تقييد المعدل"
+                },
+                "code": {
+                    "rate_limiting": "// Headers בתגובה\nHTTP/1.1 200 OK\nX-RateLimit-Limit: 1000\nX-RateLimit-Remaining: 999\nX-RateLimit-Reset: 1640995200\nX-RateLimit-Window: 3600\n\n// כאשר מגיעים למגבלה\nHTTP/1.1 429 Too Many Requests\nX-RateLimit-Limit: 1000\nX-RateLimit-Remaining: 0\nX-RateLimit-Reset: 1640995200\nRetry-After: 3600\n\n{\n  \"error\": {\n    \"message\": \"Rate limit exceeded\",\n    \"code\": 429,\n    \"retry_after\": 3600\n  }\n}"
+                },
+                "content": {
+                    "he": "הגבלת מספר הבקשות לכל משתמש",
+                    "ar": "تقييد عدد الطلبات لكل مستخدم"
+                },
+                "backgroundColor": "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"
+            },
+            {
+                "id": 18,
+                "type": "versioning",
+                "icon": "📋",
+                "title": {
+                    "he": "גרסאות API",
+                    "ar": "إصدارات API"
+                },
+                "code": {
+                    "versioning": "// URL Versioning\nGET /api/v1/users\nGET /api/v2/users\n\n// Header Versioning\nGET /api/users\nAccept: application/vnd.api.v1+json\n\n// Query Parameter Versioning\nGET /api/users?version=1\nGET /api/users?version=2\n\n// דוגמה למעבר בין גרסאות\n// v1\n{\n  \"user\": {\n    \"id\": 123,\n    \"name\": \"John Doe\"\n  }\n}\n\n// v2\n{\n  \"data\": {\n    \"id\": 123,\n    \"attributes\": {\n      \"name\": \"John Doe\",\n      \"email\": \"john@example.com\"\n    }\n  }\n}"
+                },
+                "content": {
+                    "he": "אסטרטגיות לניהול גרסאות API",
+                    "ar": "استراتيجيات إدارة إصدارات API"
+                },
+                "backgroundColor": "linear-gradient(135deg, #fa709a 0%, #fee140 100%)"
+            },
+            {
+                "id": 19,
+                "type": "caching",
+                "icon": "💾",
+                "title": {
+                    "he": "Cache Headers",
+                    "ar": "رؤوس التخزين المؤقت"
+                },
+                "code": {
+                    "caching": "// Cache-Control\nCache-Control: public, max-age=3600\nCache-Control: private, max-age=1800\nCache-Control: no-cache, no-store, must-revalidate\n\n// ETag\nETag: \"abc123\"\nIf-None-Match: \"abc123\"\n\n// Last-Modified\nLast-Modified: Wed, 21 Oct 2015 07:28:00 GMT\nIf-Modified-Since: Wed, 21 Oct 2015 07:28:00 GMT\n\n// Vary\nVary: Accept-Encoding, User-Agent\n\n// דוגמה לתגובה עם cache\nHTTP/1.1 200 OK\nCache-Control: public, max-age=3600\nETag: \"abc123\"\nLast-Modified: Wed, 21 Oct 2015 07:28:00 GMT\n\n{\n  \"data\": [...]\n}"
+                },
+                "content": {
+                    "he": "שימוש ב-cache headers לשיפור ביצועים",
+                    "ar": "استخدام رؤوس التخزين المؤقت لتحسين الأداء"
+                },
+                "backgroundColor": "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)"
+            },
+            {
+                "id": 20,
+                "type": "security",
+                "icon": "🛡️",
+                "title": {
+                    "he": "אבטחת API",
+                    "ar": "أمان API"
+                },
+                "items": [
+                    {
+                        "he": "HTTPS - שימוש ב-SSL/TLS",
+                        "ar": "HTTPS - استخدام SSL/TLS"
+                    },
+                    {
+                        "he": "Input Validation - בדיקת קלט",
+                        "ar": "التحقق من الإدخال"
+                    },
+                    {
+                        "he": "SQL Injection Protection - הגנה מפני SQL injection",
+                        "ar": "الحماية من SQL injection"
+                    },
+                    {
+                        "he": "XSS Protection - הגנה מפני XSS",
+                        "ar": "الحماية من XSS"
+                    },
+                    {
+                        "he": "CORS Configuration - הגדרת CORS",
+                        "ar": "تكوين CORS"
+                    },
+                    {
+                        "he": "Rate Limiting - הגבלת קצב",
+                        "ar": "تقييد المعدل"
+                    },
+                    {
+                        "he": "API Key Management - ניהול מפתחות API",
+                        "ar": "إدارة مفاتيح API"
+                    }
+                ],
+                "backgroundColor": "linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)"
+            },
+            {
+                "id": 21,
+                "type": "testing",
+                "icon": "🧪",
+                "title": {
+                    "he": "בדיקות API",
+                    "ar": "اختبارات API"
+                },
+                "code": {
+                    "testing": "// Unit Tests\nconst request = require('supertest');\nconst app = require('../app');\n\ndescribe('Users API', () => {\n  test('GET /api/users should return users list', async () => {\n    const response = await request(app)\n      .get('/api/users')\n      .expect(200);\n    \n    expect(response.body).toHaveProperty('users');\n    expect(Array.isArray(response.body.users)).toBe(true);\n  });\n  \n  test('POST /api/users should create new user', async () => {\n    const newUser = {\n      name: 'Test User',\n      email: 'test@example.com'\n    };\n    \n    const response = await request(app)\n      .post('/api/users')\n      .send(newUser)\n      .expect(201);\n    \n    expect(response.body).toHaveProperty('id');\n    expect(response.body.name).toBe(newUser.name);\n  });\n});"
+                },
+                "content": {
+                    "he": "כלים ושיטות לבדיקת API",
+                    "ar": "أدوات وطرق اختبار API"
+                },
+                "backgroundColor": "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)"
+            },
+            {
+                "id": 22,
+                "type": "documentation",
+                "icon": "📚",
+                "title": {
+                    "he": "תיעוד API",
+                    "ar": "توثيق API"
+                },
+                "items": [
+                    {
+                        "he": "OpenAPI/Swagger - סטנדרט לתיעוד API",
+                        "ar": "OpenAPI/Swagger - معيار لتوثيق API"
+                    },
+                    {
+                        "he": "Postman Collections - אוסף בקשות לבדיקה",
+                        "ar": "مجموعات Postman - مجموعة طلبات للاختبار"
+                    },
+                    {
+                        "he": "API Blueprint - פורמט תיעוד אלטרנטיבי",
+                        "ar": "API Blueprint - تنسيق توثيق بديل"
+                    },
+                    {
+                        "he": "Interactive Documentation - תיעוד אינטראקטיבי",
+                        "ar": "التوثيق التفاعلي"
+                    },
+                    {
+                        "he": "Code Examples - דוגמאות קוד",
+                        "ar": "أمثلة الكود"
+                    },
+                    {
+                        "he": "Error Codes Reference - מדריך קודי שגיאה",
+                        "ar": "مرجع رموز الخطأ"
+                    }
+                ],
+                "backgroundColor": "linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)"
+            },
+            {
+                "id": 23,
+                "type": "best-practices",
+                "icon": "⭐",
+                "title": {
+                    "he": "המלצות וטיפים",
+                    "ar": "التوصيات والنصائح"
+                },
+                "items": [
+                    {
+                        "he": "השתמש ב-HTTP methods הנכונים",
+                        "ar": "استخدم طرق HTTP الصحيحة"
+                    },
+                    {
+                        "he": "חזור status codes מדויקים",
+                        "ar": "أعد رموز الحالة الدقيقة"
+                    },
+                    {
+                        "he": "עקבי ב-URL design",
+                        "ar": "كن متسقًا في تصميم URL"
+                    },
+                    {
+                        "he": "השתמש ב-JSON לפורמט נתונים",
+                        "ar": "استخدم JSON لتنسيق البيانات"
+                    },
+                    {
+                        "he": "הוסף pagination לנתונים גדולים",
+                        "ar": "أضف التصفح للبيانات الكبيرة"
+                    },
+                    {
+                        "he": "תעד את ה-API בצורה ברורה",
+                        "ar": "وثق API بشكل واضح"
+                    },
+                    {
+                        "he": "הוסף rate limiting",
+                        "ar": "أضف تقييد المعدل"
+                    },
+                    {
+                        "he": "השתמש ב-HTTPS",
+                        "ar": "استخدم HTTPS"
+                    }
+                ],
+                "backgroundColor": "linear-gradient(135deg, #d299c2 0%, #fef9d7 100%)"
+            },
+            {
+                "id": 24,
+                "type": "qa-basic",
+                "icon": "❓",
+                "title": {
+                    "he": "שאלות ותשובות - רמה בסיסית",
+                    "ar": "أسئلة وأجوبة - مستوى أساسي"
+                },
+                "items": [
+                    {
+                        "he": "Q: מה ההבדל בין PUT ל-PATCH?",
+                        "ar": "س: ما الفرق بين PUT و PATCH؟"
+                    },
+                    {
+                        "he": "A: PUT מעדכן את כל המשאב, PATCH מעדכן רק חלק ממנו",
+                        "ar": "ج: PUT يحدث المورد بالكامل، PATCH يحدث جزءًا منه فقط"
+                    },
+                    {
+                        "he": "Q: מה זה REST?",
+                        "ar": "س: ما هو REST؟"
+                    },
+                    {
+                        "he": "A: Representational State Transfer - ארכיטקטורה לשרותי אינטרנט",
+                        "ar": "ج: نقل الحالة التمثيلي - معمارية لخدمات الويب"
+                    },
+                    {
+                        "he": "Q: איך מגדירים authentication ב-API?",
+                        "ar": "س: كيف نعرف المصادقة في API؟"
+                    },
+                    {
+                        "he": "A: באמצעות headers כמו Authorization: Bearer token",
+                        "ar": "ج: باستخدام رؤوس مثل Authorization: Bearer token"
+                    }
+                ],
+                "backgroundColor": "linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)"
+            },
+            {
+                "id": 25,
+                "type": "qa-advanced",
+                "icon": "🧠",
+                "title": {
+                    "he": "שאלות ותשובות - רמה מתקדמת",
+                    "ar": "أسئلة وأجوبة - مستوى متقدم"
+                },
+                "items": [
+                    {
+                        "he": "Q: מה ההבדל בין stateless ו-stateful?",
+                        "ar": "س: ما الفرق بين stateless و stateful؟"
+                    },
+                    {
+                        "he": "A: Stateless - כל בקשה עצמאית, Stateful - השרת זוכר מידע בין בקשות",
+                        "ar": "ج: Stateless - كل طلب مستقل، Stateful - الخادم يتذكر المعلومات بين الطلبات"
+                    },
+                    {
+                        "he": "Q: איך מטפלים ב-versioning של API?",
+                        "ar": "س: كيف نتعامل مع إصدارات API؟"
+                    },
+                    {
+                        "he": "A: באמצעות URL versioning, header versioning או query parameters",
+                        "ar": "ج: باستخدام إصدارات URL أو رؤوس أو معاملات الاستعلام"
+                    },
+                    {
+                        "he": "Q: מה זה HATEOAS?",
+                        "ar": "س: ما هو HATEOAS؟"
+                    },
+                    {
+                        "he": "A: Hypermedia as the Engine of Application State - הוספת links לתגובות",
+                        "ar": "ج: الوسائط الفائقة كمحرك لحالة التطبيق - إضافة روابط للاستجابات"
+                    }
+                ],
+                "backgroundColor": "linear-gradient(135deg, #fdbb2d 0%, #22c1c3 100%)"
+            },
+            {
+                "id": 26,
+                "type": "tools",
+                "icon": "🛠️",
+                "title": {
+                    "he": "כלים לפיתוח API",
+                    "ar": "أدوات تطوير API"
+                },
+                "items": [
+                    {
+                        "he": "Postman - בדיקה ופיתוח API",
+                        "ar": "Postman - اختبار وتطوير API"
+                    },
+                    {
+                        "he": "Insomnia - אלטרנטיבה ל-Postman",
+                        "ar": "Insomnia - بديل لـ Postman"
+                    },
+                    {
+                        "he": "Swagger UI - תיעוד אינטראקטיבי",
+                        "ar": "Swagger UI - توثيق تفاعلي"
+                    },
+                    {
+                        "he": "curl - כלי command line",
+                        "ar": "curl - أداة سطر الأوامر"
+                    },
+                    {
+                        "he": "REST Client (VS Code) - extension לבדיקת API",
+                        "ar": "REST Client (VS Code) - امتداد لاختبار API"
+                    },
+                    {
+                        "he": "Newman - הרצת Postman collections",
+                        "ar": "Newman - تشغيل مجموعات Postman"
+                    }
+                ],
+                "backgroundColor": "linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)"
+            },
+            {
+                "id": 27,
+                "type": "monitoring",
+                "icon": "📊",
+                "title": {
+                    "he": "ניטור API",
+                    "ar": "مراقبة API"
+                },
+                "items": [
+                    {
+                        "he": "Response Time - זמן תגובה",
+                        "ar": "وقت الاستجابة"
+                    },
+                    {
+                        "he": "Error Rate - אחוז שגיאות",
+                        "ar": "معدل الأخطاء"
+                    },
+                    {
+                        "he": "Throughput - תפוקה",
+                        "ar": "الإنتاجية"
+                    },
+                    {
+                        "he": "Uptime - זמן פעילות",
+                        "ar": "وقت التشغيل"
+                    },
+                    {
+                        "he": "Logging - רישום פעילות",
+                        "ar": "تسجيل النشاط"
+                    },
+                    {
+                        "he": "Alerting - התראות",
+                        "ar": "التنبيهات"
+                    }
+                ],
+                "backgroundColor": "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)"
+            },
+            {
+                "id": 28,
+                "type": "microservices",
+                "icon": "🏗️",
+                "title": {
+                    "he": "REST ו-Microservices",
+                    "ar": "REST والخدمات المصغرة"
+                },
+                "items": [
+                    {
+                        "he": "Service Discovery - גילוי שירותים",
+                        "ar": "اكتشاف الخدمات"
+                    },
+                    {
+                        "he": "API Gateway - שער API",
+                        "ar": "بوابة API"
+                    },
+                    {
+                        "he": "Load Balancing - איזון עומסים",
+                        "ar": "موازنة الأحمال"
+                    },
+                    {
+                        "he": "Circuit Breaker - מפסק זרם",
+                        "ar": "قاطع الدائرة"
+                    },
+                    {
+                        "he": "Distributed Tracing - מעקב מבוזר",
+                        "ar": "التتبع الموزع"
+                    },
+                    {
+                        "he": "Health Checks - בדיקות בריאות",
+                        "ar": "فحوصات الصحة"
+                    }
+                ],
+                "backgroundColor": "linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)"
+            },
+            {
+                "id": 29,
+                "type": "summary",
+                "icon": "📋",
+                "title": {
+                    "he": "סיכום הקורס",
+                    "ar": "ملخص الدورة"
+                },
+                "items": [
+                    {
+                        "he": "REST הוא ארכיטקטורה סטנדרטית ל-API",
+                        "ar": "REST هو معمارية معيارية لـ API"
+                    },
+                    {
+                        "he": "HTTP methods מגדירים פעולות על משאבים",
+                        "ar": "طرق HTTP تحدد العمليات على الموارد"
+                    },
+                    {
+                        "he": "Status codes מספקים מידע על תוצאות",
+                        "ar": "رموز الحالة توفر معلومات عن النتائج"
+                    },
+                    {
+                        "he": "Authentication ו-Security חיוניים",
+                        "ar": "المصادقة والأمان ضروريان"
+                    },
+                    {
+                        "he": "תיעוד ובדיקות חשובים לאיכות",
+                        "ar": "التوثيق والاختبارات مهمان للجودة"
+                    }
+                ],
+                "backgroundColor": "linear-gradient(135deg, #d299c2 0%, #fef9d7 100%)"
+            },
+            {
+                "id": 30,
+                "type": "end-slide",
+                "icon": "🎉",
+                "title": {
+                    "he": "תודה על הלימוד!",
+                    "ar": "شكرًا على التعلم!"
+                },
+                "content": {
+                    "he": "המשך לבנות API מעולים ולהיות מפתח Full Stack מקצועי!",
+                    "ar": "استمر في بناء APIs ممتازة وكن مطور Full Stack محترف!"
+                },
+                "backgroundColor": "linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)"
+            }
+        ]
+    }
+}

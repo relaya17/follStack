@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>בדיקת קורסים</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .course {
+            background: #f0f0f0;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .success {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 10px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🧪 בדיקת קורסים</h1>
+    <button onclick="testCourses()">בדוק קורסים</button>
+    <div id="result"></div>
+
+    <script>
+        async function testCourses() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<p>טוען...</p>';
+
+            try {
+                const response = await fetch('http://localhost:3060/api/courses');
+                console.log('Response status:', response.status);
+
+                const data = await response.json();
+                console.log('Response data:', data);
+
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h3>✅ הצלחה! נמצאו ${data.count} קורסים</h3>
+                            ${data.data.map(course => `
+                                <div class="course">
+                                    <h4>${course.title}</h4>
+                                    <p>${course.description}</p>
+                                    <p><strong>נושא:</strong> ${course.subject}</p>
+                                    <p><strong>רמה:</strong> ${course.level}</p>
+                                    <p><strong>סטודנטים:</strong> ${course.students}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ שגיאה: ${data.error || 'Unknown error'}</div>`;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                resultDiv.innerHTML = `<div class="error">❌ שגיאת רשת: ${error.message}</div>`;
+            }
+        }
+
+        // בדיקה אוטומטית
+        window.onload = testCourses;
+    </script>
+</body>
+
+</html>

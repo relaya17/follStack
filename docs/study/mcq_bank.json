@@ -1,0 +1,602 @@
+[
+    {
+        "id": 1,
+        "topic": "React",
+        "question": "מה היתרון המרכזי של שימוש ב־React ב־SPA לעומת HTML סטטי?",
+        "options": [
+            "ביצועים גבוהים יותר תמיד",
+            "ניהול סטייט ו־UI דינאמי",
+            "פחות קוד בשרת",
+            "אין יתרון ממשי"
+        ],
+        "answer": "ניהול סטייט ו־UI דינאמי"
+    },
+    {
+        "id": 2,
+        "topic": "HTTP",
+        "question": "מה תפקידה של ספריית Axios בפרויקט?",
+        "options": [
+            "ניהול סטייט גלובלי",
+            "ביצוע קריאות HTTP לשרת",
+            "ניהול עיצוב רספונסיבי",
+            "הצפנת סיסמאות"
+        ],
+        "answer": "ביצוע קריאות HTTP לשרת"
+    },
+    {
+        "id": 3,
+        "topic": "React",
+        "question": "מה המשמעות של Controlled Component בטפסים ב־React?",
+        "options": [
+            "הקלט מנוהל ע\"י הדפדפן",
+            "הקלט מנוהל ע\"י ה־state של React",
+            "הקלט נשמר במסד הנתונים",
+            "אין קשר בין הטופס ל־state"
+        ],
+        "answer": "הקלט מנוהל ע\"י ה־state של React"
+    },
+    {
+        "id": 4,
+        "topic": "Web",
+        "question": "למה חשוב להשתמש ב־alt לכל תמונה באתר?",
+        "options": [
+            "כדי לשפר SEO ונגישות",
+            "כדי להקטין את גודל התמונה",
+            "כדי להוסיף אנימציה",
+            "זה לא חובה"
+        ],
+        "answer": "כדי לשפר SEO ונגישות"
+    },
+    {
+        "id": 5,
+        "topic": "CSS",
+        "question": "יתרון מרכזי בחלוקת CSS למודולים?",
+        "options": [
+            "טעינה מהירה יותר",
+            "קוד מסודר וקריא יותר",
+            "מאפשר שימוש ב־Hooks",
+            "חוסך Bootstrap"
+        ],
+        "answer": "קוד מסודר וקריא יותר"
+    },
+    {
+        "id": 6,
+        "topic": "Web",
+        "question": "למה להגדיר title ייחודי בכל עמוד React?",
+        "options": [
+            "כדי לאפשר ניווט",
+            "לשפר נגישות ו־SEO",
+            "למנוע באגים ב־useEffect",
+            "לטעון ספריות צד ג'"
+        ],
+        "answer": "לשפר נגישות ו־SEO"
+    },
+    {
+        "id": 7,
+        "topic": "React",
+        "question": "מה ההבדל בין props ל־state?",
+        "options": [
+            "props משתנה ישירות",
+            "props מהורה ו־state פנימי",
+            "אין הבדל",
+            "props רק ב־Class"
+        ],
+        "answer": "props מהורה ו־state פנימי"
+    },
+    {
+        "id": 8,
+        "topic": "React",
+        "question": "מה קורה בלי key ייחודי ברשימות?",
+        "options": [
+            "הרשימה לא נטענת",
+            "רינדור לא יעיל ועקיבה בעייתית",
+            "שגיאת שרת",
+            "זה לא משנה"
+        ],
+        "answer": "רינדור לא יעיל ועקיבה בעייתית"
+    },
+    {
+        "id": 9,
+        "topic": "CSS",
+        "question": "איך מבטיחים רספונסיביות?",
+        "options": [
+            "CSS Grid/Flexbox",
+            "תמונות איכותיות",
+            "טעינת Hooks",
+            "console.log"
+        ],
+        "answer": "CSS Grid/Flexbox"
+    },
+    {
+        "id": 10,
+        "topic": "React",
+        "question": "מהו useEffect ב־React?",
+        "options": [
+            "Hook ל־Side Effects",
+            "Hook לסטייט גלובלי",
+            "ספריית CSS",
+            "פונקציית הצפנה"
+        ],
+        "answer": "Hook ל־Side Effects"
+    },
+    {
+        "id": 11,
+        "topic": "Auth",
+        "question": "למה נשתמש ב־JWT?",
+        "options": [
+            "אחסון סיסמאות",
+            "אימות משתמשים",
+            "עיצוב רספונסיבי",
+            "הצפנת מסד"
+        ],
+        "answer": "אימות משתמשים"
+    },
+    {
+        "id": 12,
+        "topic": "Auth",
+        "question": "איפה לשמור JWT בצד לקוח?",
+        "options": [
+            "בקובץ config",
+            "במסד הנתונים",
+            "localStorage או sessionStorage",
+            "בתוך ה־DOM"
+        ],
+        "answer": "localStorage או sessionStorage"
+    },
+    {
+        "id": 13,
+        "topic": "Express",
+        "question": "יתרון middleware ב־Express?",
+        "options": [
+            "מקצר routes",
+            "שכבות לוגיקה בין בקשה לתגובה",
+            "מחליף מסד נתונים",
+            "משפר רינדור React"
+        ],
+        "answer": "שכבות לוגיקה בין בקשה לתגובה"
+    },
+    {
+        "id": 14,
+        "topic": "Security",
+        "question": "תפקיד bcrypt?",
+        "options": [
+            "קריאות HTTP",
+            "הצפנת סיסמאות לפני שמירה",
+            "ניהול סטייט",
+            "ולידציית טפסים"
+        ],
+        "answer": "הצפנת סיסמאות לפני שמירה"
+    },
+    {
+        "id": 15,
+        "topic": "Auth",
+        "question": "מהי Authorization?",
+        "options": [
+            "אימות זהות",
+            "בדיקת הרשאות פעולה",
+            "הצפנת נתונים",
+            "שליחת טוקן"
+        ],
+        "answer": "בדיקת הרשאות פעולה"
+    },
+    {
+        "id": 16,
+        "topic": "Security",
+        "question": "ללא ולידציה בצד שרת?",
+        "options": [
+            "לא יקרה כלום",
+            "חשיפה ל־SQL/NoSQL Injection",
+            "UX טוב יותר",
+            "הדפדפן יקרוס"
+        ],
+        "answer": "חשיפה ל־SQL/NoSQL Injection"
+    },
+    {
+        "id": 17,
+        "topic": "Node",
+        "question": "למה try & catch בקריאות לשרת?",
+        "options": [
+            "למנוע קריסת הקוד בשגיאה",
+            "לשפר ביצועים",
+            "להצפין נתונים",
+            "לשמור Token"
+        ],
+        "answer": "למנוע קריסת הקוד בשגיאה"
+    },
+    {
+        "id": 18,
+        "topic": "Node",
+        "question": "תפקיד dotenv?",
+        "options": [
+            "ולידציות טפסים",
+            "משתני סביבה רגישים",
+            "סטייט ב־React",
+            "יצירת Logger"
+        ],
+        "answer": "משתני סביבה רגישים"
+    },
+    {
+        "id": 19,
+        "topic": "JS",
+        "question": "למה async/await לעיתים עדיף?",
+        "options": [
+            "מונע שגיאות שרת",
+            "קוד קריא יותר",
+            "מצפין סיסמאות",
+            "תמיד מהיר יותר"
+        ],
+        "answer": "קוד קריא יותר"
+    },
+    {
+        "id": 20,
+        "topic": "Security",
+        "question": "מה תפקיד CORS?",
+        "options": [
+            "למנוע הרשאות Admin",
+            "לאפשר/לחסום קריאות בין דומיינים",
+            "להצפין JWT",
+            "להגדיר ראוטרים"
+        ],
+        "answer": "לאפשר/לחסום קריאות בין דומיינים"
+    },
+    {
+        "id": 21,
+        "topic": "DB",
+        "question": "MongoDB מול Mongoose?",
+        "options": [
+            "DB מול ODM/ORM לניהול סכמות",
+            "Mongoose DB מהיר",
+            "שניהם זהים",
+            "Mongoose שרת Node"
+        ],
+        "answer": "DB מול ODM/ORM לניהול סכמות"
+    },
+    {
+        "id": 22,
+        "topic": "DB",
+        "question": "למה Schema ב־Mongoose?",
+        "options": [
+            "להציג תמונות",
+            "להגדיר מבנה נתונים ברור",
+            "לשפר עיצוב",
+            "להגדיר Token"
+        ],
+        "answer": "להגדיר מבנה נתונים ברור"
+    },
+    {
+        "id": 23,
+        "topic": "DB",
+        "question": "יתרון ObjectId?",
+        "options": [
+            "הצפנת סיסמאות",
+            "מזהה ייחודי למסמך",
+            "צמצום CSS",
+            "מניעת JWT תקף"
+        ],
+        "answer": "מזהה ייחודי למסמך"
+    },
+    {
+        "id": 24,
+        "topic": "DB",
+        "question": "קשרים בין קולקציות?",
+        "options": [
+            "באמצעות populate",
+            "הצפנת מסמכים",
+            "console.log",
+            "לא אפשרי"
+        ],
+        "answer": "באמצעות populate"
+    },
+    {
+        "id": 25,
+        "topic": "DB",
+        "question": "find מול findOne?",
+        "options": [
+            "find מחזיר מערך, findOne מסמך יחיד",
+            "find יחיד, findOne מערך",
+            "אין הבדל",
+            "find מוחק"
+        ],
+        "answer": "find מחזיר מערך, findOne מסמך יחיד"
+    },
+    {
+        "id": 26,
+        "topic": "Security",
+        "question": "למה לא לשמור סיסמאות כטקסט?",
+        "options": [
+            "לחסוך מקום",
+            "זה מסוכן וחשוף לפריצה",
+            "לשפר ביצועים",
+            "למנוע JWT"
+        ],
+        "answer": "זה מסוכן וחשוף לפריצה"
+    },
+    {
+        "id": 27,
+        "topic": "Security",
+        "question": "למה להגביל ניסיונות התחברות?",
+        "options": [
+            "למנוע Brute Force",
+            "לחסוך מקום",
+            "לשפר UX",
+            "לנהל Tokens"
+        ],
+        "answer": "למנוע Brute Force"
+    },
+    {
+        "id": 28,
+        "topic": "Security",
+        "question": "מהו XSS?",
+        "options": [
+            "הזרקת JS זדוני",
+            "התקפה על DB",
+            "הצפנת מידע",
+            "שימוש לא נכון ב־Hooks"
+        ],
+        "answer": "הזרקת JS זדוני"
+    },
+    {
+        "id": 29,
+        "topic": "Security",
+        "question": "מהו Rate Limiting?",
+        "options": [
+            "הגבלת בקשות בזמן",
+            "הצפנת JWT",
+            "שיפור ביצועי React",
+            "שמירה על רספונסיביות"
+        ],
+        "answer": "הגבלת בקשות בזמן"
+    },
+    {
+        "id": 30,
+        "topic": "Security",
+        "question": "הגנה מ־DDoS?",
+        "options": [
+            "Rate limit, Cache, Firewalls",
+            "console.log",
+            "CSS Grid",
+            "לא להשתמש ב־MongoDB"
+        ],
+        "answer": "Rate limit, Cache, Firewalls"
+    },
+    {
+        "id": 31,
+        "topic": "API",
+        "question": "CRUD משמעות?",
+        "options": [
+            "Create, Read, Update, Delete",
+            "Create, Run, Update, Debug",
+            "Cache, Read, Upload, Delete",
+            "אין משמעות"
+        ],
+        "answer": "Create, Read, Update, Delete"
+    },
+    {
+        "id": 32,
+        "topic": "Auth",
+        "question": "Authn מול Authz?",
+        "options": [
+            "Authn אימות זהות, Authz בדיקת הרשאות",
+            "שניהם אותו דבר",
+            "Authn ל־MongoDB בלבד",
+            "Authz התחברות"
+        ],
+        "answer": "Authn אימות זהות, Authz בדיקת הרשאות"
+    },
+    {
+        "id": 33,
+        "topic": "Auth",
+        "question": "למה role ב־JWT?",
+        "options": [
+            "להגדיר הרשאות משתמש",
+            "להצפין נתונים",
+            "לשמור סיסמאות",
+            "לנהל state"
+        ],
+        "answer": "להגדיר הרשאות משתמש"
+    },
+    {
+        "id": 34,
+        "topic": "API",
+        "question": "מה עושה PUT?",
+        "options": [
+            "יצירה בלבד",
+            "עדכון/יצירה אם לא קיים",
+            "קריאה בלבד",
+            "מחיקה"
+        ],
+        "answer": "עדכון/יצירה אם לא קיים"
+    },
+    {
+        "id": 35,
+        "topic": "API",
+        "question": "PUT מול PATCH?",
+        "options": [
+            "PUT מחליף מסמך, PATCH מעדכן חלק",
+            "PUT תמיד מהיר",
+            "PATCH מוחק",
+            "אין הבדל"
+        ],
+        "answer": "PUT מחליף מסמך, PATCH מעדכן חלק"
+    },
+    {
+        "id": 36,
+        "topic": "Craft",
+        "question": "למה קוד נקי?",
+        "options": [
+            "שהמשתמש יבין",
+            "תחזוקה והרחבה",
+            "קטנת bundle",
+            "להוסיף JWT"
+        ],
+        "answer": "תחזוקה והרחבה"
+    },
+    {
+        "id": 37,
+        "topic": "Architecture",
+        "question": "למה Controllers/Routes/Models?",
+        "options": [
+            "הפרדת אחריות וסדר",
+            "להקטין קוד",
+            "לאפשר JWT",
+            "להחליף MongoDB"
+        ],
+        "answer": "הפרדת אחריות וסדר"
+    },
+    {
+        "id": 38,
+        "topic": "Ops",
+        "question": "למה Morgan/Logger?",
+        "options": [
+            "להציג קריאות HTTP ל־Debug",
+            "להצפין נתונים",
+            "להחליף bcrypt",
+            "לנהל state"
+        ],
+        "answer": "להציג קריאות HTTP ל־Debug"
+    },
+    {
+        "id": 39,
+        "topic": "DB",
+        "question": "מהו seed?",
+        "options": [
+            "נתוני דמו לבדיקות",
+            "הצפנת JWT",
+            "ניהול הרשאות",
+            "עיצוב טפסים"
+        ],
+        "answer": "נתוני דמו לבדיקות"
+    },
+    {
+        "id": 40,
+        "topic": "Ops",
+        "question": "למה GitHub?",
+        "options": [
+            "גרסאות קוד ועבודה בצוות",
+            "הצפנת סיסמאות",
+            "ניהול state",
+            "עדכון Token"
+        ],
+        "answer": "גרסאות קוד ועבודה בצוות"
+    },
+    {
+        "id": 41,
+        "topic": "React",
+        "question": "למה Virtual DOM מהיר?",
+        "options": [
+            "דיפרנציאציה ועדכון מינימלי",
+            "כי הוא בענן",
+            "כי הוא ב־C",
+            "כי הוא ב־WebAssembly"
+        ],
+        "answer": "דיפרנציאציה ועדכון מינימלי"
+    },
+    {
+        "id": 42,
+        "topic": "React",
+        "question": "יתרון useReducer לסטייט מורכב?",
+        "options": [
+            "ניהול עם actions ו־reducer",
+            "פחות זיכרון תמיד",
+            "הכי מהיר",
+            "לא דורש טיפוסים"
+        ],
+        "answer": "ניהול עם actions ו־reducer"
+    },
+    {
+        "id": 43,
+        "topic": "React",
+        "question": "יתרון React Router?",
+        "options": [
+            "ניווט SPA עם URLs",
+            "החלפת Redux",
+            "אבטחת JWT",
+            "הצפנת DB"
+        ],
+        "answer": "ניווט SPA עם URLs"
+    },
+    {
+        "id": 44,
+        "topic": "Security",
+        "question": "למה לאפס טוקן אחרי X שעות?",
+        "options": [
+            "הקטנת סיכון שימוש לרעה",
+            "שיפור ביצועי DB",
+            "לאפשר CORS",
+            "להחליף Logger"
+        ],
+        "answer": "הקטנת סיכון שימוש לרעה"
+    },
+    {
+        "id": 45,
+        "topic": "Auth",
+        "question": "Session מול JWT?",
+        "options": [
+            "Session בשרת, JWT סטייטלס בלקוח",
+            "שניהם זהים",
+            "JWT תמיד מוצפן",
+            "Session תמיד לא מאובטח"
+        ],
+        "answer": "Session בשרת, JWT סטייטלס בלקוח"
+    },
+    {
+        "id": 46,
+        "topic": "State",
+        "question": "איך Redux משתלב?",
+        "options": [
+            "סטייט גלובלי מחוץ לרכיבים",
+            "מחליף Express",
+            "DB חלופי",
+            "ספריית CSS"
+        ],
+        "answer": "סטייט גלובלי מחוץ לרכיבים"
+    },
+    {
+        "id": 47,
+        "topic": "DB",
+        "question": "למה MongoDB לפרויקט כזה?",
+        "options": [
+            "גמישות סכמות ו־JSON דמוי",
+            "תמיד מהיר מ־SQL",
+            "אין טרנזקציות",
+            "כי React דורש"
+        ],
+        "answer": "גמישות סכמות ו־JSON דמוי"
+    },
+    {
+        "id": 48,
+        "topic": "Security",
+        "question": "מהי CSRF והגנה?",
+        "options": [
+            "בקשות מזויפות; SameSite/CSRF Token",
+            "הזרקת JS; CSP",
+            "הצפנת JWT",
+            "שימוש ב־Redux"
+        ],
+        "answer": "בקשות מזויפות; SameSite/CSRF Token"
+    },
+    {
+        "id": 49,
+        "topic": "Ops",
+        "question": "למה לא console.log בפרודקשן?",
+        "options": [
+            "לוגים מזהמים/דליפות; עדיף structured",
+            "אסור תקנית",
+            "מאט SSR תמיד",
+            "שובר React"
+        ],
+        "answer": "לוגים מזהמים/דליפות; עדיף structured"
+    },
+    {
+        "id": 50,
+        "topic": "DB",
+        "question": "איך לממש Search יעיל גדול?",
+        "options": [
+            "אינדקסים/סינון/pagination/Atlas Search",
+            "Regex בלי אינדקס",
+            "להביא הכל לזיכרון",
+            "ללא Pagination"
+        ],
+        "answer": "אינדקסים/סינון/pagination/Atlas Search"
+    }
+]

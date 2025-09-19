@@ -1,0 +1,309 @@
+{
+    "title": "חוברת עבודה - React עם פרויקט מעשי",
+    "version": 1,
+    "description": {
+        "he": "חוברת עבודה אינטראקטיבית ללימוד React עם פרויקט מעשי של בניית אפליקציית כרטיסי ביקור",
+        "ar": "دفتر عمل تفاعلي لتعلم React مع مشروع عملي لبناء تطبيق بطاقات العمل"
+    },
+    "project": {
+        "name": "Business Cards App",
+        "description": {
+            "he": "אפליקציה לניהול כרטיסי ביקור עם פונקציונליות מלאה",
+            "ar": "تطبيق لإدارة بطاقات العمل مع وظائف كاملة"
+        }
+    },
+    "sections": [
+        {
+            "id": "setup",
+            "title": "הכנת הסביבה",
+            "questions": [
+                {
+                    "q": "כיצד ליצור פרויקט React חדש?",
+                    "a": "npx create-react-app business-cards-app\ncd business-cards-app\nnpm start"
+                },
+                {
+                    "q": "אילו קבצים חשובים יש בתיקיית src?",
+                    "a": "App.js - הקומפוננט הראשי\nindex.js - נקודת הכניסה\nApp.css - עיצוב ראשי\nindex.css - עיצוב גלובלי"
+                },
+                {
+                    "q": "כיצד להריץ את הפרויקט?",
+                    "a": "npm start - פותח את הפרויקט בדפדפן על localhost:3000"
+                }
+            ]
+        },
+        {
+            "id": "components-basics",
+            "title": "יסודות קומפוננטים",
+            "questions": [
+                {
+                    "q": "כיצד ליצור קומפוננט פונקציונלי פשוט?",
+                    "a": "const Header = () => {\n  return <h1>Business Cards App</h1>;\n};\n\nexport default Header;"
+                },
+                {
+                    "q": "כיצד לייבא ולהשתמש בקומפוננט?",
+                    "a": "import Header from './components/Header';\n\nfunction App() {\n  return (\n    <div>\n      <Header />\n    </div>\n  );\n}"
+                },
+                {
+                    "q": "מה ההבדל בין JSX ל-HTML רגיל?",
+                    "a": "JSX מאפשר שימוש ב-JavaScript בתוך HTML, className במקום class, self-closing tags חובה"
+                }
+            ]
+        },
+        {
+            "id": "state-management",
+            "title": "ניהול מצב עם useState",
+            "questions": [
+                {
+                    "q": "כיצד להשתמש ב-useState?",
+                    "a": "import { useState } from 'react';\n\nconst [cards, setCards] = useState([]);\nconst [name, setName] = useState('');"
+                },
+                {
+                    "q": "כיצד לעדכן מצב?",
+                    "a": "setCards([...cards, newCard]);\nsetName('John Doe');\nsetCards(prev => [...prev, newCard]);"
+                },
+                {
+                    "q": "מה זה spread operator ומתי משתמשים בו?",
+                    "a": "...cards יוצר העתק של המערך. משתמשים כדי לא לשנות את המערך המקורי"
+                }
+            ]
+        },
+        {
+            "id": "forms",
+            "title": "טיפול בטפסים",
+            "questions": [
+                {
+                    "q": "כיצד ליצור טופס עם controlled components?",
+                    "a": "const [formData, setFormData] = useState({name: '', email: '', phone: ''});\n\nconst handleChange = (e) => {\n  setFormData({...formData, [e.target.name]: e.target.value});\n};\n\n<input name=\"name\" value={formData.name} onChange={handleChange} />"
+                },
+                {
+                    "q": "כיצד לטפל בשליחת טופס?",
+                    "a": "const handleSubmit = (e) => {\n  e.preventDefault();\n  // לוגיקה לטיפול בטופס\n  setCards([...cards, formData]);\n  setFormData({name: '', email: '', phone: ''});\n};"
+                },
+                {
+                    "q": "מה זה preventDefault ומתי משתמשים בו?",
+                    "a": "מונע את התנהגות ברירת המחדל של הטופס (רענון הדף). תמיד להשתמש בטיפול בטופסים"
+                }
+            ]
+        },
+        {
+            "id": "card-component",
+            "title": "קומפוננט כרטיס ביקור",
+            "questions": [
+                {
+                    "q": "כיצד ליצור קומפוננט לכרטיס ביקור?",
+                    "a": "const BusinessCard = ({ card, onEdit, onDelete }) => {\n  return (\n    <div className=\"business-card\">\n      <h3>{card.name}</h3>\n      <p>{card.email}</p>\n      <p>{card.phone}</p>\n      <button onClick={() => onEdit(card)}>ערוך</button>\n      <button onClick={() => onDelete(card.id)}>מחק</button>\n    </div>\n  );\n};"
+                },
+                {
+                    "q": "כיצד להעביר פונקציות כ-props?",
+                    "a": "const handleEdit = (card) => {\n  setEditingCard(card);\n  setFormData(card);\n};\n\n<BusinessCard card={card} onEdit={handleEdit} onDelete={handleDelete} />"
+                },
+                {
+                    "q": "מה זה key prop ומתי משתמשים בו?",
+                    "a": "key עוזר ל-React לזהות איברים ברשימה. תמיד להשתמש ב-key ייחודי: {cards.map(card => <BusinessCard key={card.id} card={card} />)}"
+                }
+            ]
+        },
+        {
+            "id": "local-storage",
+            "title": "שמירה ב-localStorage",
+            "questions": [
+                {
+                    "q": "כיצד לשמור נתונים ב-localStorage?",
+                    "a": "useEffect(() => {\n  const savedCards = localStorage.getItem('businessCards');\n  if (savedCards) {\n    setCards(JSON.parse(savedCards));\n  }\n}, []);\n\nuseEffect(() => {\n  localStorage.setItem('businessCards', JSON.stringify(cards));\n}, [cards]);"
+                },
+                {
+                    "q": "מה זה useEffect ומתי משתמשים בו?",
+                    "a": "useEffect מריץ קוד אחרי render. useEffect(() => {}, []) - פעם אחת בלבד. useEffect(() => {}, [dependency]) - כשהתלות משתנה"
+                },
+                {
+                    "q": "כיצד לטפל בשגיאות ב-localStorage?",
+                    "a": "try {\n  const savedCards = localStorage.getItem('businessCards');\n  if (savedCards) {\n    setCards(JSON.parse(savedCards));\n  }\n} catch (error) {\n  console.error('שגיאה בטעינת נתונים:', error);\n}"
+                }
+            ]
+        },
+        {
+            "id": "search-filter",
+            "title": "חיפוש וסינון",
+            "questions": [
+                {
+                    "q": "כיצד ליצור פונקציית חיפוש?",
+                    "a": "const [searchTerm, setSearchTerm] = useState('');\n\nconst filteredCards = cards.filter(card => \n  card.name.toLowerCase().includes(searchTerm.toLowerCase()) ||\n  card.email.toLowerCase().includes(searchTerm.toLowerCase())\n);"
+                },
+                {
+                    "q": "כיצד ליצור input לחיפוש?",
+                    "a": "<input \n  type=\"text\" \n  placeholder=\"חפש כרטיס...\" \n  value={searchTerm} \n  onChange={(e) => setSearchTerm(e.target.value)} \n/>"
+                },
+                {
+                    "q": "כיצד להציג רק כרטיסים מסוננים?",
+                    "a": "{filteredCards.map(card => (\n  <BusinessCard key={card.id} card={card} />\n))}"
+                }
+            ]
+        },
+        {
+            "id": "styling",
+            "title": "עיצוב האפליקציה",
+            "questions": [
+                {
+                    "q": "כיצד ליצור CSS Module?",
+                    "a": "יצירת קובץ BusinessCard.module.css:\n.businessCard {\n  border: 1px solid #ccc;\n  padding: 15px;\n  margin: 10px;\n  border-radius: 8px;\n}\n\nייבא: import styles from './BusinessCard.module.css';\nשימוש: <div className={styles.businessCard}>"
+                },
+                {
+                    "q": "כיצד ליצור עיצוב רספונסיבי?",
+                    "a": "@media (max-width: 768px) {\n  .businessCard {\n    width: 100%;\n    margin: 5px 0;\n  }\n}"
+                },
+                {
+                    "q": "כיצד להוסיף אנימציות?",
+                    "a": ".businessCard {\n  transition: transform 0.2s ease;\n}\n\n.businessCard:hover {\n  transform: translateY(-2px);\n  box-shadow: 0 4px 8px rgba(0,0,0,0.1);\n}"
+                }
+            ]
+        },
+        {
+            "id": "advanced-features",
+            "title": "תכונות מתקדמות",
+            "questions": [
+                {
+                    "q": "כיצד להוסיף אישור למחיקה?",
+                    "a": "const handleDelete = (id) => {\n  if (window.confirm('האם אתה בטוח שברצונך למחוק את הכרטיס?')) {\n    setCards(cards.filter(card => card.id !== id));\n  }\n};"
+                },
+                {
+                    "q": "כיצד להוסיף הודעות הצלחה?",
+                    "a": "const [message, setMessage] = useState('');\n\nconst showMessage = (text) => {\n  setMessage(text);\n  setTimeout(() => setMessage(''), 3000);\n};\n\n{message && <div className=\"success-message\">{message}</div>}"
+                },
+                {
+                    "q": "כיצד להוסיף טעינה?",
+                    "a": "const [loading, setLoading] = useState(false);\n\nconst handleSubmit = async (e) => {\n  e.preventDefault();\n  setLoading(true);\n  // לוגיקה...\n  setLoading(false);\n};\n\n<button disabled={loading}>\n  {loading ? 'שומר...' : 'שמור'}\n</button>"
+                }
+            ]
+        },
+        {
+            "id": "deployment",
+            "title": "פרסום האפליקציה",
+            "questions": [
+                {
+                    "q": "כיצד לבנות את הפרויקט לפרסום?",
+                    "a": "npm run build - יוצר תיקיית build עם קבצים מותאמים לפרסום"
+                },
+                {
+                    "q": "כיצד לפרסם ב-Netlify?",
+                    "a": "1. העלה את תיקיית build ל-Netlify\n2. או חבר ל-GitHub repository\n3. Netlify יבנה ויפרסם אוטומטית"
+                },
+                {
+                    "q": "כיצד לפרסם ב-Vercel?",
+                    "a": "1. התקן Vercel CLI: npm i -g vercel\n2. vercel --prod\n3. או חבר ל-GitHub repository"
+                }
+            ]
+        }
+    ],
+    "projectSteps": [
+        {
+            "step": 1,
+            "title": "הכנת הפרויקט",
+            "description": "יצירת פרויקט React חדש והכנת המבנה הבסיסי",
+            "tasks": [
+                "יצירת פרויקט עם create-react-app",
+                "מחיקת קבצים מיותרים",
+                "יצירת תיקיית components",
+                "הגדרת App.js הבסיסי"
+            ]
+        },
+        {
+            "step": 2,
+            "title": "קומפוננט Header",
+            "description": "יצירת קומפוננט כותרת לאפליקציה",
+            "tasks": [
+                "יצירת קובץ Header.js",
+                "הוספת כותרת וניווט",
+                "עיצוב בסיסי",
+                "ייבוא ל-App.js"
+            ]
+        },
+        {
+            "step": 3,
+            "title": "טופס הוספת כרטיס",
+            "description": "יצירת טופס להוספת כרטיסי ביקור חדשים",
+            "tasks": [
+                "יצירת קומפוננט AddCardForm",
+                "הוספת שדות: שם, אימייל, טלפון",
+                "טיפול ב-controlled components",
+                "הוספת validation בסיסי"
+            ]
+        },
+        {
+            "step": 4,
+            "title": "קומפוננט כרטיס ביקור",
+            "description": "יצירת קומפוננט להצגת כרטיס ביקור",
+            "tasks": [
+                "יצירת קומפוננט BusinessCard",
+                "הצגת פרטי הכרטיס",
+                "הוספת כפתורי עריכה ומחיקה",
+                "עיצוב כרטיס"
+            ]
+        },
+        {
+            "step": 5,
+            "title": "ניהול מצב",
+            "description": "הוספת useState לניהול רשימת הכרטיסים",
+            "tasks": [
+                "הוספת useState לרשימת כרטיסים",
+                "פונקציות הוספה, עריכה, מחיקה",
+                "טיפול ב-ID ייחודי",
+                "עדכון UI בהתאם"
+            ]
+        },
+        {
+            "step": 6,
+            "title": "שמירה ב-localStorage",
+            "description": "הוספת שמירה וטעינה של נתונים",
+            "tasks": [
+                "הוספת useEffect לטעינת נתונים",
+                "שמירה אוטומטית ב-localStorage",
+                "טיפול בשגיאות",
+                "בדיקת פונקציונליות"
+            ]
+        },
+        {
+            "step": 7,
+            "title": "חיפוש וסינון",
+            "description": "הוספת פונקציונליות חיפוש",
+            "tasks": [
+                "הוספת input לחיפוש",
+                "פונקציית סינון",
+                "חיפוש בשם ואימייל",
+                "עדכון רשימת הכרטיסים"
+            ]
+        },
+        {
+            "step": 8,
+            "title": "עיצוב מתקדם",
+            "description": "שיפור העיצוב והוספת אנימציות",
+            "tasks": [
+                "יצירת CSS Modules",
+                "עיצוב רספונסיבי",
+                "הוספת אנימציות",
+                "שיפור UX"
+            ]
+        },
+        {
+            "step": 9,
+            "title": "תכונות נוספות",
+            "description": "הוספת תכונות מתקדמות",
+            "tasks": [
+                "אישור מחיקה",
+                "הודעות הצלחה",
+                "טעינה",
+                "validation מתקדם"
+            ]
+        },
+        {
+            "step": 10,
+            "title": "פרסום",
+            "description": "בנייה ופרסום האפליקציה",
+            "tasks": [
+                "בניית הפרויקט",
+                "בדיקת build",
+                "פרסום ב-Netlify/Vercel",
+                "בדיקת האפליקציה החיה"
+            ]
+        }
+    ]
+}

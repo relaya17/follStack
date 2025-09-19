@@ -1,0 +1,470 @@
+{
+    "title": "חוברת עבודה - JavaScript בסיס",
+    "version": 1,
+    "sections": [
+        {
+            "id": "variables",
+            "title": "משתנים וסוגי נתונים",
+            "questions": [
+                {
+                    "q": "מה ההבדל בין var, let ו-const? מתי נשתמש בכל אחד?",
+                    "a": "var הוא function-scoped ומאפשר הצהרה כפולה ו-hoisting; let ו-const הם block-scoped. let לערך שמשתנה לאורך החיים; const לערך שאינו מאותחל מחדש (אך אובייקט/מערך תחת const עדיין ניתן לשינוי במאפיינים). ברירת מחדל עדיפה: const, ואם חייבים לשנות – let. הימנע מ-var בקוד מודרני."
+                },
+                {
+                    "q": "מהם הטיפים לשמות משתנים טובים ומהו camelCase?",
+                    "a": "שם צריך להיות תיאורי וברור, באנגלית, ללא קיצורים מיותרים. בקוד JS נוהגים להשתמש ב-camelCase: האות הראשונה במילה הראשונה קטנה, וכל מילה נוספת מתחילה באות גדולה, למשל totalPrice, userFirstName."
+                },
+                {
+                    "q": "מהם סוגי הנתונים הפרימיטיביים ב-JS ומה ההבדל לעומת טיפוסים מורכבים?",
+                    "a": "פרימיטיביים: string, number, boolean, null, undefined, bigint, symbol. הם בלתי-ברי-שינוי (immutable) ומאוחסנים לפי ערך. טיפוסים מורכבים: object (כולל array, function, Date וכו'). מאוחסנים לפי הפניה (reference) וברי-שינוי."
+                },
+                {
+                    "q": "מה עושה typeof ומתי נקבל תוצאות מבלבלות?",
+                    "a": "typeof מחזיר מחרוזת עם סוג הנתון. חריגות ידועות: typeof null מחזיר 'object' מסיבות היסטוריות; עבור מערך נקבל 'object' – כדי לבדוק מערך משתמשים ב-Array.isArray(value)."
+                },
+                {
+                    "q": "מה זה coercion ו-casting ב-JS?",
+                    "a": "coercion הוא המרה אוטומטית ש-JS עושה בעת חישובים/השוואות (למשל '5' * 2 ⇒ 10). casting הוא המרה מפורשת בעזרת פונקציות כמו Number('5'), String(10), Boolean(0)."
+                }
+            ]
+        },
+        {
+            "id": "operators",
+            "title": "אופרטורים והשוואות",
+            "questions": [
+                {
+                    "q": "מה ההבדל בין == ל-=== ומתי להשתמש בכל אחד?",
+                    "a": "== מבצע coercion ולכן עלול להחזיר true עבור סוגים שונים ('5' == 5). === מבצע השוואה מחמירה של גם סוג וגם ערך ולכן בטוח וצפוי יותר. ברירת מחדל: להשתמש ב-=== וב-!==."
+                },
+                {
+                    "q": "מהם truthy ו-falsy?",
+                    "a": "Falsy: false, 0, -0, 0n, '', null, undefined, NaN. כל ערך אחר הוא truthy. בדיקות תנאי משתמשות באמת/שקר לאחר המרה ל-boolean."
+                },
+                {
+                    "q": "כיצד לחבר מספרים שמגיעים כמחרוזות קלט?",
+                    "a": "להמיר במפורש: Number(a) + Number(b) או בעזרת parseInt/parseFloat עם בסיס מתאים. להימנע מ-+ לפני מחרוזת אם יש חשש לחיבור טקסטואלי."
+                }
+            ]
+        },
+        {
+            "id": "conditions",
+            "title": "תנאים וסוויצ'",
+            "questions": [
+                {
+                    "q": "מתי לבחור בין if...else ל-switch?",
+                    "a": "if...else מתאים לתנאים מורכבים ומשווים טווחים/בוליאנים; switch יעיל ונקי כשבודקים שוויון קשיח של מקרה בודד מול כמה ערכים ידועים."
+                },
+                {
+                    "q": "מהו ה-ternary operator ומתי הוא מומלץ?",
+                    "a": "(?:) תנאי ? ערך_אם_אמת : ערך_אם_שקר. טוב להחזרת ערך קצרה בתוך ביטוי. לא מומלץ לקינון עמוק – עדיף if רגיל לקריאות."
+                }
+            ]
+        },
+        {
+            "id": "loops",
+            "title": "לולאות",
+            "questions": [
+                {
+                    "q": "מה ההבדל בין for, while ו-do...while?",
+                    "a": "for מתאים כשידוע מונה/טווח; while רץ כל עוד תנאי אמת לפני הגוף – מתאים כאשר לא ידוע מספר איטרציות; do...while מריץ לפחות פעם אחת ואז בודק תנאי בסוף."
+                },
+                {
+                    "q": "כיצד נמנעים מלולאה אינסופית?",
+                    "a": "מבטיחים שתנאי הלולאה יתקדם לסיום: לעדכן מונה/מצב בכל איטרציה, לבדוק תנאי נכון, ולהשתמש ב-break כשנדרש."
+                },
+                {
+                    "q": "איך מדפיסים את המספרים מ-1 עד 10 בשתי דרכים?",
+                    "a": "for(let i=1;i<=10;i++){console.log(i)} וגם let i=1; while(i<=10){console.log(i); i++;}."
+                }
+            ]
+        },
+        {
+            "id": "functions",
+            "title": "פונקציות והעברת פרמטרים",
+            "questions": [
+                {
+                    "q": "מהם הצורות להגדיר פונקציה ומה ההבדל בין הצהרה לביטוי?",
+                    "a": "הצהרת פונקציה (function declaration) נרשמת כ-function name(){} וזוכה ל-hoisting מלא. ביטוי פונקציה (function expression) משויך למשתנה const sum = function(a,b){}; אינו זוכה ל-hoisting של הערך. יש גם Arrow Functions: const sum = (a,b)=>a+b."
+                },
+                {
+                    "q": "מה זה פרמטרים ברירת מחדל, rest ו-spread בהקשר פונקציות?",
+                    "a": "פרמטר ברירת מחדל: function f(a=0){}. rest אוסף ארגומנטים לרשימה: function sum(...nums){}. spread פורס מערך לארגומנטים: sum(...[1,2,3])."
+                },
+                {
+                    "q": "מה ההבדל בין פרמטר לפי ערך לבין לפי הפניה?",
+                    "a": "פרימיטיביים עוברים לפי ערך; אובייקטים ומערכים לפי הפניה – שינוי בתוך הפונקציה ישפיע על האובייקט החיצוני. כדי להימנע משינוי בלתי רצוי – לעבוד על העתק (spread/structuredClone)."
+                }
+            ]
+        },
+        {
+            "id": "arrays",
+            "title": "מערכים",
+            "questions": [
+                {
+                    "q": "כיצד למיין, לסנן ולמפות מערך בצורה פונקציונלית?",
+                    "a": "שימוש ב-map להמרה, filter לסינון, reduce לאגרגציה. לדוגמה: const names = users.filter(u=>u.age>18).map(u=>u.name).sort(); מיון מותאם אישית עם sort((a,b)=>a-b)."
+                },
+                {
+                    "q": "מה ההבדל בין includes ל-some ול-find?",
+                    "a": "includes בודק קיום ערך בסיסי במערך. some בודק אם קיים איבר שעומד בתנאי ומחזיר boolean. find מחזיר את האיבר הראשון שעומד בתנאי או undefined."
+                }
+            ]
+        },
+        {
+            "id": "objects",
+            "title": "אובייקטים ו-JSON",
+            "questions": [
+                {
+                    "q": "מה ההבדל בין Object לשורת JSON וכיצד ממירים ביניהם?",
+                    "a": "Object הוא מבנה חי ב-JS. JSON הוא טקסט בפורמט מוסכם. ממירים על ידי JSON.stringify(obj) לשרשור טקסטואלי, ו-JSON.parse(text) להפוך חזרה לאובייקט."
+                },
+                {
+                    "q": "מה זה destructuring ו-spread באובייקטים?",
+                    "a": "destructuring שולף שדות: const {name,age} = user. spread יוצר העתק/מיזוג: const copy = {...user, role:'admin'}."
+                },
+                {
+                    "q": "מהו אובייקט ב-JavaScript ולמה צריך אובייקטים?",
+                    "a": "אובייקט הוא מבנה נתונים המכיל מאפיינים (properties) ומתודות (methods). משמש לארגון נתונים קשורים, יצירת מודלים של ישויות בעולם האמיתי, וקידוד מודולרי."
+                },
+                {
+                    "q": "כיצד להגדיר אובייקט חדש ב-JavaScript?",
+                    "a": "שלוש דרכים: 1) Object literal: const obj = {name: 'John', age: 30} 2) Constructor: const obj = new Object() 3) Object.create(): const obj = Object.create(prototype)."
+                },
+                {
+                    "q": "כיצד לפנות למאפיין באובייקט?",
+                    "a": "שתי דרכים: 1) Dot notation: obj.name 2) Bracket notation: obj['name'] או obj[variable]. Bracket notation חיוני כשהמאפיין מכיל רווחים או מתחיל במספר."
+                },
+                {
+                    "q": "מה זה this באובייקטים ומתי משתמשים בו?",
+                    "a": "this מתייחס לאובייקט הנוכחי. בתוך מתודה של אובייקט, this מצביע לאובייקט עצמו. מאפשר למתודות לגשת למאפיינים של האובייקט ולשרשר מתודות (method chaining)."
+                },
+                {
+                    "q": "כיצד לעבור על מאפיינים של אובייקט בלולאה?",
+                    "a": "for...in loop: for(const key in obj) { console.log(key + ': ' + obj[key]) }. Object.keys(obj) מחזיר מערך של מפתחות. Object.values(obj) מחזיר מערך של ערכים. Object.entries(obj) מחזיר מערך של [key, value]."
+                }
+            ]
+        },
+        {
+            "id": "advanced-loops",
+            "title": "לולאות מתקדמות",
+            "questions": [
+                {
+                    "q": "כיצד ליצור לולאה שמדפיסה מספרים מ-1 עד 10?",
+                    "a": "for(let i=1; i<=10; i++) { console.log(i) } או let i=1; while(i<=10) { console.log(i); i++ }."
+                },
+                {
+                    "q": "כיצד ליצור לולאה שמדפיסה מספרים זוגיים מ-2 עד 20?",
+                    "a": "for(let i=2; i<=20; i+=2) { console.log(i) } או let i=2; while(i<=20) { console.log(i); i+=2 }."
+                },
+                {
+                    "q": "כיצד ליצור לולאה שמדפיסה מספרים מ-10 עד 0?",
+                    "a": "for(let i=10; i>=0; i--) { console.log(i) } או let i=10; while(i>=0) { console.log(i); i-- }."
+                },
+                {
+                    "q": "כיצד ליצור לולאה שמדפיסה מספרים מ-start עד end (כש-start ו-end מוגדרים על ידי המשתמש)?",
+                    "a": "const start = parseInt(prompt('הזן start')); const end = parseInt(prompt('הזן end')); for(let i=start; i<=end; i++) { console.log(i) }."
+                },
+                {
+                    "q": "כיצד ליצור לולאה שמדפיסה מספרים מ-start עד end עם מרווחים של space?",
+                    "a": "const start = parseInt(prompt('הזן start')); const end = parseInt(prompt('הזן end')); const space = parseInt(prompt('הזן מרווח')); for(let i=start; i<=end; i+=space) { console.log(i) }."
+                },
+                {
+                    "q": "כיצד ליצור לולאה שמדפיסה מספרים מ-start עד end גם כש-start גדול מ-end?",
+                    "a": "const start = parseInt(prompt('הזן start')); const end = parseInt(prompt('הזן end')); if(start <= end) { for(let i=start; i<=end; i++) console.log(i); } else { for(let i=start; i>=end; i--) console.log(i); }."
+                }
+            ]
+        },
+        {
+            "id": "array-practice",
+            "title": "תרגולי מערכים",
+            "questions": [
+                {
+                    "q": "כיצד ליצור מערך עם 10 מספרים המייצגים תוצאות משחקים ולחשב את הסכום?",
+                    "a": "const points = [85, 92, 78, 96, 88, 91, 83, 95, 89, 87]; let total = 0; for(let i=0; i<points.length; i++) { total += points[i]; } console.log('סכום:', total);"
+                },
+                {
+                    "q": "כיצד ליצור מערך עם 5 מחירי מוצרים ולחשב ממוצע?",
+                    "a": "const cart = [25.50, 15.75, 32.00, 18.25, 28.90]; let sum = 0; for(let i=0; i<cart.length; i++) { sum += cart[i]; } const average = sum / cart.length; console.log('ממוצע:', average);"
+                },
+                {
+                    "q": "כיצד ליצור מערך עם ציוני סטודנטים ולמצוא את הציון הגבוה והנמוך ביותר?",
+                    "a": "const grades = [85, 92, 78, 96, 88]; let max = grades[0]; let min = grades[0]; for(let i=1; i<grades.length; i++) { if(grades[i] > max) max = grades[i]; if(grades[i] < min) min = grades[i]; } console.log('הגבוה:', max, 'הנמוך:', min);"
+                },
+                {
+                    "q": "כיצד לספור כמה סטודנטים מצטיינים (90+) וכמה נכשלים (69-) בכיתה?",
+                    "a": "const grades = [85, 92, 78, 96, 88, 65, 95, 70]; let excellent = 0; let failed = 0; for(let i=0; i<grades.length; i++) { if(grades[i] >= 90) excellent++; if(grades[i] <= 69) failed++; } console.log('מצטיינים:', excellent, 'נכשלים:', failed);"
+                },
+                {
+                    "q": "כיצד ליצור פונקציה שמחזירה ממוצע ציונים?",
+                    "a": "function average(grades) { let sum = 0; for(let i=0; i<grades.length; i++) { sum += grades[i]; } return sum / grades.length; } console.log(average([85, 92, 78, 96, 88]));"
+                },
+                {
+                    "q": "כיצד ליצור פונקציה שמחזירה את הציון הגבוה ביותר?",
+                    "a": "function maxGrade(grades) { let max = grades[0]; for(let i=1; i<grades.length; i++) { if(grades[i] > max) max = grades[i]; } return max; } console.log(maxGrade([85, 92, 78, 96, 88]));"
+                },
+                {
+                    "q": "כיצד ליצור פונקציה שמחזירה את הציון הנמוך ביותר?",
+                    "a": "function minGrade(grades) { let min = grades[0]; for(let i=1; i<grades.length; i++) { if(grades[i] < min) min = grades[i]; } return min; } console.log(minGrade([85, 92, 78, 96, 88]));"
+                },
+                {
+                    "q": "כיצד ליצור פונקציה שמחזירה את הפער בין הציון הגבוה לנמוך?",
+                    "a": "function gradeGap(grades) { let max = grades[0]; let min = grades[0]; for(let i=1; i<grades.length; i++) { if(grades[i] > max) max = grades[i]; if(grades[i] < min) min = grades[i]; } return max - min; } console.log(gradeGap([85, 92, 78, 96, 88]));"
+                },
+                {
+                    "q": "כיצד ליצור פונקציה שמחזירה מערך עם הציון הגבוה והנמוך?",
+                    "a": "function endPoints(grades) { let max = grades[0]; let min = grades[0]; for(let i=1; i<grades.length; i++) { if(grades[i] > max) max = grades[i]; if(grades[i] < min) min = grades[i]; } return [min, max]; } console.log(endPoints([85, 92, 78, 96, 88]));"
+                }
+            ]
+        },
+        {
+            "id": "array-methods",
+            "title": "מתודות מערכים",
+            "questions": [
+                {
+                    "q": "מה עושה pop() ומתי משתמשים בו?",
+                    "a": "pop() מסיר ומחזיר את האיבר האחרון במערך. משתמשים כשצריך להסיר איבר מהסוף או כשמעבדים מערך בסדר הפוך. מחזיר undefined אם המערך ריק."
+                },
+                {
+                    "q": "מה עושה push() ומתי משתמשים בו?",
+                    "a": "push() מוסיף איבר(ים) לסוף המערך ומחזיר את האורך החדש. משתמשים כשצריך להוסיף נתונים חדשים או לבנות מערך דינמי."
+                },
+                {
+                    "q": "מה עושה shift() ומתי משתמשים בו?",
+                    "a": "shift() מסיר ומחזיר את האיבר הראשון במערך. משתמשים כשצריך להסיר איבר מההתחלה או כשמעבדים תור (queue). מחזיר undefined אם המערך ריק."
+                },
+                {
+                    "q": "מה עושה includes() ומתי משתמשים בו?",
+                    "a": "includes() בודק אם מערך מכיל ערך מסוים ומחזיר true/false. משתמשים לבדיקת קיום ערך ללא צורך בלולאה. תומך בפרמטר שני לאינדקס התחלתי."
+                },
+                {
+                    "q": "מה עושה indexOf() ומתי משתמשים בו?",
+                    "a": "indexOf() מחזיר את האינדקס של הערך הראשון שנמצא במערך, או -1 אם לא נמצא. משתמשים כשצריך לדעת מיקום של ערך או לבדוק קיום. תומך בפרמטר שני לאינדקס התחלתי."
+                },
+                {
+                    "q": "מה עושה toString() ומתי משתמשים בו?",
+                    "a": "toString() ממיר מערך למחרוזת עם פסיקים כמפרידים. משתמשים להצגה או שמירה פשוטה. אוטומטי כשמערבבים מערך עם מחרוזת."
+                },
+                {
+                    "q": "מה עושה join() ומתי משתמשים בו?",
+                    "a": "join() ממיר מערך למחרוזת עם מפריד מותאם אישית. join('-') יוצר 'a-b-c'. join('') יוצר 'abc'. משתמשים ליצירת מחרוזות מותאמות או CSV."
+                },
+                {
+                    "q": "מה עושה concat() ומתי משתמשים בו?",
+                    "a": "concat() מחבר מערכים ויוצר מערך חדש. משתמשים למיזוג מערכים ללא שינוי המקוריים. עדיף על push() כשצריך לשמור על המערכים המקוריים."
+                }
+            ]
+        },
+        {
+            "id": "timers",
+            "title": "טיימרים - setTimeout ו-setInterval",
+            "questions": [
+                {
+                    "q": "מה עושה setTimeout ומתי משתמשים בו?",
+                    "a": "setTimeout מריץ פונקציה פעם אחת אחרי זמן מוגדר (במילישניות). משתמשים לעיכוב ביצוע, אנימציות, או פעולות חד-פעמיות. מחזיר ID שניתן להשתמש בו עם clearTimeout()."
+                },
+                {
+                    "q": "מה עושה setInterval ומתי משתמשים בו?",
+                    "a": "setInterval מריץ פונקציה כל זמן מוגדר (במילישניות). משתמשים לשעונים, עדכונים תקופתיים, או אנימציות חוזרות. מחזיר ID שניתן להשתמש בו עם clearInterval()."
+                },
+                {
+                    "q": "מדוע לא צריך להוסיף סוגריים לפונקציה ב-setTimeout/setInterval?",
+                    "a": "כי אנחנו מעבירים הפניה לפונקציה, לא קוראים לה מיד. setTimeout(myFunction, 1000) נכון. setTimeout(myFunction(), 1000) יקרא לפונקציה מיד ויעביר את התוצאה."
+                },
+                {
+                    "q": "כיצד לעצור setTimeout או setInterval?",
+                    "a": "שומרים את ה-ID שמחזירים: const id = setTimeout(fn, 1000); clearTimeout(id); או const id = setInterval(fn, 1000); clearInterval(id);. חשוב לנקות טיימרים כדי למנוע זליגות זיכרון."
+                },
+                {
+                    "q": "מה ההבדל בין setTimeout(fn, 0) לבין קריאה ישירה לפונקציה?",
+                    "a": "setTimeout(fn, 0) מעביר את הפונקציה ל-event loop ויריץ אותה אחרי שהקוד הנוכחי יסתיים. קריאה ישירה מריצה מיד. משתמשים ב-setTimeout(0) לשבירת בלוקים ארוכים או לעדכון DOM."
+                }
+            ]
+        },
+        {
+            "id": "dates",
+            "title": "עבודה עם תאריכים וזמנים",
+            "questions": [
+                {
+                    "q": "מהי מחלקת Date וכיצד יוצרים אובייקט תאריך?",
+                    "a": "Date היא מחלקה מובנית ליצירת אובייקטי תאריך וזמן. יוצרים עם: new Date() (עכשיו), new Date(year, month, day), new Date('2023-12-25'), או new Date(timestamp)."
+                },
+                {
+                    "q": "מהו מועד ברירת המחדל כשמשתמשים ב-new Date()?",
+                    "a": "new Date() יוצר אובייקט עם התאריך והשעה הנוכחיים לפי שעון המחשב. כולל שנה, חודש, יום, שעה, דקה, שנייה ומילישנייה."
+                },
+                {
+                    "q": "כיצד להגדיר תאריך ספציפי בעת יצירת אובייקט Date?",
+                    "a": "new Date(2023, 11, 25) - שנה, חודש (0-11), יום. new Date('2023-12-25') - מחרוזת תאריך. new Date(1703462400000) - timestamp. new Date(2023, 11, 25, 14, 30, 0) - כולל שעה."
+                },
+                {
+                    "q": "מהי חותמת זמן (timestamp) בתכנות?",
+                    "a": "Timestamp הוא מספר המייצג את מספר המילישניות שעברו מ-1 בינואר 1970 00:00:00 UTC. משמש להשוואת תאריכים, חישובי זמן, ושמירה במסדי נתונים. מתקבל עם Date.now() או date.getTime()."
+                },
+                {
+                    "q": "כיצד ליצור פונקציה שמברכת לפי שעה נוכחית?",
+                    "a": "function greetByTime(name) { const now = new Date(); const hour = now.getHours(); if(hour < 12) return 'בוקר טוב ' + name; else if(hour < 18) return 'צהריים טובים ' + name; else return 'ערב טוב ' + name; }"
+                },
+                {
+                    "q": "כיצד להציג שעה מקומית לעיר מסוימת?",
+                    "a": "function getCityTime(city) { const now = new Date(); const offsets = { 'תל אביב': 2, 'ניו יורק': -5, 'בנגקוק': 7, 'ברצלונה': 1 }; const utc = now.getTime() + (now.getTimezoneOffset() * 60000); const cityTime = new Date(utc + (offsets[city] * 3600000)); return cityTime.toLocaleString(); }"
+                }
+            ]
+        },
+        {
+            "id": "strings",
+            "title": "עבודה עם מחרוזות",
+            "questions": [
+                {
+                    "q": "כיצד להוסיף טקסטים לקוד JavaScript?",
+                    "a": "שלוש דרכים: 1) מחרוזות רגילות: 'hello' או \"world\" 2) Template literals: `Hello ${name}` 3) חיבור: 'Hello ' + name. Template literals תומכים בשורות מרובות וביטויים."
+                },
+                {
+                    "q": "האם JavaScript רגישה לאותיות קטנות וגדולות?",
+                    "a": "כן, JavaScript case-sensitive. 'Hello' ≠ 'hello'. indexOf('Hello') לא ימצא 'hello'. משתמשים ב-toLowerCase() או toUpperCase() לנורמליזציה לפני השוואות."
+                },
+                {
+                    "q": "כיצד לחפש ביטוי בתוך טקסט?",
+                    "a": "indexOf() מחזיר מיקום או -1: text.indexOf('search'). includes() מחזיר true/false: text.includes('search'). search() עם regex: text.search(/pattern/). startsWith() ו-endsWith() לבדיקת התחלה/סיום."
+                },
+                {
+                    "q": "כיצד להחליף ביטוי בתוך טקסט בביטוי אחר?",
+                    "a": "replace() מחליף הופעה ראשונה: text.replace('old', 'new'). replaceAll() מחליף הכל: text.replaceAll('old', 'new'). עם regex: text.replace(/old/g, 'new') מחליף הכל."
+                },
+                {
+                    "q": "כיצד להגדיל או להקטין את כל המילים?",
+                    "a": "toUpperCase() הופך הכל לאותיות גדולות: text.toUpperCase(). toLowerCase() הופך הכל לאותיות קטנות: text.toLowerCase(). toLocaleUpperCase() ו-toLocaleLowerCase() תומכים בשפות שונות."
+                },
+                {
+                    "q": "כיצד ליצור פונקציה שבודקת אם שם פרטי ומשפחה תקינים (יותר מ-2 תווים)?",
+                    "a": "function validateNames(firstName, lastName) { if(firstName.length <= 2 && lastName.length <= 2) return 'שם פרטי ושם משפחה אינם תקינים'; else if(firstName.length <= 2) return 'שם פרטי אינו תקין'; else if(lastName.length <= 2) return 'שם משפחה אינו תקין'; else return 'welcome'; }"
+                },
+                {
+                    "q": "כיצד ליצור פונקציה שבודקת אם מספר טלפון תקין (9-10 תווים)?",
+                    "a": "function validatePhone(phone) { const cleanPhone = phone.replace(/\\D/g, ''); if(cleanPhone.length >= 9 && cleanPhone.length <= 10) return 'welcome'; else return 'מספר טלפון אינו תקין'; }"
+                },
+                {
+                    "q": "כיצד ליצור פונקציה שבודקת אם כתובת אימייל היא Gmail?",
+                    "a": "function isGmail(email) { if(email.toLowerCase().endsWith('@gmail.com')) return 'welcome'; else return 'כתובת אימייל אינה Gmail'; }"
+                },
+                {
+                    "q": "כיצד ליצור פונקציה שמסירה רווחים מהתחלה ומהסוף של שם?",
+                    "a": "function trimName(name) { return name.trim(); } או function trimName(name) { return name.replace(/^\\s+|\\s+$/g, ''); }"
+                },
+                {
+                    "q": "כיצד ליצור פונקציה שמפרקת שם מלא לשם פרטי ומשפחה?",
+                    "a": "function splitFullName(fullName) { const parts = fullName.trim().split(' '); if(parts.length >= 2) { const firstName = parts[0]; const lastName = parts.slice(1).join(' '); return { firstName, lastName }; } return null; }"
+                }
+            ]
+        },
+        {
+            "id": "numbers",
+            "title": "עבודה עם מספרים",
+            "questions": [
+                {
+                    "q": "אילו סוגי מספרים קיימים ב-JavaScript?",
+                    "a": "JavaScript מכיר רק Number type (כולל שלמים ועשרוניים). יש גם BigInt למספרים גדולים מאוד. כל המספרים הם floating-point (64-bit). אין הבחנה בין שלמים לעשרוניים כמו בשפות אחרות."
+                },
+                {
+                    "q": "כיצד לבצע המרה מטקסט למספר?",
+                    "a": "Number('123') ממיר למספר. parseInt('123') ממיר לשלם. parseFloat('123.45') ממיר לעשרוני. +'123' הוא קיצור ל-Number(). חשוב לבדוק NaN אחרי המרה."
+                },
+                {
+                    "q": "מה ההבדל בין parseInt ל-parseFloat?",
+                    "a": "parseInt ממיר לשלם ומפסיק בקריאת תו לא-מספרי. parseInt('123abc') = 123. parseFloat ממיר לעשרוני וממשיך עד תו לא-מספרי. parseFloat('123.45abc') = 123.45. parseInt('12.34') = 12."
+                },
+                {
+                    "q": "מהי מחלקת Math ואילו מתודות חשובות יש בה?",
+                    "a": "Math היא מחלקה מובנית עם פונקציות מתמטיות. חשובות: Math.round() (עיגול), Math.floor() (עיגול למטה), Math.ceil() (עיגול למעלה), Math.random() (מספר אקראי), Math.max()/min() (מקסימום/מינימום), Math.abs() (ערך מוחלט)."
+                },
+                {
+                    "q": "כיצד ליצור מספר אקראי בין 1 ל-10?",
+                    "a": "Math.floor(Math.random() * 10) + 1. Math.random() מחזיר 0-0.999. כפול ב-10 נותן 0-9.999. Math.floor() מעגל למטה ל-0-9. +1 נותן 1-10."
+                },
+                {
+                    "q": "כיצד ליצור פונקציה שמקבלת שני מספרים ואופרטור ומחזירה תוצאה?",
+                    "a": "function calculate(a, b, operator) { switch(operator) { case '+': return a + b; case '-': return a - b; case '*': return a * b; case '/': return b !== 0 ? a / b : 'לא ניתן לחלק באפס'; default: return 'אופרטור לא תקין'; } }"
+                },
+                {
+                    "q": "כיצד ליצור פונקציה שמחזירה מספר אקראי בין 1 למספר נתון?",
+                    "a": "function randomUpTo(max) { return Math.floor(Math.random() * max) + 1; } או function randomUpTo(max) { return Math.ceil(Math.random() * max); }"
+                },
+                {
+                    "q": "כיצד ליצור פונקציה שמעגלת מחיר מוצר?",
+                    "a": "function roundPrice(price) { return Math.round(price); } או function roundPrice(price) { return Math.round(price * 100) / 100; } לעיגול לשני מקומות עשרוניים."
+                },
+                {
+                    "q": "כיצד ליצור פונקציה שמפרקת מחיר כולל מע\"מ למחיר ללא מע\"מ ולסכום המע\"מ?",
+                    "a": "function splitVAT(totalPrice) { const vatRate = 0.17; const priceWithoutVAT = totalPrice / (1 + vatRate); const vatAmount = totalPrice - priceWithoutVAT; return { priceWithoutVAT: Math.round(priceWithoutVAT * 100) / 100, vatAmount: Math.round(vatAmount * 100) / 100 }; }"
+                }
+            ]
+        },
+        {
+            "id": "object-practice",
+            "title": "תרגולי אובייקטים",
+            "questions": [
+                {
+                    "q": "כיצד ליצור אובייקט user עם מאפיינים ומתודות בסיסיות?",
+                    "a": "const user = { fullName: 'Gal Lavi', username: 'gallavi', password: 'gal123', isLogin: false, sayHola() { console.log('שלום ' + this.fullName); }, changeName(newName) { this.fullName = newName; console.log('שם שונה ל-' + this.fullName); } }; console.log(user); console.log(typeof user);"
+                },
+                {
+                    "q": "כיצד ליצור מתודת login שבודקת שם משתמש וסיסמה?",
+                    "a": "login(username, password) { if(username === this.username && password === this.password) { this.isLogin = true; console.log('התחברת בהצלחה'); } else { console.log('שם משתמש או סיסמה שגויים'); } }"
+                },
+                {
+                    "q": "כיצד ליצור מתודת logout?",
+                    "a": "logout() { this.isLogin = false; console.log('התנתקת בהצלחה'); }"
+                },
+                {
+                    "q": "כיצד ליצור מתודת changePassword שבודקת סיסמה ישנה?",
+                    "a": "changePassword(oldPassword, newPassword) { if(oldPassword === this.password) { this.password = newPassword; console.log('סיסמה שונתה בהצלחה'); } else { console.log('סיסמה ישנה שגויה'); } }"
+                },
+                {
+                    "q": "כיצד ליצור אובייקט bankAccount עם פונקציונליות בנקאית?",
+                    "a": "const bankAccount = { first: 'Gal', last: 'Lavi', username: 'gallavi', password: 'gal123', statusLogin: false, total: 0, credit: 500, deposit(amount) { if(this.statusLogin) { this.total += amount; console.log('הופקדו ' + amount + ' ש\"ח'); } else { console.log('יש להתחבר תחילה'); } } };"
+                },
+                {
+                    "q": "כיצד ליצור מתודת withdraw עם בדיקת אשראי?",
+                    "a": "withdraw(amount, password) { if(!this.statusLogin) { console.log('יש להתחבר תחילה'); return; } if(password !== this.password) { console.log('סיסמה שגויה'); return; } if(this.total + this.credit >= amount) { this.total -= amount; console.log('נמשכו ' + amount + ' ש\"ח'); } else { console.log('אין מספיק אשראי'); } }"
+                },
+                {
+                    "q": "כיצד ליצור מתודת changeCredit עם סיסמת מנהל?",
+                    "a": "changeCredit(newCredit, password, adminPassword) { if(!this.statusLogin) { console.log('יש להתחבר תחילה'); return; } if(password !== this.password) { console.log('סיסמה שגויה'); return; } if(adminPassword !== 'admin123456') { console.log('סיסמת מנהל שגויה'); return; } this.credit = newCredit; console.log('מסגרת אשראי שונתה ל-' + newCredit); }"
+                },
+                {
+                    "q": "מה זה method chaining וכיצד ליישם אותו?",
+                    "a": "Method chaining מאפשר לקרוא למספר מתודות ברצף. כל מתודה חייבת להחזיר this. דוגמה: const car = { setModel(model) { this.model = model; return this; }, setYear(year) { this.year = year; return this; } }; car.setModel('BMW').setYear(2023);"
+                }
+            ]
+        },
+        {
+            "id": "storage",
+            "title": "אחסון מקומי - localStorage ו-sessionStorage",
+            "questions": [
+                {
+                    "q": "מה ההבדל בין localStorage ל-sessionStorage?",
+                    "a": "localStorage נשמר עד שמנקים ידנית או עד שהמשתמש מוחק נתונים. sessionStorage נמחק כשסוגרים את הטאב. localStorage נגיש מכל הטאבים של הדומיין, sessionStorage רק מהטאב הנוכחי."
+                },
+                {
+                    "q": "כיצד לשמור מידע ב-localStorage?",
+                    "a": "localStorage.setItem('key', 'value') שומר מחרוזת. localStorage['key'] = 'value' הוא קיצור. לאובייקטים: localStorage.setItem('user', JSON.stringify(userObject)). תמיד לבדוק תמיכה: if(typeof Storage !== 'undefined')."
+                },
+                {
+                    "q": "כיצד לקרוא מידע מ-localStorage?",
+                    "a": "localStorage.getItem('key') מחזיר מחרוזת או null. localStorage['key'] הוא קיצור. לאובייקטים: JSON.parse(localStorage.getItem('user')). תמיד לבדוק null: const user = localStorage.getItem('user') || 'default';"
+                },
+                {
+                    "q": "כיצד למחוק מידע מ-localStorage?",
+                    "a": "localStorage.removeItem('key') מוחק מפתח ספציפי. localStorage.clear() מוחק הכל. localStorage['key'] = null לא מוחק - עדיין קיים. תמיד להשתמש ב-removeItem()."
+                },
+                {
+                    "q": "כיצד לבדוק כמה פריטים יש ב-localStorage?",
+                    "a": "localStorage.length מחזיר את מספר הפריטים. localStorage.key(index) מחזיר את שם המפתח באינדקס נתון. for(let i = 0; i < localStorage.length; i++) { console.log(localStorage.key(i)); }"
+                },
+                {
+                    "q": "כיצד ליצור מערכת שמירת העדפות משתמש?",
+                    "a": "function savePreferences(prefs) { localStorage.setItem('userPreferences', JSON.stringify(prefs)); } function loadPreferences() { const saved = localStorage.getItem('userPreferences'); return saved ? JSON.parse(saved) : { theme: 'light', language: 'he' }; } function clearPreferences() { localStorage.removeItem('userPreferences'); }"
+                }
+            ]
+        }
+    ]
+}

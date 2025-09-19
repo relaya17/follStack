@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Material-UI Course</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #fff;
+            background: radial-gradient(1000px 600px at 20% 10%, rgba(0, 212, 255, 0.15), transparent), radial-gradient(800px 500px at 80% 0%, rgba(255, 0, 212, 0.12), transparent), #0b0f14;
+        }
+
+        .course-layout {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 24px 120px;
+        }
+
+        .slide-container {
+            width: 100%;
+            max-width: 1100px;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.05);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+            padding: 40px;
+        }
+
+        .slide-title {
+            font-size: 42px;
+            margin: 0 0 12px;
+            text-align: center;
+            background: linear-gradient(45deg, #00d4ff, #00ffa3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .slide-subtitle {
+            opacity: .9;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .slide-icon {
+            font-size: 56px;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .definition-content,
+        .explanation-content {
+            margin-top: 10px;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .list-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+            margin-top: 20px;
+        }
+
+        .list-item {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .code-block {
+            margin-top: 16px;
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 16px;
+            overflow: auto;
+            white-space: pre;
+            direction: ltr;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            padding: 12px 22px;
+            border-radius: 22px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            cursor: pointer;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 18px;
+            left: 18px;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px 14px;
+        }
+
+        .language-switcher {
+            position: fixed;
+            top: 18px;
+            right: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 22px;
+            padding: 6px;
+        }
+
+        .lang-btn {
+            padding: 8px 14px;
+            background: transparent;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 16px;
+        }
+
+        .lang-btn.active {
+            background: linear-gradient(45deg, #00d4ff, #ff00d4);
+        }
+
+        .home-btn {
+            position: fixed;
+            top: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 8px 14px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .section-note {
+            margin-top: 12px;
+            text-align: center;
+            color: #9be7ff;
+        }
+
+        .table-container {
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .data-table th {
+            background: rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+            color: #80d8ff;
+        }
+
+        .data-table td {
+            color: #ffffff;
+        }
+
+        .data-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+    </style>
+    <!-- הערות: עמוד זה נטען את תוכן הקורס מקובץ JSON ומציג שקפים דינמיים. כל הטקסטים מוצגים בעברית או ערבית לפי בחירת המשתמש. -->
+</head>
+
+<body>
+    <a class="home-btn" href="/index.html" data-he="לדף הבית" data-ar="الصفحة الرئيسية">לדף הבית</a>
+    <div class="language-switcher">
+        <button class="lang-btn active" onclick="switchLanguage('he')">עברית</button>
+        <button class="lang-btn" onclick="switchLanguage('ar')">العربية</button>
+    </div>
+    <div class="slide-counter">שקף 1 מתוך 46</div>
+
+    <div id="slides-container"></div>
+
+    <div class="navigation">
+        <button class="nav-btn" onclick="previousSlide()" data-he="הקודם" data-ar="السابق">הקודם</button>
+        <button class="nav-btn" onclick="nextSlide()" data-he="הבא" data-ar="التالي">הבא</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        let totalSlides = 46;
+        let currentLanguage = 'he';
+        let courseData = null;
+
+        async function loadCourseData() {
+            const response = await fetch('../data/material-ui-course-data.json');
+            courseData = await response.json();
+            totalSlides = courseData.course.totalSlides;
+            generateSlides();
+            showSlide(1);
+        }
+
+        function switchLanguage(lang) {
+            currentLanguage = lang;
+            document.querySelectorAll('[data-he]').forEach(el => {
+                el.textContent = lang === 'he' ? el.getAttribute('data-he') : el.getAttribute('data-ar');
+            });
+            document.body.dir = lang === 'he' ? 'rtl' : 'rtl';
+        }
+
+        function generateSlides() {
+            const container = document.getElementById('slides-container');
+            container.innerHTML = '';
+            courseData.course.slides.forEach((slide, idx) => {
+                const el = createSlideElement(slide, idx + 1);
+                container.appendChild(el);
+            });
+        }
+
+        function createSlideElement(slide, slideNumber) {
+            const wrap = document.createElement('div');
+            wrap.className = 'course-layout hidden';
+            wrap.id = `slide-${slideNumber}`;
+            if (slide.backgroundColor) wrap.style.background = slide.backgroundColor;
+
+            let content = '';
+            switch (slide.type) {
+                case 'title':
+                    content = `
+        <div class="slide-container">
+          <div class="slide-icon">${slide.icon || ''}</div>
+          <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+          <div class="slide-subtitle" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+          ${slide.creator ? `<div class=\"section-note\" data-he=\"${slide.creator.he}\" data-ar=\"${slide.creator.ar}\">${slide.creator.he}</div>` : ''}
+        </div>`;
+                    break;
+
+                case 'toc':
+                    content = `
+        <div class="slide-container">
+          <div class="slide-icon">${slide.icon || ''}</div>
+          <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+          <div class="list-grid">
+            ${slide.items.map(it => `<div class='list-item' data-he='${it.he}' data-ar='${it.ar}'>${it.he}</div>`).join('')}
+          </div>
+        </div>`;
+                    break;
+
+                case 'benefits':
+                    content = `
+        <div class="slide-container">
+          <div class="slide-icon">${slide.icon || ''}</div>
+          <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+          <div class="list-grid">
+            ${slide.items.map(it => `<div class='list-item' data-he='${it.he}' data-ar='${it.ar}'>${it.he}</div>`).join('')}
+          </div>
+        </div>`;
+                    break;
+
+                case 'installation':
+                    content = `
+        <div class="slide-container">
+          <div class="slide-icon">${slide.icon || ''}</div>
+          <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+          <div class="definition-content" data-he="התקנת הספריות הנדרשות" data-ar="تثبيت الحزم المطلوبة">התקנת הספריות הנדרשות</div>
+          <div class="code-block">${slide.commands.join('\\n')}</div>
+        </div>`;
+                    break;
+
+                case 'roboto':
+                    content = `
+        <div class="slide-container">
+          <div class="slide-icon">${slide.icon || ''}</div>
+          <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+          <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+          ${slide.steps ? `<div class='code-block'>${slide.steps.map(s => s.he).join('\\n')}</div>` : ''}
+        </div>`;
+                    break;
+
+                case 'snippets':
+                    content = `
+        <div class="slide-container">
+          <div class="slide-icon">${slide.icon || ''}</div>
+          <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+          <div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+          ${slide.link ? `<div class='section-note'><a href='${slide.link}' target='_blank' style='color:#80d8ff'>${slide.link}</a></div>` : ''}
+        </div>`;
+                    break;
+
+                case 'components-types':
+                    content = `
+        <div class="slide-container">
+          <div class="slide-icon">${slide.icon || ''}</div>
+          <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+          <div class="list-grid">
+            ${slide.items.map(it => `<div class='list-item'><div style='font-size:28px'>${it.icon || ''}</div><div data-he='${it.he}' data-ar='${it.ar}'>${it.he}</div></div>`).join('')}
+          </div>
+        </div>`;
+                    break;
+
+                case 'section':
+                    content = `
+        <div class="slide-container">
+          <div class="slide-icon">${slide.icon || ''}</div>
+          <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+          <div class="definition-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>
+        </div>`;
+                    break;
+
+                case 'typography-intro':
+                    content = `
+        <div class="slide-container">
+          <div class="slide-icon">${slide.icon || ''}</div>
+          <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+          <div class="explanation-content" data-he="${slide.quote.he}" data-ar="${slide.quote.ar}">${slide.quote.he}</div>
+          ${slide.link ? `<div class='section-note'><a href='${slide.link}' target='_blank' style='color:#80d8ff'>${slide.link}</a></div>` : ''}
+        </div>`;
+                    break;
+
+                case 'typography-usage':
+                    content = `
+        <div class="slide-container">
+          <div class="slide-icon">${slide.icon || ''}</div>
+          <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+          <div class="code-block">${slide.code.component}</div>
+          ${slide.notes ? `<div class='list-grid'>${slide.notes.map(n => `<div class='list-item' data-he='${n.he}' data-ar='${n.ar}'>${n.he}</div>`).join('')}</div>` : ''}
+        </div>`;
+                    break;
+
+                case 'typography-component-attr':
+                case 'typography-fontweight':
+                case 'typography-colors':
+                case 'typography-align':
+                case 'typography-nowrap':
+                case 'sx-prop-intro':
+                case 'sx-prop-usage':
+                case 'divider-intro':
+                case 'button-intro':
+                case 'button-variants':
+                case 'button-colors':
+                case 'button-sizes':
+                case 'button-icons':
+                case 'icon-button':
+                case 'card-intro':
+                case 'card-header':
+                case 'card-props':
+                case 'card-outlined':
+                case 'business-cards-app':
+                case 'layout-intro':
+                case 'box-component':
+                case 'container-component':
+                case 'stack-component':
+                case 'stack-divider':
+                case 'grid-layout':
+                case 'responsive-grid':
+                case 'measurement-units':
+                case 'grid-spacing':
+                case 'grid-direction':
+                case 'justify-content':
+                case 'align-items':
+                case 'layout-task':
+                case 'navigation-intro':
+                case 'appbar-intro':
+                case 'appbar-component':
+                case 'toolbar-component':
+                case 'bottom-navigation-intro':
+                case 'bottom-navigation-component':
+                case 'browser-result':
+                case 'showlabels-prop':
+                case 'browser-result-labels':
+                case 'navigation-task':
+                case 'end-slide':
+                case 'success-message':
+                    content = `
+        <div class="slide-container">
+          <div class="slide-icon">${slide.icon || ''}</div>
+          <h1 class="slide-title" data-he="${slide.title.he}" data-ar="${slide.title.ar}">${slide.title.he}</h1>
+          ${slide.content ? `<div class="explanation-content" data-he="${slide.content.he}" data-ar="${slide.content.ar}">${slide.content.he}</div>` : ''}
+          ${slide.code ? `<div class="code-block">${slide.code.component}</div>` : ''}
+          ${slide.steps ? `<div class='list-grid'>${slide.steps.map(s => `<div class='list-item' data-he='${s.he}' data-ar='${s.ar}'>${s.he}</div>`).join('')}</div>` : ''}
+          ${slide.notes ? `<div class='list-grid'>${slide.notes.map(n => `<div class='list-item' data-he='${n.he}' data-ar='${n.ar}'>${n.he}</div>`).join('')}</div>` : ''}
+          ${slide.table ? `<div class='table-container'><table class='data-table'><thead><tr><th>Unit</th><th>Detail</th><th>Screen Size</th></tr></thead><tbody>${slide.table.map(row => `<tr><td>${row.unit}</td><td>${row.detail}</td><td>${row.screenSize}</td></tr>`).join('')}</tbody></table></div>` : ''}
+          ${slide.link ? `<div class='section-note'><a href='${slide.link}' target='_blank' style='color:#80d8ff'>${slide.link}</a></div>` : ''}
+        </div>`;
+                    break;
+
+                default:
+                    content = `<div class='slide-container'><h1 class='slide-title'>Unsupported type</h1></div>`;
+            }
+
+            wrap.innerHTML = content;
+            return wrap;
+        }
+
+        function showSlide(n) {
+            for (let i = 1; i <= totalSlides; i++) {
+                const el = document.getElementById(`slide-${i}`);
+                if (el) el.classList.add('hidden');
+            }
+            const cur = document.getElementById(`slide-${n}`);
+            if (cur) cur.classList.remove('hidden');
+            const counter = document.querySelector('.slide-counter');
+            counter.textContent = currentLanguage === 'he' ? `שקף ${n} מתוך ${totalSlides}` : `شريحة ${n} من ${totalSlides}`;
+            document.querySelector('.nav-btn:first-child').disabled = n === 1;
+            document.querySelector('.nav-btn:last-child').disabled = n === totalSlides;
+        }
+
+        function nextSlide() { if (currentSlide < totalSlides) { currentSlide++; showSlide(currentSlide); } }
+        function previousSlide() { if (currentSlide > 1) { currentSlide--; showSlide(currentSlide); } }
+
+        window.addEventListener('load', loadCourseData);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,2195 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎓 FullStack Learning Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design Improvements */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .text-4xl {
+                font-size: 2rem;
+            }
+
+            .text-2xl {
+                font-size: 1.5rem;
+            }
+
+            .hidden-mobile {
+                display: none;
+            }
+
+            .mobile-full {
+                width: 100%;
+            }
+
+            .mobile-stack {
+                flex-direction: column;
+            }
+
+            .mobile-center {
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .px-4 {
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+            }
+
+            .py-8 {
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+            }
+
+            .text-lg {
+                font-size: 1rem;
+            }
+
+            .text-sm {
+                font-size: 0.75rem;
+            }
+        }
+
+        /* Touch-friendly buttons */
+        @media (hover: none) {
+            .hover\:bg-blue-700:hover {
+                background-color: #1d4ed8;
+            }
+
+            button,
+            .button {
+                min-height: 44px;
+                min-width: 44px;
+            }
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            .bg-white {
+                background-color: #ffffff;
+                border: 2px solid #000000;
+            }
+
+            .text-gray-600 {
+                color: #000000;
+            }
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            .fade-in {
+                animation: none;
+            }
+
+            * {
+                transition: none;
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            .bg-gray-50 {
+                background-color: #1f2937;
+            }
+
+            .bg-white {
+                background-color: #374151;
+                color: #f9fafb;
+            }
+
+            .text-gray-900 {
+                color: #f9fafb;
+            }
+
+            .text-gray-600 {
+                color: #d1d5db;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3 space-x-reverse">
+                    <!-- Hamburger Menu Button -->
+                    <button onclick="toggleMobileMenu()"
+                        class="md:hidden p-2 rounded-lg hover:bg-gray-100 min-h-[44px] min-w-[44px]" aria-label="תפריט">
+                        <span id="hamburgerIcon" class="text-xl">☰</span>
+                    </button>
+                    <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                        <span class="text-white text-xl">💻</span>
+                    </div>
+                    <h1 class="text-xl md:text-2xl font-bold text-gray-900 mobile-center">FullStack Learning Hub</h1>
+                </div>
+                <div class="flex items-center space-x-4 space-x-reverse hidden-mobile">
+                    <div class="flex items-center space-x-2 space-x-reverse text-green-600">
+                        <span id="connectionStatus" class="text-green-600">🔄</span>
+                        <span class="text-sm font-medium" id="connectionText">מתחבר...</span>
+                    </div>
+                </div>
+                <!-- Mobile connection status -->
+                <div class="md:hidden flex items-center">
+                    <span id="connectionStatusMobile" class="text-green-600 text-sm">🔄</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden bg-white border-b shadow-sm">
+        <div class="px-4 py-2 space-y-2">
+            <button onclick="showTab('users'); toggleMobileMenu();"
+                class="w-full text-right py-2 px-4 rounded-lg hover:bg-gray-100 flex items-center space-x-2 space-x-reverse">
+                <span>👥</span>
+                <span>משתמשים</span>
+            </button>
+            <button onclick="showTab('courses'); toggleMobileMenu();"
+                class="w-full text-right py-2 px-4 rounded-lg hover:bg-gray-100 flex items-center space-x-2 space-x-reverse">
+                <span>📚</span>
+                <span>קורסים</span>
+            </button>
+            <button onclick="showTab('subjects'); toggleMobileMenu();"
+                class="w-full text-right py-2 px-4 rounded-lg hover:bg-gray-100 flex items-center space-x-2 space-x-reverse">
+                <span>📚</span>
+                <span>נושאים</span>
+            </button>
+            <button onclick="showTab('workbook'); toggleMobileMenu();"
+                class="w-full text-right py-2 px-4 rounded-lg hover:bg-gray-100 flex items-center space-x-2 space-x-reverse">
+                <span>📖</span>
+                <span>חוברת עבודה</span>
+            </button>
+            <button onclick="showTab('quiz'); toggleMobileMenu();"
+                class="w-full text-right py-2 px-4 rounded-lg hover:bg-gray-100 flex items-center space-x-2 space-x-reverse">
+                <span>🧠</span>
+                <span>חידון</span>
+            </button>
+            <button onclick="showTab('ai'); toggleMobileMenu();"
+                class="w-full text-right py-2 px-4 rounded-lg hover:bg-gray-100 flex items-center space-x-2 space-x-reverse">
+                <span>🤖</span>
+                <span>AI עוזר</span>
+            </button>
+            <button onclick="showTab('materials'); toggleMobileMenu();"
+                class="w-full text-right py-2 px-4 rounded-lg hover:bg-gray-100 flex items-center space-x-2 space-x-reverse">
+                <span>📚</span>
+                <span>חומרי לימוד</span>
+            </button>
+            <button onclick="showTab('register'); toggleMobileMenu();"
+                class="w-full text-right py-2 px-4 rounded-lg hover:bg-gray-100 flex items-center space-x-2 space-x-reverse">
+                <span>📝</span>
+                <span>הרשמה</span>
+            </button>
+            <button onclick="showTab('add'); toggleMobileMenu();"
+                class="w-full text-right py-2 px-4 rounded-lg hover:bg-gray-100 flex items-center space-x-2 space-x-reverse">
+                <span>➕</span>
+                <span>הוספה</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow-lg p-4 md:p-6 border border-blue-200">
+                <div class="flex items-center mb-4 mobile-stack">
+                    <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                        <span class="text-blue-600 text-lg md:text-xl">👥</span>
+                    </div>
+                    <div class="mobile-center">
+                        <h3 class="text-base md:text-lg font-semibold text-gray-900">משתמשים</h3>
+                        <p class="text-sm text-gray-600" id="userCount">טוען...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-4 md:p-6 border border-green-200">
+                <div class="flex items-center mb-4 mobile-stack">
+                    <div
+                        class="w-10 h-10 md:w-12 md:h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
+                        <span class="text-green-600 text-lg md:text-xl">📚</span>
+                    </div>
+                    <div class="mobile-center">
+                        <h3 class="text-base md:text-lg font-semibold text-gray-900">קורסים</h3>
+                        <p class="text-sm text-gray-600" id="courseCount">טוען...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-4 md:p-6 border border-purple-200">
+                <div class="flex items-center mb-4 mobile-stack">
+                    <div
+                        class="w-10 h-10 md:w-12 md:h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
+                        <span class="text-purple-600 text-lg md:text-xl">🎓</span>
+                    </div>
+                    <div class="mobile-center">
+                        <h3 class="text-base md:text-lg font-semibold text-gray-900">סטודנטים</h3>
+                        <p class="text-sm text-gray-600" id="studentCount">טוען...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-4 md:p-6 border border-orange-200">
+                <div class="flex items-center mb-4 mobile-stack">
+                    <div
+                        class="w-10 h-10 md:w-12 md:h-12 bg-orange-100 rounded-lg flex items-center justify-center mr-4">
+                        <span class="text-orange-600 text-lg md:text-xl">📚</span>
+                    </div>
+                    <div class="mobile-center">
+                        <h3 class="text-base md:text-lg font-semibold text-gray-900">נושאים</h3>
+                        <p class="text-sm text-gray-600" id="subjectCount">טוען...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="bg-white rounded-xl shadow-lg">
+            <div class="border-b border-gray-200">
+                <nav class="-mb-px flex space-x-2 md:space-x-8 space-x-reverse px-2 md:px-6 overflow-x-auto">
+                    <button onclick="showTab('users')" id="usersTab"
+                        class="tab-button border-b-2 border-blue-500 py-2 md:py-4 px-1 text-xs md:text-sm font-medium text-blue-600 whitespace-nowrap min-h-[44px]">
+                        👥 משתמשים
+                    </button>
+                    <button onclick="showTab('courses')" id="coursesTab"
+                        class="tab-button border-b-2 border-transparent py-2 md:py-4 px-1 text-xs md:text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap min-h-[44px]">
+                        📚 קורסים
+                    </button>
+                    <button onclick="showTab('subjects')" id="subjectsTab"
+                        class="tab-button border-b-2 border-transparent py-2 md:py-4 px-1 text-xs md:text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap min-h-[44px]">
+                        📚 נושאים
+                    </button>
+                    <button onclick="showTab('workbook')" id="workbookTab"
+                        class="tab-button border-b-2 border-transparent py-2 md:py-4 px-1 text-xs md:text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap min-h-[44px]">
+                        📖 חוברת
+                    </button>
+                    <button onclick="showTab('quiz')" id="quizTab"
+                        class="tab-button border-b-2 border-transparent py-2 md:py-4 px-1 text-xs md:text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap min-h-[44px]">
+                        🧠 חידון
+                    </button>
+                    <button onclick="showTab('ai')" id="aiTab"
+                        class="tab-button border-b-2 border-transparent py-2 md:py-4 px-1 text-xs md:text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap min-h-[44px]">
+                        🤖 AI
+                    </button>
+                    <button onclick="showTab('materials')" id="materialsTab"
+                        class="tab-button border-b-2 border-transparent py-2 md:py-4 px-1 text-xs md:text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap min-h-[44px]">
+                        📚 חומרים
+                    </button>
+                    <button onclick="showTab('register')" id="registerTab"
+                        class="tab-button border-b-2 border-transparent py-2 md:py-4 px-1 text-xs md:text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap min-h-[44px]">
+                        📝 הרשמה
+                    </button>
+                    <button onclick="showTab('add')" id="addTab"
+                        class="tab-button border-b-2 border-transparent py-2 md:py-4 px-1 text-xs md:text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap min-h-[44px]">
+                        ➕ הוספה
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Users Tab -->
+            <div id="usersContent" class="tab-content p-4 md:p-6">
+                <div class="flex justify-between items-center mb-4 mobile-stack">
+                    <h2 class="text-lg md:text-xl font-semibold text-gray-900 mobile-center">רשימת משתמשים</h2>
+                    <button onclick="loadUsers()"
+                        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 min-h-[44px] mobile-full">
+                        🔄 רענן
+                    </button>
+                </div>
+                <div id="usersList" class="space-y-4">
+                    <div class="text-center py-8">
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                        <p class="text-gray-600 mt-2">טוען משתמשים...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Courses Tab -->
+            <div id="coursesContent" class="tab-content p-6 hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-gray-900">רשימת קורסים</h2>
+                    <button onclick="loadCourses()"
+                        class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                        🔄 רענן
+                    </button>
+                </div>
+                <div id="coursesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="text-center py-8">
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
+                        <p class="text-gray-600 mt-2">טוען קורסים...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subjects Tab -->
+            <div id="subjectsContent" class="tab-content p-6 hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-gray-900">נושאי לימוד</h2>
+                    <button onclick="loadSubjects()"
+                        class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700">
+                        🔄 רענן
+                    </button>
+                </div>
+                <div id="subjectsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="text-center py-8">
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600 mx-auto"></div>
+                        <p class="text-gray-600 mt-2">טוען נושאים...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workbook Tab -->
+            <div id="workbookContent" class="tab-content p-6 hidden">
+                <h2 class="text-xl font-semibold text-gray-900 mb-6">📖 חוברת עבודה - FullStack Development</h2>
+
+                <!-- Chapters -->
+                <div class="space-y-6">
+                    <!-- Chapter 1 -->
+                    <div class="bg-blue-50 rounded-lg p-6 border border-blue-200">
+                        <h3 class="text-lg font-semibold text-blue-900 mb-4">📚 פרק 1: JavaScript Basics</h3>
+                        <div class="space-y-3">
+                            <div class="bg-white rounded-lg p-4 border border-blue-100">
+                                <h4 class="font-medium text-blue-800 mb-2">🎯 מטרות הלמידה</h4>
+                                <ul class="text-sm text-blue-700 space-y-1 list-disc list-inside">
+                                    <li>הכרת משתנים ופונקציות</li>
+                                    <li>עבודה עם מערכים ואובייקטים</li>
+                                    <li>לולאות ותנאים</li>
+                                    <li>ES6 Features</li>
+                                </ul>
+                            </div>
+                            <div class="bg-white rounded-lg p-4 border border-blue-100">
+                                <h4 class="font-medium text-blue-800 mb-2">📝 תרגילים</h4>
+                                <div class="space-y-2">
+                                    <button
+                                        class="w-full text-right bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                                        תרגיל 1: משתנים ופונקציות
+                                    </button>
+                                    <button
+                                        class="w-full text-right bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                                        תרגיל 2: מערכים ואובייקטים
+                                    </button>
+                                    <button
+                                        class="w-full text-right bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                                        תרגיל 3: לולאות ותנאים
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chapter 2 -->
+                    <div class="bg-green-50 rounded-lg p-6 border border-green-200">
+                        <h3 class="text-lg font-semibold text-green-900 mb-4">⚛️ פרק 2: React Development</h3>
+                        <div class="space-y-3">
+                            <div class="bg-white rounded-lg p-4 border border-green-100">
+                                <h4 class="font-medium text-green-800 mb-2">🎯 מטרות הלמידה</h4>
+                                <ul class="text-sm text-green-700 space-y-1 list-disc list-inside">
+                                    <li>הכרת Components</li>
+                                    <li>State ו-Props</li>
+                                    <li>Event Handling</li>
+                                    <li>Lifecycle Methods</li>
+                                </ul>
+                            </div>
+                            <div class="bg-white rounded-lg p-4 border border-green-100">
+                                <h4 class="font-medium text-green-800 mb-2">📝 תרגילים</h4>
+                                <div class="space-y-2">
+                                    <button
+                                        class="w-full text-right bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                                        תרגיל 1: יצירת Component ראשון
+                                    </button>
+                                    <button
+                                        class="w-full text-right bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                                        תרגיל 2: State Management
+                                    </button>
+                                    <button
+                                        class="w-full text-right bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                                        תרגיל 3: Event Handling
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chapter 3 -->
+                    <div class="bg-purple-50 rounded-lg p-6 border border-purple-200">
+                        <h3 class="text-lg font-semibold text-purple-900 mb-4">🖥️ פרק 3: Node.js Backend</h3>
+                        <div class="space-y-3">
+                            <div class="bg-white rounded-lg p-4 border border-purple-100">
+                                <h4 class="font-medium text-purple-800 mb-2">🎯 מטרות הלמידה</h4>
+                                <ul class="text-sm text-purple-700 space-y-1 list-disc list-inside">
+                                    <li>יצירת Express Server</li>
+                                    <li>Routes ו-Middleware</li>
+                                    <li>חיבור למסד נתונים</li>
+                                    <li>API Design</li>
+                                </ul>
+                            </div>
+                            <div class="bg-white rounded-lg p-4 border border-purple-100">
+                                <h4 class="font-medium text-purple-800 mb-2">📝 תרגילים</h4>
+                                <div class="space-y-2">
+                                    <button
+                                        class="w-full text-right bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                                        תרגיל 1: Express Server בסיסי
+                                    </button>
+                                    <button
+                                        class="w-full text-right bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                                        תרגיל 2: Routes ו-Middleware
+                                    </button>
+                                    <button
+                                        class="w-full text-right bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                                        תרגיל 3: MongoDB Integration
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chapter 4 -->
+                    <div class="bg-orange-50 rounded-lg p-6 border border-orange-200">
+                        <h3 class="text-lg font-semibold text-orange-900 mb-4">🎓 פרק 4: פרויקט מלא</h3>
+                        <div class="space-y-3">
+                            <div class="bg-white rounded-lg p-4 border border-orange-100">
+                                <h4 class="font-medium text-orange-800 mb-2">🎯 מטרות הלמידה</h4>
+                                <ul class="text-sm text-orange-700 space-y-1 list-disc list-inside">
+                                    <li>ארכיטקטורה מלאה</li>
+                                    <li>חיבור Frontend ל-Backend</li>
+                                    <li>Authentication</li>
+                                    <li>Deployment</li>
+                                </ul>
+                            </div>
+                            <div class="bg-white rounded-lg p-4 border border-orange-100">
+                                <h4 class="font-medium text-orange-800 mb-2">📝 פרויקטים</h4>
+                                <div class="space-y-2">
+                                    <button
+                                        class="w-full text-right bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700">
+                                        פרויקט 1: Todo App מלא
+                                    </button>
+                                    <button
+                                        class="w-full text-right bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700">
+                                        פרויקט 2: Blog System
+                                    </button>
+                                    <button
+                                        class="w-full text-right bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700">
+                                        פרויקט 3: E-commerce App
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Section -->
+                <div class="mt-8 bg-gray-50 rounded-lg p-6 border border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">📊 התקדמות הלמידה</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-sm text-gray-600 mb-1">
+                                <span>JavaScript Basics</span>
+                                <span>0%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-blue-600 h-2 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm text-gray-600 mb-1">
+                                <span>React Development</span>
+                                <span>0%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-green-600 h-2 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm text-gray-600 mb-1">
+                                <span>Node.js Backend</span>
+                                <span>0%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-purple-600 h-2 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm text-gray-600 mb-1">
+                                <span>פרויקט מלא</span>
+                                <span>0%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-orange-600 h-2 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Tab -->
+            <div id="quizContent" class="tab-content p-4 md:p-6 hidden">
+                <h2 class="text-lg md:text-xl font-semibold text-gray-900 mb-6">🧠 חידון אינטראקטיבי</h2>
+
+                <!-- Quiz Controls -->
+                <div class="bg-gray-50 rounded-lg p-4 md:p-6 border border-gray-200 mb-6">
+                    <div class="flex flex-wrap gap-2 md:gap-4 mb-4">
+                        <button id="startQuiz"
+                            class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 min-h-[44px]">
+                            🚀 התחל חידון
+                        </button>
+                        <button id="prevQuestion" disabled
+                            class="bg-gray-400 text-white px-4 py-2 rounded-lg min-h-[44px]">
+                            ⬅️ הקודם
+                        </button>
+                        <button id="checkQuestion" disabled
+                            class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 min-h-[44px]">
+                            ✅ בדוק שאלה
+                        </button>
+                        <button id="nextQuestion" disabled
+                            class="bg-gray-400 text-white px-4 py-2 rounded-lg min-h-[44px]">
+                            ➡️ הבא
+                        </button>
+                        <button id="submitQuiz" disabled
+                            class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 min-h-[44px]">
+                            📊 בדוק תשובות
+                        </button>
+                        <button id="resetQuiz" disabled
+                            class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 min-h-[44px]">
+                            🔄 איפוס
+                        </button>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="mb-4">
+                        <div class="flex justify-between text-sm text-gray-600 mb-2">
+                            <span id="questionCounter">שאלה 0 מתוך 0</span>
+                            <span id="quizProgress">0%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div id="progressBar" class="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                                style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question Container -->
+                <div id="quizContainer" class="bg-white rounded-xl shadow-lg p-4 md:p-6 border border-gray-200 mb-6">
+                    <div class="text-center py-12">
+                        <div class="text-6xl mb-4">🧠</div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">מוכן להתחיל?</h3>
+                        <p class="text-gray-600">לחץ על "התחל חידון" כדי להתחיל את החידון האינטראקטיבי</p>
+                        <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-blue-50 rounded-lg p-4">
+                                <div class="text-2xl mb-2">📚</div>
+                                <h4 class="font-semibold text-blue-900">50 שאלות</h4>
+                                <p class="text-sm text-blue-700">מגוון רחב של נושאים</p>
+                            </div>
+                            <div class="bg-green-50 rounded-lg p-4">
+                                <div class="text-2xl mb-2">⚡</div>
+                                <h4 class="font-semibold text-green-900">בדיקה מיידית</h4>
+                                <p class="text-sm text-green-700">קבל משוב מיידי</p>
+                            </div>
+                            <div class="bg-purple-50 rounded-lg p-4">
+                                <div class="text-2xl mb-2">💾</div>
+                                <h4 class="font-semibold text-purple-900">שמירה אוטומטית</h4>
+                                <p class="text-sm text-purple-700">התקדמות נשמרת</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Summary -->
+                <div id="quizSummary"
+                    class="hidden bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 md:p-6 border border-blue-200">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">📊 תוצאות החידון</h3>
+                    <div id="quizResults" class="text-center">
+                        <!-- Results will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Quiz Instructions -->
+                <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 md:p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-yellow-900 mb-4">📋 הוראות החידון</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <div class="flex items-center space-x-2 space-x-reverse">
+                                <span class="text-yellow-600">1️⃣</span>
+                                <span class="text-yellow-800">לחץ "התחל חידון" כדי להתחיל</span>
+                            </div>
+                            <div class="flex items-center space-x-2 space-x-reverse">
+                                <span class="text-yellow-600">2️⃣</span>
+                                <span class="text-yellow-800">בחר תשובה לכל שאלה</span>
+                            </div>
+                            <div class="flex items-center space-x-2 space-x-reverse">
+                                <span class="text-yellow-600">3️⃣</span>
+                                <span class="text-yellow-800">לחץ "בדוק שאלה" לקבלת משוב</span>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex items-center space-x-2 space-x-reverse">
+                                <span class="text-yellow-600">4️⃣</span>
+                                <span class="text-yellow-800">השתמש בכפתורי ניווט</span>
+                            </div>
+                            <div class="flex items-center space-x-2 space-x-reverse">
+                                <span class="text-yellow-600">5️⃣</span>
+                                <span class="text-yellow-800">לחץ "בדוק תשובות" לסיום</span>
+                            </div>
+                            <div class="flex items-center space-x-2 space-x-reverse">
+                                <span class="text-yellow-600">6️⃣</span>
+                                <span class="text-yellow-800">ההתקדמות נשמרת אוטומטית</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Resources -->
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 md:p-6">
+                    <h3 class="text-lg font-semibold text-blue-900 mb-4">📚 משאבים נוספים</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-white rounded-lg p-4 border border-blue-100">
+                            <h4 class="font-medium text-blue-900 mb-2">🧠 חידון מתקדם</h4>
+                            <p class="text-sm text-blue-700 mb-3">חידון מלא עם 50 שאלות מתוך בסיס הנתונים</p>
+                            <a href="docs/study/quiz.html" target="_blank"
+                                class="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm">
+                                פתח חידון מלא
+                            </a>
+                        </div>
+                        <div class="bg-white rounded-lg p-4 border border-blue-100">
+                            <h4 class="font-medium text-blue-900 mb-2">📖 חוברת לימוד</h4>
+                            <p class="text-sm text-blue-700 mb-3">חומרי לימוד נוספים וקישורים שימושיים</p>
+                            <a href="docs/learning-book/index.html" target="_blank"
+                                class="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm">
+                                פתח חוברת
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Assistant Tab -->
+            <div id="aiContent" class="tab-content p-6 hidden">
+                <h2 class="text-xl font-semibold text-gray-900 mb-6">🤖 AI עוזר ללמידה</h2>
+
+                <!-- Chat Interface -->
+                <div class="bg-gray-50 rounded-lg p-4 md:p-6 border border-gray-200 mb-6">
+                    <div id="chatMessages" class="h-64 md:h-96 overflow-y-auto mb-4 space-y-4">
+                        <div class="flex items-start space-x-3 space-x-reverse">
+                            <div
+                                class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                                <span class="text-white text-sm">🤖</span>
+                            </div>
+                            <div class="bg-white rounded-lg p-3 shadow-sm">
+                                <p class="text-gray-800 text-sm md:text-base">שלום! אני עוזר AI שלך ללמידת Full Stack
+                                    Development. איך אני
+                                    יכול לעזור לך היום?</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 md:space-x-reverse">
+                        <input type="text" id="chatInput" placeholder="שאל שאלה על JavaScript, React, Node.js..."
+                            class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[44px]">
+                        <button onclick="sendMessage()"
+                            class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 min-h-[44px]">
+                            שלח
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <button onclick="askAI('מה זה JavaScript?')"
+                        class="bg-blue-50 border border-blue-200 rounded-lg p-4 hover:bg-blue-100 transition-colors">
+                        <div class="flex items-center space-x-3 space-x-reverse mb-2">
+                            <span class="text-2xl">📚</span>
+                            <h3 class="font-semibold text-blue-900">JavaScript Basics</h3>
+                        </div>
+                        <p class="text-sm text-blue-700">למד על משתנים, פונקציות ומבני נתונים</p>
+                    </button>
+
+                    <button onclick="askAI('איך יוצרים React Component?')"
+                        class="bg-green-50 border border-green-200 rounded-lg p-4 hover:bg-green-100 transition-colors">
+                        <div class="flex items-center space-x-3 space-x-reverse mb-2">
+                            <span class="text-2xl">⚛️</span>
+                            <h3 class="font-semibold text-green-900">React Components</h3>
+                        </div>
+                        <p class="text-sm text-green-700">למד על יצירת קומפוננטים וניהול state</p>
+                    </button>
+
+                    <button onclick="askAI('איך בונים Express API?')"
+                        class="bg-purple-50 border border-purple-200 rounded-lg p-4 hover:bg-purple-100 transition-colors">
+                        <div class="flex items-center space-x-3 space-x-reverse mb-2">
+                            <span class="text-2xl">🖥️</span>
+                            <h3 class="font-semibold text-purple-900">Node.js & Express</h3>
+                        </div>
+                        <p class="text-sm text-purple-700">למד על בניית שרתים ו-APIs</p>
+                    </button>
+
+                    <button onclick="askAI('איך מתחברים למסד נתונים?')"
+                        class="bg-orange-50 border border-orange-200 rounded-lg p-4 hover:bg-orange-100 transition-colors">
+                        <div class="flex items-center space-x-3 space-x-reverse mb-2">
+                            <span class="text-2xl">🗄️</span>
+                            <h3 class="font-semibold text-orange-900">מסדי נתונים</h3>
+                        </div>
+                        <p class="text-sm text-orange-700">למד על MongoDB ו-SQL</p>
+                    </button>
+
+                    <button onclick="askAI('איך מפרסים אפליקציה?')"
+                        class="bg-red-50 border border-red-200 rounded-lg p-4 hover:bg-red-100 transition-colors">
+                        <div class="flex items-center space-x-3 space-x-reverse mb-2">
+                            <span class="text-2xl">🚀</span>
+                            <h3 class="font-semibold text-red-900">Deployment</h3>
+                        </div>
+                        <p class="text-sm text-red-700">למד על פרסום אפליקציות לאינטרנט</p>
+                    </button>
+
+                    <button onclick="askAI('איך כותבים קוד נקי?')"
+                        class="bg-indigo-50 border border-indigo-200 rounded-lg p-4 hover:bg-indigo-100 transition-colors">
+                        <div class="flex items-center space-x-3 space-x-reverse mb-2">
+                            <span class="text-2xl">✨</span>
+                            <h3 class="font-semibold text-indigo-900">Best Practices</h3>
+                        </div>
+                        <p class="text-sm text-indigo-700">למד על כתיבת קוד איכותי</p>
+                    </button>
+                </div>
+
+                <!-- AI Features -->
+                <div class="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 border border-blue-200">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">🌟 יכולות AI</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-white rounded-lg p-4 border border-blue-100">
+                            <h4 class="font-medium text-blue-900 mb-2">💬 תמיכה אישית</h4>
+                            <p class="text-sm text-blue-700">שאל שאלות ספציפיות וקבל תשובות מותאמות לרמה שלך</p>
+                        </div>
+                        <div class="bg-white rounded-lg p-4 border border-green-100">
+                            <h4 class="font-medium text-green-900 mb-2">🔍 בדיקת קוד</h4>
+                            <p class="text-sm text-green-700">הדבק קוד וקבל משוב על השיפורים האפשריים</p>
+                        </div>
+                        <div class="bg-white rounded-lg p-4 border border-purple-100">
+                            <h4 class="font-medium text-purple-900 mb-2">📝 הסברים מפורטים</h4>
+                            <p class="text-sm text-purple-700">קבל הסברים צעד אחר צעד לכל נושא</p>
+                        </div>
+                        <div class="bg-white rounded-lg p-4 border border-orange-100">
+                            <h4 class="font-medium text-orange-900 mb-2">🎯 תרגילים מותאמים</h4>
+                            <p class="text-sm text-orange-700">קבל תרגילים מותאמים לרמה הנוכחית שלך</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Learning Materials Tab -->
+            <div id="materialsContent" class="tab-content p-6 hidden">
+                <h2 class="text-xl font-semibold text-gray-900 mb-6">📚 חומרי לימוד מתקדמים</h2>
+
+                <!-- Technology Categories -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    <!-- Bootstrap -->
+                    <div class="bg-white rounded-xl shadow-lg p-6 border border-purple-200">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
+                                <span class="text-purple-600 text-xl">🎨</span>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">Bootstrap 5</h3>
+                                <p class="text-sm text-gray-600">CSS Framework</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <button onclick="openMaterial('bootstrap-grid')"
+                                class="w-full text-right bg-purple-600 text-white px-3 py-2 rounded-lg hover:bg-purple-700 text-sm">
+                                Grid System & Layout
+                            </button>
+                            <button onclick="openMaterial('bootstrap-components')"
+                                class="w-full text-right bg-purple-600 text-white px-3 py-2 rounded-lg hover:bg-purple-700 text-sm">
+                                Components & Utilities
+                            </button>
+                            <button onclick="openMaterial('bootstrap-responsive')"
+                                class="w-full text-right bg-purple-600 text-white px-3 py-2 rounded-lg hover:bg-purple-700 text-sm">
+                                Responsive Design
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Joy UI -->
+                    <div class="bg-white rounded-xl shadow-lg p-6 border border-blue-200">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                                <span class="text-blue-600 text-xl">⚛️</span>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">Joy UI</h3>
+                                <p class="text-sm text-gray-600">React Components</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <button onclick="openMaterial('joy-ui-setup')"
+                                class="w-full text-right bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 text-sm">
+                                Setup & Installation
+                            </button>
+                            <button onclick="openMaterial('joy-ui-theming')"
+                                class="w-full text-right bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 text-sm">
+                                Theming & Customization
+                            </button>
+                            <button onclick="openMaterial('joy-ui-components')"
+                                class="w-full text-right bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 text-sm">
+                                Component Library
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- TypeScript Advanced -->
+                    <div class="bg-white rounded-xl shadow-lg p-6 border border-green-200">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
+                                <span class="text-green-600 text-xl">📘</span>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">TypeScript Advanced</h3>
+                                <p class="text-sm text-gray-600">Advanced Types</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <button onclick="openMaterial('typescript-generics')"
+                                class="w-full text-right bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 text-sm">
+                                Generics & Utility Types
+                            </button>
+                            <button onclick="openMaterial('typescript-decorators')"
+                                class="w-full text-right bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 text-sm">
+                                Decorators & Metadata
+                            </button>
+                            <button onclick="openMaterial('typescript-advanced')"
+                                class="w-full text-right bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 text-sm">
+                                Advanced Patterns
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Advanced JavaScript -->
+                    <div class="bg-white rounded-xl shadow-lg p-6 border border-orange-200">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mr-4">
+                                <span class="text-orange-600 text-xl">⚡</span>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">Advanced JavaScript</h3>
+                                <p class="text-sm text-gray-600">ES6+ Features</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <button onclick="openMaterial('js-async')"
+                                class="w-full text-right bg-orange-600 text-white px-3 py-2 rounded-lg hover:bg-orange-700 text-sm">
+                                Async/Await & Promises
+                            </button>
+                            <button onclick="openMaterial('js-closures')"
+                                class="w-full text-right bg-orange-600 text-white px-3 py-2 rounded-lg hover:bg-orange-700 text-sm">
+                                Closures & Scope
+                            </button>
+                            <button onclick="openMaterial('js-prototypes')"
+                                class="w-full text-right bg-orange-600 text-white px-3 py-2 rounded-lg hover:bg-orange-700 text-sm">
+                                Prototypes & Classes
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- React Advanced -->
+                    <div class="bg-white rounded-xl shadow-lg p-6 border border-cyan-200">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center mr-4">
+                                <span class="text-cyan-600 text-xl">🚀</span>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">React Advanced</h3>
+                                <p class="text-sm text-gray-600">Hooks & Patterns</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <button onclick="openMaterial('react-hooks')"
+                                class="w-full text-right bg-cyan-600 text-white px-3 py-2 rounded-lg hover:bg-cyan-700 text-sm">
+                                Custom Hooks
+                            </button>
+                            <button onclick="openMaterial('react-context')"
+                                class="w-full text-right bg-cyan-600 text-white px-3 py-2 rounded-lg hover:bg-cyan-700 text-sm">
+                                Context & Reducers
+                            </button>
+                            <button onclick="openMaterial('react-performance')"
+                                class="w-full text-right bg-cyan-600 text-white px-3 py-2 rounded-lg hover:bg-cyan-700 text-sm">
+                                Performance Optimization
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Node.js Advanced -->
+                    <div class="bg-white rounded-xl shadow-lg p-6 border border-red-200">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4">
+                                <span class="text-red-600 text-xl">🖥️</span>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">Node.js Advanced</h3>
+                                <p class="text-sm text-gray-600">Backend Patterns</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <button onclick="openMaterial('nodejs-streams')"
+                                class="w-full text-right bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 text-sm">
+                                Streams & Buffers
+                            </button>
+                            <button onclick="openMaterial('nodejs-clustering')"
+                                class="w-full text-right bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 text-sm">
+                                Clustering & PM2
+                            </button>
+                            <button onclick="openMaterial('nodejs-microservices')"
+                                class="w-full text-right bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 text-sm">
+                                Microservices
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Material Content Display -->
+                <div id="materialContent" class="bg-gray-50 rounded-lg p-6 border border-gray-200 hidden">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 id="materialTitle" class="text-lg font-semibold text-gray-900"></h3>
+                        <button onclick="closeMaterial()" class="text-gray-500 hover:text-gray-700">
+                            <span class="text-xl">✕</span>
+                        </button>
+                    </div>
+                    <div id="materialBody" class="prose max-w-none"></div>
+                </div>
+
+                <!-- Quick Reference -->
+                <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-6 border border-indigo-200">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">🔍 Quick Reference</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-white rounded-lg p-4 border border-indigo-100">
+                            <h4 class="font-medium text-indigo-900 mb-2">📋 Cheat Sheets</h4>
+                            <div class="space-y-1">
+                                <button onclick="openCheatSheet('bootstrap')"
+                                    class="block w-full text-right text-indigo-700 hover:text-indigo-900">Bootstrap
+                                    Classes</button>
+                                <button onclick="openCheatSheet('typescript')"
+                                    class="block w-full text-right text-indigo-700 hover:text-indigo-900">TypeScript
+                                    Types</button>
+                                <button onclick="openCheatSheet('react-hooks')"
+                                    class="block w-full text-right text-indigo-700 hover:text-indigo-900">React
+                                    Hooks</button>
+                                <button onclick="openCheatSheet('nodejs')"
+                                    class="block w-full text-right text-indigo-700 hover:text-indigo-900">Node.js
+                                    APIs</button>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg p-4 border border-purple-100">
+                            <h4 class="font-medium text-purple-900 mb-2">🎯 Best Practices</h4>
+                            <div class="space-y-1">
+                                <button onclick="openBestPractice('code-quality')"
+                                    class="block w-full text-right text-purple-700 hover:text-purple-900">Code
+                                    Quality</button>
+                                <button onclick="openBestPractice('security')"
+                                    class="block w-full text-right text-purple-700 hover:text-purple-900">Security</button>
+                                <button onclick="openBestPractice('performance')"
+                                    class="block w-full text-right text-purple-700 hover:text-purple-900">Performance</button>
+                                <button onclick="openBestPractice('testing')"
+                                    class="block w-full text-right text-purple-700 hover:text-purple-900">Testing</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Register Tab -->
+            <div id="registerContent" class="tab-content p-6 hidden">
+                <h2 class="text-xl font-semibold text-gray-900 mb-6">📝 הרשמה לקורס</h2>
+                <form id="registerForm" class="max-w-md">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">שם מלא</label>
+                            <input type="text" id="registerName" required placeholder="הכנס שם מלא"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">אימייל</label>
+                            <input type="email" id="registerEmail" required placeholder="הכנס כתובת אימייל"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">טלפון</label>
+                            <input type="tel" id="registerPhone" placeholder="הכנס מספר טלפון"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">קורס</label>
+                            <select id="registerCourse" required title="בחר קורס"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option value="">בחר קורס</option>
+                                <option value="1">JavaScript Basics</option>
+                                <option value="2">React Development</option>
+                                <option value="3">Node.js Backend</option>
+                                <option value="4">Python Programming</option>
+                                <option value="5">Database Design</option>
+                                <option value="6">Machine Learning</option>
+                                <option value="7">Web Security</option>
+                                <option value="8">DevOps Fundamentals</option>
+                                <option value="9">Mobile Development</option>
+                                <option value="10">UI/UX Design</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">רמת ניסיון</label>
+                            <select id="registerLevel" required title="בחר רמת ניסיון"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option value="">בחר רמת ניסיון</option>
+                                <option value="beginner">מתחיל</option>
+                                <option value="intermediate">בינוני</option>
+                                <option value="advanced">מתקדם</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="flex items-center">
+                                <input type="checkbox" id="registerTerms" required class="mr-2">
+                                <span class="text-sm text-gray-700">אני מסכים לתנאי השימוש ומדיניות הפרטיות</span>
+                            </label>
+                        </div>
+                        <button type="submit"
+                            class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">
+                            📝 הירשם לקורס
+                        </button>
+                    </div>
+                </form>
+                <div id="registerResult" class="mt-4"></div>
+            </div>
+
+            <!-- Add Tab -->
+            <div id="addContent" class="tab-content p-6 hidden">
+                <h2 class="text-xl font-semibold text-gray-900 mb-6">הוספת משתמש חדש</h2>
+                <form id="addUserForm" class="max-w-md">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">שם מלא</label>
+                            <input type="text" id="userName" required placeholder="הכנס שם מלא"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">אימייל</label>
+                            <input type="email" id="userEmail" required placeholder="הכנס כתובת אימייל"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">תפקיד</label>
+                            <select id="userRole" required title="בחר תפקיד"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option value="">בחר תפקיד</option>
+                                <option value="student">סטודנט</option>
+                                <option value="teacher">מורה</option>
+                                <option value="admin">מנהל</option>
+                            </select>
+                        </div>
+                        <button type="submit"
+                            class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                            ➕ הוסף משתמש
+                        </button>
+                    </div>
+                </form>
+                <div id="addResult" class="mt-4"></div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const API_BASE = 'http://localhost:3060';
+        let currentTab = 'users';
+
+        // Check API connection
+        async function checkConnection() {
+            try {
+                // Simulate connection check with local data
+                const data = { status: 'success', message: 'Local system is running!' };
+
+                document.getElementById('connectionStatus').textContent = '✅';
+                document.getElementById('connectionText').textContent = 'מחובר';
+                document.getElementById('connectionStatus').className = 'text-green-600';
+
+                // Update mobile status
+                const mobileStatus = document.getElementById('connectionStatusMobile');
+                if (mobileStatus) {
+                    mobileStatus.textContent = '✅';
+                    mobileStatus.className = 'text-green-600 text-sm';
+                }
+
+                loadStats();
+                loadUsers();
+            } catch (error) {
+                document.getElementById('connectionStatus').textContent = '❌';
+                document.getElementById('connectionText').textContent = 'לא מחובר';
+                document.getElementById('connectionStatus').className = 'text-red-600';
+
+                // Update mobile status
+                const mobileStatus = document.getElementById('connectionStatusMobile');
+                if (mobileStatus) {
+                    mobileStatus.textContent = '❌';
+                    mobileStatus.className = 'text-red-600 text-sm';
+                }
+            }
+        }
+
+        // Load stats
+        async function loadStats() {
+            try {
+                // Load from local data files instead of API
+                const [jsWorkbook, reactCourse, materialUiCourse, typescriptCourse, sassCourse, restApiCourse] = await Promise.all([
+                    fetch('data/js-workbook.json').then(res => res.json()),
+                    fetch('data/react-course-data.json').then(res => res.json()),
+                    fetch('data/material-ui-course-data.json').then(res => res.json()),
+                    fetch('data/typescript-course-data.json').then(res => res.json()),
+                    fetch('data/sass-course-data.json').then(res => res.json()),
+                    fetch('data/rest-api-course-data.json').then(res => res.json())
+                ]);
+
+                const data = {
+                    success: true,
+                    data: {
+                        totalUsers: 2,
+                        totalCourses: 6,
+                        totalQuestions: jsWorkbook.sections.reduce((total, section) => total + section.questions.length, 0),
+                        totalSlides: reactCourse.totalSlides + materialUiCourse.totalSlides + typescriptCourse.totalSlides + sassCourse.course.totalSlides + restApiCourse.course.totalSlides,
+                        activeUsers: 1,
+                        completedCourses: 0
+                    }
+                };
+
+                if (data.success) {
+                    document.getElementById('userCount').textContent = `${data.data.totalUsers} משתמשים`;
+                    document.getElementById('courseCount').textContent = `${data.data.totalCourses} קורסים`;
+                    document.getElementById('studentCount').textContent = `${data.data.totalStudents} סטודנטים`;
+                    document.getElementById('subjectCount').textContent = `${data.data.totalSubjects} נושאים`;
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // Load users
+        async function loadUsers() {
+            const usersList = document.getElementById('usersList');
+            usersList.innerHTML = `
+                <div class="text-center py-8">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                    <p class="text-gray-600 mt-2">טוען משתמשים...</p>
+                </div>
+            `;
+
+            try {
+                // Load from local data files instead of API
+                const [jsWorkbook, reactCourse, materialUiCourse, typescriptCourse, sassCourse, restApiCourse] = await Promise.all([
+                    fetch('data/js-workbook.json').then(res => res.json()),
+                    fetch('data/react-course-data.json').then(res => res.json()),
+                    fetch('data/material-ui-course-data.json').then(res => res.json()),
+                    fetch('data/typescript-course-data.json').then(res => res.json()),
+                    fetch('data/sass-course-data.json').then(res => res.json()),
+                    fetch('data/rest-api-course-data.json').then(res => res.json())
+                ]);
+
+                const data = {
+                    users: [
+                        { id: 1, name: 'משתמש דמו', email: 'demo@example.com', role: 'student', progress: 75 },
+                        { id: 2, name: 'מורה דמו', email: 'teacher@example.com', role: 'teacher', progress: 100 }
+                    ],
+                    courses: [
+                        { id: 1, name: 'JavaScript Workbook', sections: jsWorkbook.sections.length, questions: jsWorkbook.sections.reduce((total, section) => total + section.questions.length, 0) },
+                        { id: 2, name: 'React Course', slides: reactCourse.totalSlides, type: 'presentation' },
+                        { id: 3, name: 'Material-UI Course', slides: materialUiCourse.totalSlides, type: 'presentation' }
+                    ]
+                };
+
+                if (data.success) {
+                    usersList.innerHTML = data.data.map(user => `
+                        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 fade-in">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="font-semibold text-gray-900">${user.name}</h3>
+                                    <p class="text-sm text-gray-600">${user.email}</p>
+                                    <span class="inline-block px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full mt-1">
+                                        ${user.role === 'student' ? 'סטודנט' : user.role === 'teacher' ? 'מורה' : 'מנהל'}
+                                    </span>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm text-gray-500">ID: ${user.id}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                usersList.innerHTML = `
+                    <div class="text-center py-8">
+                        <p class="text-red-600">שגיאה בטעינת משתמשים</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Load courses
+        async function loadCourses() {
+            const coursesList = document.getElementById('coursesList');
+            coursesList.innerHTML = `
+                <div class="text-center py-8 col-span-full">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
+                    <p class="text-gray-600 mt-2">טוען קורסים...</p>
+                </div>
+            `;
+
+            try {
+                // Load from local data files instead of API
+                const [jsWorkbook, reactCourse, materialUiCourse, typescriptCourse, sassCourse, restApiCourse] = await Promise.all([
+                    fetch('data/js-workbook.json').then(res => res.json()),
+                    fetch('data/react-course-data.json').then(res => res.json()),
+                    fetch('data/material-ui-course-data.json').then(res => res.json()),
+                    fetch('data/typescript-course-data.json').then(res => res.json()),
+                    fetch('data/sass-course-data.json').then(res => res.json()),
+                    fetch('data/rest-api-course-data.json').then(res => res.json())
+                ]);
+
+                const data = {
+                    success: true,
+                    data: [
+                        {
+                            id: 1,
+                            name: 'JavaScript Workbook',
+                            description: 'חוברת תרגילים מקיפה ב-JavaScript',
+                            sections: jsWorkbook.sections.length,
+                            questions: jsWorkbook.sections.reduce((total, section) => total + section.questions.length, 0),
+                            type: 'workbook',
+                            link: 'courses/js-workbook.html'
+                        },
+                        {
+                            id: 2,
+                            name: 'React Course',
+                            description: 'קורס מלא ב-React עם 455 סליידים',
+                            slides: reactCourse.totalSlides,
+                            type: 'presentation',
+                            link: 'courses/react.html'
+                        },
+                        {
+                            id: 3,
+                            name: 'Material-UI Course',
+                            description: 'קורס קומפוננטים של Material-UI',
+                            slides: materialUiCourse.totalSlides,
+                            type: 'presentation',
+                            link: 'courses/material-ui.html'
+                        },
+                        {
+                            id: 4,
+                            name: 'TypeScript Course',
+                            description: 'קורס TypeScript עם טיפוסים מתקדמים',
+                            slides: typescriptCourse.totalSlides,
+                            type: 'presentation',
+                            link: 'courses/typescript.html'
+                        },
+                        {
+                            id: 5,
+                            name: 'SASS Course',
+                            description: 'קורס SASS - משתנים, קינון, מיקסינים ועוד',
+                            slides: sassCourse.course.totalSlides,
+                            type: 'presentation',
+                            link: 'courses/sass.html'
+                        },
+                        {
+                            id: 6,
+                            name: 'REST API Course',
+                            description: 'קורס REST API - עקרונות, HTTP methods, authentication',
+                            slides: restApiCourse.course.totalSlides,
+                            type: 'presentation',
+                            link: 'courses/rest-api.html'
+                        }
+                    ]
+                };
+
+                if (data.success) {
+                    coursesList.innerHTML = data.data.map(course => `
+                        <div class="bg-green-50 rounded-lg p-4 border border-green-200 fade-in">
+                            <h3 class="font-semibold text-gray-900 mb-2">${course.title}</h3>
+                            <p class="text-sm text-gray-600 mb-3">${course.description}</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm font-medium text-green-700">${course.students} סטודנטים</span>
+                                <span class="text-xs text-gray-500">ID: ${course.id}</span>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                coursesList.innerHTML = `
+                    <div class="text-center py-8 col-span-full">
+                        <p class="text-red-600">שגיאה בטעינת קורסים</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Show tab
+        function showTab(tabName) {
+            // Hide all content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('border-blue-500', 'text-blue-600');
+                button.classList.add('border-transparent', 'text-gray-500');
+            });
+
+            // Show selected content
+            document.getElementById(tabName + 'Content').classList.remove('hidden');
+
+            // Add active class to selected tab
+            const activeTab = document.getElementById(tabName + 'Tab');
+            activeTab.classList.remove('border-transparent', 'text-gray-500');
+            activeTab.classList.add('border-blue-500', 'text-blue-600');
+
+            currentTab = tabName;
+
+            // Load content if needed
+            if (tabName === 'courses') {
+                loadCourses();
+            }
+        }
+
+        // Add user form
+        document.getElementById('addUserForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = {
+                name: document.getElementById('userName').value,
+                email: document.getElementById('userEmail').value,
+                role: document.getElementById('userRole').value
+            };
+
+            const resultDiv = document.getElementById('addResult');
+
+            try {
+                const response = await fetch(`${API_BASE}/api/users`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                            <p class="text-green-800">✅ המשתמש נוסף בהצלחה!</p>
+                            <p class="text-sm text-green-600 mt-1">${data.data.name} - ${data.data.email}</p>
+                        </div>
+                    `;
+
+                    // Clear form
+                    document.getElementById('addUserForm').reset();
+
+                    // Reload stats and users
+                    loadStats();
+                    if (currentTab === 'users') {
+                        loadUsers();
+                    }
+                } else {
+                    throw new Error(data.error || 'Unknown error');
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <p class="text-red-800">❌ שגיאה בהוספת משתמש</p>
+                        <p class="text-sm text-red-600 mt-1">${error.message}</p>
+                    </div>
+                `;
+            }
+        });
+
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const hamburgerIcon = document.getElementById('hamburgerIcon');
+
+            if (mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.remove('hidden');
+                hamburgerIcon.textContent = '✕';
+            } else {
+                mobileMenu.classList.add('hidden');
+                hamburgerIcon.textContent = '☰';
+            }
+        }
+
+        // AI Chat Functions
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (message) {
+                addMessage(message, 'user');
+                input.value = '';
+                setTimeout(() => generateAIResponse(message), 1000);
+            }
+        }
+
+        function askAI(question) {
+            addMessage(question, 'user');
+            setTimeout(() => generateAIResponse(question), 1000);
+        }
+
+        function addMessage(text, sender) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+
+            if (sender === 'user') {
+                messageDiv.className = 'flex items-start space-x-3 space-x-reverse flex-row-reverse';
+                messageDiv.innerHTML = `
+                    <div class="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
+                        <span class="text-white text-sm">👤</span>
+                    </div>
+                    <div class="bg-green-100 rounded-lg p-3 shadow-sm">
+                        <p class="text-gray-800">${text}</p>
+                    </div>
+                `;
+            } else {
+                messageDiv.className = 'flex items-start space-x-3 space-x-reverse';
+                messageDiv.innerHTML = `
+                    <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                        <span class="text-white text-sm">🤖</span>
+                    </div>
+                    <div class="bg-white rounded-lg p-3 shadow-sm">
+                        <p class="text-gray-800">${text}</p>
+                    </div>
+                `;
+            }
+
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function generateAIResponse(question) {
+            const responses = {
+                'מה זה JavaScript?': `JavaScript היא שפת תכנות דינמית שמשמשת לפיתוח אתרים ואפליקציות. היא מאפשרת:
+                • יצירת אינטראקטיביות באתרים
+                • עבודה עם DOM
+                • פיתוח Full Stack עם Node.js
+                • בניית אפליקציות מובייל עם React Native`,
+
+                'איך יוצרים React Component?': `יצירת React Component:
+                1. import React from 'react';
+                2. const MyComponent = () => { return <div>Hello World!</div>; };
+                3. export default MyComponent;
+                
+                או עם Class:
+                class MyComponent extends React.Component {
+                    render() { return <div>Hello World!</div>; }
+                }`,
+
+                'איך בונים Express API?': `בניית Express API:
+                1. npm install express
+                2. const express = require('express');
+                3. const app = express();
+                4. app.get('/api/users', (req, res) => { res.json(users); });
+                5. app.listen(3000, () => console.log('Server running'));`,
+
+                'איך מתחברים למסד נתונים?': `חיבור למסד נתונים:
+                MongoDB: mongoose.connect('mongodb://localhost:27017/mydb');
+                MySQL: mysql.createConnection({host, user, password, database});
+                PostgreSQL: pg.connect('postgresql://user:pass@localhost/db');`,
+
+                'איך מפרסים אפליקציה?': `פרסום אפליקציה:
+                1. Heroku: git push heroku main
+                2. Netlify: drag & drop או git integration
+                3. Vercel: vercel --prod
+                4. AWS: Elastic Beanstalk או EC2`,
+
+                'איך כותבים קוד נקי?': `כתיבת קוד נקי:
+                • שמות משתנים ברורים
+                • פונקציות קצרות וממוקדות
+                • הערות במקומות הנכונים
+                • עקביות בסגנון הקוד
+                • בדיקות יחידה (Unit Tests)`
+            };
+
+            const response = responses[question] || `זה נושא מעניין! אני יכול לעזור לך עם:
+            • הסברים מפורטים על ${question}
+            • דוגמאות קוד
+            • תרגילים מעשיים
+            • טיפים וטריקים
+            
+            איזה חלק ספציפי מעניין אותך?`;
+
+            addMessage(response, 'ai');
+        }
+
+        // Enter key support for chat
+        document.addEventListener('DOMContentLoaded', () => {
+            const chatInput = document.getElementById('chatInput');
+            if (chatInput) {
+                chatInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        sendMessage();
+                    }
+                });
+            }
+        });
+
+        // Learning Materials Functions
+        const materialsData = {
+            'bootstrap-grid': {
+                title: 'Bootstrap Grid System',
+                content: `
+                    <h4>🎨 Bootstrap Grid System</h4>
+                    <p>מערכת הגריד של Bootstrap מאפשרת יצירת layouts רספונסיביים:</p>
+                    
+                    <h5>📐 Container Classes:</h5>
+                    <ul>
+                        <li><code>.container</code> - רחב מקסימלי בכל breakpoint</li>
+                        <li><code>.container-fluid</code> - רחב 100% בכל המסכים</li>
+                        <li><code>.container-sm/md/lg/xl/xxl</code> - רחב מקסימלי מ-breakpoint ספציפי</li>
+                    </ul>
+                    
+                    <h5>🏗️ Grid Structure:</h5>
+                    <pre><code>&lt;div class="container"&gt;
+  &lt;div class="row"&gt;
+    &lt;div class="col-md-6"&gt;Content 1&lt;/div&gt;
+    &lt;div class="col-md-6"&gt;Content 2&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                    
+                    <h5>📱 Breakpoints:</h5>
+                    <ul>
+                        <li><code>xs</code> - &lt; 576px</li>
+                        <li><code>sm</code> - ≥ 576px</li>
+                        <li><code>md</code> - ≥ 768px</li>
+                        <li><code>lg</code> - ≥ 992px</li>
+                        <li><code>xl</code> - ≥ 1200px</li>
+                        <li><code>xxl</code> - ≥ 1400px</li>
+                    </ul>
+                `
+            },
+            'typescript-generics': {
+                title: 'TypeScript Generics',
+                content: `
+                    <h4>📘 TypeScript Generics</h4>
+                    <p>Generics מאפשרים יצירת קוד גמיש ו-reusable:</p>
+                    
+                    <h5>🔧 Basic Generic Function:</h5>
+                    <pre><code>function identity&lt;T&gt;(arg: T): T {
+    return arg;
+}
+
+const result = identity&lt;string&gt;("Hello"); // Type: string
+const num = identity&lt;number&gt;(42); // Type: number</code></pre>
+                    
+                    <h5>🏗️ Generic Interface:</h5>
+                    <pre><code>interface ApiResponse&lt;T&gt; {
+    data: T;
+    status: number;
+    message: string;
+}
+
+const userResponse: ApiResponse&lt;User&gt; = {
+    data: { id: 1, name: "John" },
+    status: 200,
+    message: "Success"
+};</code></pre>
+                    
+                    <h5>⚡ Utility Types:</h5>
+                    <ul>
+                        <li><code>Partial&lt;T&gt;</code> - כל השדות אופציונליים</li>
+                        <li><code>Required&lt;T&gt;</code> - כל השדות חובה</li>
+                        <li><code>Pick&lt;T, K&gt;</code> - בחירת שדות ספציפיים</li>
+                        <li><code>Omit&lt;T, K&gt;</code> - השמטת שדות ספציפיים</li>
+                        <li><code>Record&lt;K, V&gt;</code> - יצירת אובייקט עם keys ו-values</li>
+                    </ul>
+                `
+            },
+            'react-hooks': {
+                title: 'React Custom Hooks',
+                content: `
+                    <h4>🚀 React Custom Hooks</h4>
+                    <p>Custom Hooks מאפשרים שימוש חוזר בלוגיקה:</p>
+                    
+                    <h5>🎣 useLocalStorage Hook:</h5>
+                    <pre><code>function useLocalStorage(key: string, initialValue: any) {
+    const [storedValue, setStoredValue] = useState(() => {
+        try {
+            const item = window.localStorage.getItem(key);
+            return item ? JSON.parse(item) : initialValue;
+        } catch (error) {
+            return initialValue;
+        }
+    });
+
+    const setValue = (value: any) => {
+        try {
+            setStoredValue(value);
+            window.localStorage.setItem(key, JSON.stringify(value));
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    return [storedValue, setValue];
+}</code></pre>
+                    
+                    <h5>🔄 useFetch Hook:</h5>
+                    <pre><code>function useFetch&lt;T&gt;(url: string) {
+    const [data, setData] = useState&lt;T | null&gt;(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                setData(data);
+                setLoading(false);
+            })
+            .catch(err => {
+                setError(err);
+                setLoading(false);
+            });
+    }, [url]);
+
+    return { data, loading, error };
+}</code></pre>
+                `
+            },
+            'js-async': {
+                title: 'JavaScript Async/Await',
+                content: `
+                    <h4>⚡ JavaScript Async/Await</h4>
+                    <p>Async/Await מאפשר כתיבת קוד אסינכרוני בצורה סינכרונית:</p>
+                    
+                    <h5>🔄 Basic Async/Await:</h5>
+                    <pre><code>async function fetchData() {
+    try {
+        const response = await fetch('/api/data');
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}</code></pre>
+                    
+                    <h5>⚡ Parallel Execution:</h5>
+                    <pre><code>async function fetchMultipleData() {
+    const [users, posts, comments] = await Promise.all([
+        fetch('/api/users').then(res => res.json()),
+        fetch('/api/posts').then(res => res.json()),
+        fetch('/api/comments').then(res => res.json())
+    ]);
+    
+    return { users, posts, comments };
+}</code></pre>
+                    
+                    <h5>🎯 Error Handling:</h5>
+                    <pre><code>async function safeFetch(url: string) {
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(\`HTTP error! status: \${response.status}\`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Fetch failed:', error);
+        return null;
+    }
+}</code></pre>
+                `
+            }
+        };
+
+        function openMaterial(materialId) {
+            const material = materialsData[materialId];
+            if (material) {
+                document.getElementById('materialTitle').textContent = material.title;
+                document.getElementById('materialBody').innerHTML = material.content;
+                document.getElementById('materialContent').classList.remove('hidden');
+            }
+        }
+
+        function closeMaterial() {
+            document.getElementById('materialContent').classList.add('hidden');
+        }
+
+        function openCheatSheet(type) {
+            const cheatSheets = {
+                'bootstrap': {
+                    title: 'Bootstrap Cheat Sheet',
+                    content: `
+                        <h4>🎨 Bootstrap Classes Cheat Sheet</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <h5>📐 Spacing:</h5>
+                                <ul>
+                                    <li><code>m-0</code> to <code>m-5</code> - margin</li>
+                                    <li><code>p-0</code> to <code>p-5</code> - padding</li>
+                                    <li><code>mt-*, mb-*, ml-*, mr-*</code> - directional</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5>🎨 Colors:</h5>
+                                <ul>
+                                    <li><code>text-primary</code> - primary color</li>
+                                    <li><code>bg-secondary</code> - secondary background</li>
+                                    <li><code>border-success</code> - success border</li>
+                                </ul>
+                            </div>
+                        </div>
+                    `
+                },
+                'typescript': {
+                    title: 'TypeScript Types Cheat Sheet',
+                    content: `
+                        <h4>📘 TypeScript Types</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <h5>🔧 Basic Types:</h5>
+                                <ul>
+                                    <li><code>string</code> - מחרוזת</li>
+                                    <li><code>number</code> - מספר</li>
+                                    <li><code>boolean</code> - בוליאני</li>
+                                    <li><code>any</code> - כל סוג</li>
+                                    <li><code>void</code> - אין החזרה</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5>🏗️ Complex Types:</h5>
+                                <ul>
+                                    <li><code>string[]</code> - מערך מחרוזות</li>
+                                    <li><code>User | Admin</code> - Union type</li>
+                                    <li><code>{ name: string }</code> - Object type</li>
+                                    <li><code>(x: number) => number</code> - Function type</li>
+                                </ul>
+                            </div>
+                        </div>
+                    `
+                }
+            };
+
+            const cheatSheet = cheatSheets[type];
+            if (cheatSheet) {
+                document.getElementById('materialTitle').textContent = cheatSheet.title;
+                document.getElementById('materialBody').innerHTML = cheatSheet.content;
+                document.getElementById('materialContent').classList.remove('hidden');
+            }
+        }
+
+        function openBestPractice(type) {
+            const bestPractices = {
+                'code-quality': {
+                    title: 'Code Quality Best Practices',
+                    content: `
+                        <h4>✨ Code Quality Best Practices</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <h5>📝 Naming Conventions:</h5>
+                                <ul>
+                                    <li>Use descriptive variable names</li>
+                                    <li>Follow camelCase for variables</li>
+                                    <li>Use PascalCase for components</li>
+                                    <li>Avoid abbreviations</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5>🏗️ Function Design:</h5>
+                                <ul>
+                                    <li>Keep functions small and focused</li>
+                                    <li>One responsibility per function</li>
+                                    <li>Use pure functions when possible</li>
+                                    <li>Handle errors gracefully</li>
+                                </ul>
+                            </div>
+                        </div>
+                    `
+                }
+            };
+
+            const practice = bestPractices[type];
+            if (practice) {
+                document.getElementById('materialTitle').textContent = practice.title;
+                document.getElementById('materialBody').innerHTML = practice.content;
+                document.getElementById('materialContent').classList.remove('hidden');
+            }
+        }
+
+        // Quiz System
+        const QUIZ_STORAGE_KEY = 'quiz_state_v1';
+        let quizState = {
+            questions: [],
+            answers: {},
+            currentIndex: 0,
+            checked: {},
+            isActive: false
+        };
+
+        // Sample quiz questions (in real app, load from docs/study/mcq_bank.json)
+        const sampleQuestions = [
+            {
+                id: 1,
+                question: "מה זה JavaScript?",
+                options: ["שפת תכנות", "סוג של קפה", "מערכת הפעלה", "מסד נתונים"],
+                answer: "שפת תכנות"
+            },
+            {
+                id: 2,
+                question: "איך מצהירים על משתנה ב-JavaScript?",
+                options: ["var name", "let name", "const name", "כל התשובות נכונות"],
+                answer: "כל התשובות נכונות"
+            },
+            {
+                id: 3,
+                question: "מה זה React?",
+                options: ["ספריית JavaScript", "מסד נתונים", "שפת תכנות", "מערכת הפעלה"],
+                answer: "ספריית JavaScript"
+            },
+            {
+                id: 4,
+                question: "איך יוצרים רכיב React?",
+                options: ["function Component() {}", "class Component {}", "const Component = () => {}", "כל התשובות נכונות"],
+                answer: "כל התשובות נכונות"
+            },
+            {
+                id: 5,
+                question: "מה זה Node.js?",
+                options: ["JavaScript runtime", "מסד נתונים", "מערכת הפעלה", "ספריית CSS"],
+                answer: "JavaScript runtime"
+            }
+        ];
+
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function saveQuizState() {
+            localStorage.setItem(QUIZ_STORAGE_KEY, JSON.stringify(quizState));
+        }
+
+        function loadQuizState() {
+            try {
+                const saved = localStorage.getItem(QUIZ_STORAGE_KEY);
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    quizState = { ...quizState, ...data };
+                    return true;
+                }
+            } catch (error) {
+                console.error('Error loading quiz state:', error);
+            }
+            return false;
+        }
+
+        function updateQuizUI() {
+            const container = document.getElementById('quizContainer');
+            const questionCounter = document.getElementById('questionCounter');
+            const progressBar = document.getElementById('progressBar');
+            const quizProgress = document.getElementById('quizProgress');
+
+            if (!quizState.isActive || quizState.questions.length === 0) {
+                return;
+            }
+
+            const currentQuestion = quizState.questions[quizState.currentIndex];
+            const progress = ((quizState.currentIndex + 1) / quizState.questions.length) * 100;
+
+            // Update progress
+            questionCounter.textContent = `שאלה ${quizState.currentIndex + 1} מתוך ${quizState.questions.length}`;
+            quizProgress.textContent = `${Math.round(progress)}%`;
+            progressBar.style.width = `${progress}%`;
+
+            // Render question
+            container.innerHTML = `
+                <div class="question-card">
+                    <div class="mb-6">
+                        <h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-4">
+                            ${currentQuestion.question}
+                        </h3>
+                        <div class="space-y-3">
+                            ${currentQuestion.options.map((option, index) => {
+                const isChecked = quizState.answers[currentQuestion.id] === option;
+                const isCorrect = option === currentQuestion.answer;
+                const isCheckedAndWrong = quizState.checked[currentQuestion.id] && isChecked && !isCorrect;
+                const isCorrectAnswer = quizState.checked[currentQuestion.id] && isCorrect;
+
+                let classes = "w-full p-4 rounded-lg border-2 transition-all duration-200 text-right";
+                if (isChecked) classes += " border-blue-500 bg-blue-50";
+                else classes += " border-gray-200 hover:border-gray-300";
+
+                if (isCorrectAnswer) classes += " border-green-500 bg-green-50 text-green-800";
+                if (isCheckedAndWrong) classes += " border-red-500 bg-red-50 text-red-800 line-through";
+
+                return `
+                                    <label class="block cursor-pointer">
+                                        <input type="radio" name="question_${currentQuestion.id}" value="${option}" 
+                                               ${isChecked ? 'checked' : ''} 
+                                               ${quizState.checked[currentQuestion.id] ? 'disabled' : ''}
+                                               class="sr-only" 
+                                               onchange="selectAnswer('${option}')">
+                                        <div class="${classes}">
+                                            <span class="font-medium">${option}</span>
+                                        </div>
+                                    </label>
+                                `;
+            }).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Update button states
+            updateQuizButtons();
+        }
+
+        function updateQuizButtons() {
+            const prevBtn = document.getElementById('prevQuestion');
+            const nextBtn = document.getElementById('nextQuestion');
+            const checkBtn = document.getElementById('checkQuestion');
+            const submitBtn = document.getElementById('submitQuiz');
+
+            prevBtn.disabled = quizState.currentIndex === 0;
+            nextBtn.disabled = quizState.currentIndex >= quizState.questions.length - 1;
+
+            const currentQuestion = quizState.questions[quizState.currentIndex];
+            const hasAnswer = quizState.answers[currentQuestion.id];
+            const isChecked = quizState.checked[currentQuestion.id];
+
+            checkBtn.disabled = !hasAnswer || isChecked;
+
+            // Enable submit if all questions answered
+            const allAnswered = quizState.questions.every(q => quizState.answers[q.id]);
+            submitBtn.disabled = !allAnswered;
+        }
+
+        function selectAnswer(answer) {
+            const currentQuestion = quizState.questions[quizState.currentIndex];
+            quizState.answers[currentQuestion.id] = answer;
+            saveQuizState();
+            updateQuizUI();
+        }
+
+        function startQuiz() {
+            // Load sample questions (in real app, load from API)
+            quizState.questions = shuffleArray(sampleQuestions);
+            quizState.answers = {};
+            quizState.checked = {};
+            quizState.currentIndex = 0;
+            quizState.isActive = true;
+
+            saveQuizState();
+            updateQuizUI();
+
+            // Enable buttons
+            document.getElementById('resetQuiz').disabled = false;
+        }
+
+        function prevQuestion() {
+            if (quizState.currentIndex > 0) {
+                quizState.currentIndex--;
+                saveQuizState();
+                updateQuizUI();
+            }
+        }
+
+        function nextQuestion() {
+            if (quizState.currentIndex < quizState.questions.length - 1) {
+                quizState.currentIndex++;
+                saveQuizState();
+                updateQuizUI();
+            }
+        }
+
+        function checkQuestion() {
+            const currentQuestion = quizState.questions[quizState.currentIndex];
+            if (!quizState.answers[currentQuestion.id]) return;
+
+            quizState.checked[currentQuestion.id] = true;
+            saveQuizState();
+            updateQuizUI();
+        }
+
+        function submitQuiz() {
+            let correct = 0;
+            quizState.questions.forEach(q => {
+                if (quizState.answers[q.id] === q.answer) correct++;
+            });
+
+            const percentage = Math.round((correct / quizState.questions.length) * 100);
+            const results = document.getElementById('quizResults');
+            const summary = document.getElementById('quizSummary');
+
+            results.innerHTML = `
+                <div class="mb-6">
+                    <div class="text-4xl mb-4">${percentage >= 80 ? '🎉' : percentage >= 60 ? '👍' : '📚'}</div>
+                    <h4 class="text-2xl font-bold text-gray-900 mb-2">
+                        ענית נכון על ${correct} מתוך ${quizState.questions.length}
+                    </h4>
+                    <div class="text-3xl font-bold ${percentage >= 80 ? 'text-green-600' : percentage >= 60 ? 'text-yellow-600' : 'text-red-600'}">
+                        ${percentage}%
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white rounded-lg p-4 border border-blue-200">
+                        <div class="text-2xl mb-2">✅</div>
+                        <div class="font-semibold text-blue-900">נכונות</div>
+                        <div class="text-blue-700">${correct}</div>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 border border-red-200">
+                        <div class="text-2xl mb-2">❌</div>
+                        <div class="font-semibold text-red-900">שגיאות</div>
+                        <div class="text-red-700">${quizState.questions.length - correct}</div>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 border border-purple-200">
+                        <div class="text-2xl mb-2">📊</div>
+                        <div class="font-semibold text-purple-900">ציון</div>
+                        <div class="text-purple-700">${percentage}%</div>
+                    </div>
+                </div>
+            `;
+
+            summary.classList.remove('hidden');
+            summary.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetQuiz() {
+            localStorage.removeItem(QUIZ_STORAGE_KEY);
+            quizState = {
+                questions: [],
+                answers: {},
+                currentIndex: 0,
+                checked: {},
+                isActive: false
+            };
+
+            // Reset UI
+            document.getElementById('quizContainer').innerHTML = `
+                <div class="text-center py-12">
+                    <div class="text-6xl mb-4">🧠</div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">מוכן להתחיל?</h3>
+                    <p class="text-gray-600">לחץ על "התחל חידון" כדי להתחיל את החידון האינטראקטיבי</p>
+                </div>
+            `;
+
+            document.getElementById('quizSummary').classList.add('hidden');
+            document.getElementById('questionCounter').textContent = 'שאלה 0 מתוך 0';
+            document.getElementById('quizProgress').textContent = '0%';
+            document.getElementById('progressBar').style.width = '0%';
+
+            // Disable buttons
+            document.getElementById('prevQuestion').disabled = true;
+            document.getElementById('nextQuestion').disabled = true;
+            document.getElementById('checkQuestion').disabled = true;
+            document.getElementById('submitQuiz').disabled = true;
+            document.getElementById('resetQuiz').disabled = true;
+        }
+
+        // Quiz event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load saved quiz state
+            if (loadQuizState() && quizState.isActive) {
+                updateQuizUI();
+                document.getElementById('resetQuiz').disabled = false;
+            }
+
+            // Quiz button events
+            document.getElementById('startQuiz').addEventListener('click', startQuiz);
+            document.getElementById('prevQuestion').addEventListener('click', prevQuestion);
+            document.getElementById('nextQuestion').addEventListener('click', nextQuestion);
+            document.getElementById('checkQuestion').addEventListener('click', checkQuestion);
+            document.getElementById('submitQuiz').addEventListener('click', submitQuiz);
+            document.getElementById('resetQuiz').addEventListener('click', resetQuiz);
+        });
+
+        // Register form
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = {
+                name: document.getElementById('registerName').value,
+                email: document.getElementById('registerEmail').value,
+                phone: document.getElementById('registerPhone').value,
+                courseId: document.getElementById('registerCourse').value,
+                level: document.getElementById('registerLevel').value,
+                terms: document.getElementById('registerTerms').checked
+            };
+
+            const resultDiv = document.getElementById('registerResult');
+
+            try {
+                // Simulate registration
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                resultDiv.innerHTML = `
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                        <p class="text-green-800">✅ ההרשמה בוצעה בהצלחה!</p>
+                        <p class="text-sm text-green-600 mt-1">${formData.name} - ${formData.email}</p>
+                        <p class="text-sm text-green-600">קורס ID: ${formData.courseId}</p>
+                        <p class="text-sm text-green-600">רמה: ${formData.level}</p>
+                    </div>
+                `;
+
+                document.getElementById('registerForm').reset();
+                loadStats();
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <p class="text-red-800">❌ שגיאה בהרשמה</p>
+                        <p class="text-sm text-red-600 mt-1">${error.message}</p>
+                    </div>
+                `;
+            }
+        });
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', () => {
+            checkConnection();
+
+            // Auto-refresh every 30 seconds
+            setInterval(() => {
+                checkConnection();
+                if (currentTab === 'users') {
+                    loadUsers();
+                } else if (currentTab === 'courses') {
+                    loadCourses();
+                }
+            }, 30000);
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1978 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>חוברת לימוד מקיפה - JavaScript, HTML5, CSS3</title>
+    
+    <style>
+      @media print {
+        body { 
+          background: white !important; 
+          color: black !important; 
+          font-family: Arial, sans-serif;
+        }
+        .container { max-width: none; margin: 0; padding: 20px; }
+        section { 
+          background: white !important; 
+          border: 1px solid #ccc; 
+          margin: 10px 0; 
+          padding: 15px; 
+          page-break-inside: avoid;
+        }
+        pre { 
+          background: #f5f5f5 !important; 
+          border: 1px solid #ddd; 
+          padding: 10px; 
+          font-size: 12px;
+        }
+        button { display: none; }
+        .grid { display: none; }
+        h1, h2 { color: black !important; }
+        .muted { color: #666 !important; }
+      }
+    </style>
+  
+
+    <script>
+      window.onload = function() {
+        // Auto-print when loaded
+        setTimeout(() => {
+          window.print();
+        }, 1000);
+      };
+    </script>
+  </head>
+<body>
+    <header class="container">
+        <h1>חוברת לימוד מקיפה – JavaScript, HTML5, CSS3</h1>
+        <p class="subtitle">מדריך מלא עם דוגמאות קוד, תרגילים ומשחקים</p>
+        <p class="author">נוצר על בסיס חומרי הלימוד שהעברת</p>
+    </header>
+
+    <main class="container">
+        <!-- תוכן עניינים -->
+        <section id="toc">
+            <h2>תוכן עניינים</h2>
+            <ol>
+                <li><a href="#js-basics">JavaScript בסיסי - טיפוסי נתונים</a></li>
+                <li><a href="#data-conversion">המרת נתונים והמרות טיפוס</a></li>
+                <li><a href="#arrays">מערכים - CRUD, איטרציות ושיטות מובנות</a></li>
+                <li><a href="#functions">פונקציות - הגדרה, פרמטרים ו-Scope</a></li>
+                <li><a href="#objects">אובייקטים ליטרליים</a></li>
+                <li><a href="#algorithms">אלגוריתמים - FizzBuzz ו-Reverse String</a></li>
+                <li><a href="#html5">HTML5 - אלמנטים סמנטיים</a></li>
+                <li><a href="#css3">CSS3 - סלקטורים מתקדמים ותכונות חדשות</a></li>
+                <li><a href="#exercises">תרגילים מעשיים מהחומר</a></li>
+                <li><a href="#advanced-topics">נושאים מתקדמים</a></li>
+                <li><a href="#trivia">חידון טריוויה (50 שאלות)</a></li>
+                <li><a href="#memory">משחק זיכרון</a></li>
+            </ol>
+        </section>
+
+        <!-- JavaScript בסיסי -->
+        <section id="js-basics">
+            <h2>1. JavaScript בסיסי - טיפוסי נתונים</h2>
+            
+            <h3>מבוא לטיפוסי נתונים</h3>
+            <p>טיפוסי נתונים או באנגלית Data Types מאפיינים ל"משפחות" את הערכים עליהם אנו מכריזים כשאנו כותבים קוד. כל ערך או נתון שייך לסוג כל שהוא או במונח המקצועי טיפוס נתון כל שהוא.</p>
+            
+            <h4>הטיפוסים הבסיסיים ב-JavaScript:</h4>
+            <table class="data-types">
+                <thead>
+                    <tr>
+                        <th>דוגמה</th>
+                        <th>טיפוס נתון</th>
+                        <th>הסבר</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>undefined</code></td>
+                        <td>Undefined</td>
+                        <td>משתנה שהוכרז אבל לא קיבל ערך</td>
+                    </tr>
+                    <tr>
+                        <td><code>null</code></td>
+                        <td>Null</td>
+                        <td>ערך ריק במכוון</td>
+                    </tr>
+                    <tr>
+                        <td><code>true / false</code></td>
+                        <td>Boolean</td>
+                        <td>ערכי אמת/שקר</td>
+                    </tr>
+                    <tr>
+                        <td><code>"Hello world"</code></td>
+                        <td>String</td>
+                        <td>מחרוזת תווים</td>
+                    </tr>
+                    <tr>
+                        <td><code>16</code></td>
+                        <td>Number</td>
+                        <td>מספר שלם</td>
+                    </tr>
+                    <tr>
+                        <td><code>54.3</code></td>
+                        <td>Number</td>
+                        <td>מספר עשרונית</td>
+                    </tr>
+                    <tr>
+                        <td><code>{ id: 85 }</code></td>
+                        <td>Object</td>
+                        <td>אובייקט עם תכונות</td>
+                    </tr>
+                    <tr>
+                        <td><code>function fn() {}</code></td>
+                        <td>Function</td>
+                        <td>פונקציה</td>
+                    </tr>
+                    <tr>
+                        <td><code>[42, "foo"]</code></td>
+                        <td>Array</td>
+                        <td>מערך של ערכים</td>
+                    </tr>
+                    <tr>
+                        <td><code>/$+[a-z]^/</code></td>
+                        <td>RegExp</td>
+                        <td>ביטוי רגולרי</td>
+                    </tr>
+                    <tr>
+                        <td><code>NaN</code></td>
+                        <td>NaN</td>
+                        <td>"Not a Number" - לא מספר</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>בדיקת טיפוס נתון עם typeof</h4>
+            <p>בשפת JavaScript ניתן לקבל את טיפוס הנתון של משתנה כל שהוא באמצעות הפקודה <code>typeof</code>. להלן מספר דוגמאות:</p>
+            
+            <pre><code class="language-javascript">var price = 56.5;
+// output: number
+console.log(typeof price); 
+
+var userName = "Yaron";
+// output: string
+console.log(typeof userName); 
+
+var x;
+// output: undefined
+console.log(typeof x); 
+
+var isSet = false;
+// output: boolean
+console.log(typeof isSet);
+
+var data = [1, 2, 3];
+// output: object (מערכים הם אובייקטים ב-JS)
+console.log(typeof data);
+
+var func = function() {};
+// output: function
+console.log(typeof func);</code></pre>
+
+            <div class="tip">
+                <h5>💡 טיפ חשוב:</h5>
+                <p>מערכים ב-JavaScript מוחזרים כ-"object" על ידי typeof. כדי לבדוק אם משהו הוא מערך, השתמש ב-<code>Array.isArray()</code>.</p>
+            </div>
+        </section>
+
+        <!-- המרת נתונים -->
+        <section id="data-conversion">
+            <h2>2. המרת נתונים</h2>
+            
+            <h3>מה זה המרת נתונים?</h3>
+            <p>המרת נתונים או באנגלית Type conversion או Type casting היא פעולה בה אנו ממירים משתנה או ערך מטיפוס נתון אחד לטיפוס נתון אחר כדי שנוכל לבצע עם הערך פעולות הקשורות לטיפוס נתון אחר.</p>
+            
+            <p><strong>דוגמה:</strong> אם נתון מחרוזת תוים עם מספר ונרצה לבצע על המחרוזת פעולות חשבון נוכל להמיר את מחרוזת התוים למספר שלם או מספר צף כדי לבצע פעולות חשבון אלו.</p>
+
+            <h3>המרות נפוצות</h3>
+            
+            <h4>1. המרה למספר שלם - parseInt()</h4>
+            <pre><code class="language-javascript">// המרת מחרוזת למספר שלם
+var x = '6';
+var result = 4 + parseInt(x);
+// output: 10 (ולא "46")
+console.log(result);
+
+// דוגמאות נוספות:
+parseInt("123");     // 123
+parseInt("123.45");  // 123 (חותך את החלק העשרוני)
+parseInt("123abc");  // 123 (לוקח רק החלק המספרי)
+parseInt("abc123");  // NaN (לא יכול להמיר)</code></pre>
+
+            <h4>2. המרה למספר עשרוני - parseFloat()</h4>
+            <pre><code class="language-javascript">// המרת מחרוזת למספר עשרוני
+var y = '87.33';
+var f = parseFloat(y);
+var total = f + 2;
+// output: 89.33
+console.log(total);
+
+// דוגמאות נוספות:
+parseFloat("123.45");    // 123.45
+parseFloat("123.45abc"); // 123.45
+parseFloat("abc123.45"); // NaN</code></pre>
+
+            <h4>3. המרה למחרוזת - String()</h4>
+            <pre><code class="language-javascript">// המרת מספר למחרוזת
+var num = 45;
+var age = String(num);
+// output: "string"
+console.log(typeof age);
+
+// דרכים נוספות להמרה למחרוזת:
+var num2 = 123;
+String(num2);    // "123"
+num2.toString(); // "123"
+num2 + "";       // "123" (שיטה קצרה)</code></pre>
+
+            <h3>המרה לערך בוליאני (Boolean)</h3>
+            <p>ניתן להמיר ערכים מסוג של מחרוזת תוים או מספר או אפילו מערך וכו' לערך בוליאני של true או false באמצעות הפונקציה Boolean().</p>
+
+            <h4>כללי Truthy ו-Falsy</h4>
+            <div class="comparison-table">
+                <div class="column">
+                    <h5>ערכים שמוערכים כ-False (Falsy)</h5>
+                    <ul>
+                        <li><code>0</code> - המספר אפס</li>
+                        <li><code>""</code> - מחרוזת ריקה</li>
+                        <li><code>null</code></li>
+                        <li><code>undefined</code></li>
+                        <li><code>false</code></li>
+                        <li><code>NaN</code></li>
+                    </ul>
+                </div>
+                <div class="column">
+                    <h5>ערכים שמוערכים כ-True (Truthy)</h5>
+                    <ul>
+                        <li>כל המספרים חוץ מ-0</li>
+                        <li>כל המחרוזות חוץ מריקה</li>
+                        <li>כל האובייקטים</li>
+                        <li>כל המערכים (גם ריקים!)</li>
+                        <li>כל הפונקציות</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h4>דוגמאות להמרה בוליאנית:</h4>
+            <pre><code class="language-javascript">// ערכים שיהפכו ל-true
+console.log(Boolean(6));        // true
+console.log(Boolean(-89));      // true
+console.log(Boolean('Hello'));  // true
+console.log(Boolean([]));       // true (מערך ריק!)
+console.log(Boolean({}));       // true (אובייקט ריק!)
+
+// ערכים שיהפכו ל-false
+console.log(Boolean(''));       // false
+console.log(Boolean(0));        // false
+console.log(Boolean(null));     // false
+console.log(Boolean(undefined)); // false</code></pre>
+
+            <div class="warning">
+                <h5>⚠️ שימו לב:</h5>
+                <p>מערך ריק <code>[]</code> ואובייקט ריק <code>{}</code> נחשבים Truthy! זה מקור שגיאות נפוץ.</p>
+            </div>
+        </section>
+
+        <!-- מערכים -->
+        <section id="arrays">
+            <h2>3. מערכים - CRUD ואיטרציות</h2>
+            
+            <h3>מבוא למערכים</h3>
+            <p>מערכים הם אחד מאבני היסוד החשובים בכל שפת תיכנות ובכללם בשפת JavaScript. מערכים הם אחד ממבני הנתונים (Data Structure) הפופולריים והמקובלים בכל שפות התיכנות כמעט כולם.</p>
+            
+            <p>הם נותנים את היכולת לאחסן מספר רב של נתונים ומידע במשתנה אחד או במקום אחד שמכיל את כל הנתונים.</p>
+
+            <h3>פעולות CRUD</h3>
+            <p>כאחד ממבני הנתונים הפופולריים על מערך לאפשר מספר פעולות יסודיות ונפוצות כשעובדים עם סוג של מבנה כל שהוא שאוגר מספר נתונים במקביל. נהוג לציין את הפעולות הללו בארבע אותיות - <strong>CRUD</strong> שהם בעצם ראשי תיבות לארבעת הפעולות הנפוצות:</p>
+            
+            <ul>
+                <li><strong>C</strong>reate - יצירת מערך חדש</li>
+                <li><strong>R</strong>ead - גישה לנתונים במערך</li>
+                <li><strong>U</strong>pdate - עדכון נתונים במערך</li>
+                <li><strong>D</strong>elete - מחיקת נתונים מהמערך</li>
+            </ul>
+
+            <h3>מבנה המערך</h3>
+            <p>מערך בנוי מתאים כאשר כל תא מאחסן בתוכו ערך מסוים. הערך יכול להיות מחרוזת תוים או מספר או אפילו ערך בוליאני של true או false ולעיתים תא יכול בעצמו להכיל מערך פנימי או אובייקט.</p>
+            
+            <p>כדי שנוכל לפנות לכל תא ותא בנפרד - כל תא מקבל "מפתח" או באנגלית key או index המאפשר פנייה ישירה לתא ספציפי מתוך כל המערך.</p>
+
+            <div class="array-visual">
+                <h4>דוגמה ויזואלית למערך:</h4>
+                <table class="array-demo">
+                    <tr>
+                        <th>Index</th>
+                        <td>0</td>
+                        <td>1</td>
+                        <td>2</td>
+                        <td>3</td>
+                        <td>4</td>
+                    </tr>
+                    <tr>
+                        <th>Value</th>
+                        <td>2</td>
+                        <td>5</td>
+                        <td>7</td>
+                        <td>1</td>
+                        <td>9</td>
+                    </tr>
+                </table>
+                <p><small>בעולם המחשבים הספירה מתחילה מ-0!</small></p>
+            </div>
+
+            <h3>יצירת מערכים (Create)</h3>
+            
+            <h4>דרך 1: Array Literal (מומלצת)</h4>
+            <p>הדרך הנוחה והקלה ביותר ליצירת מערך היא ע"י שימוש באופרטור למערכים הנראה כשני סוגריים מרובעות <code>[ ]</code>:</p>
+            
+            <pre><code class="language-javascript">// מערך של מספרים
+var nums = [10, 18, 3, 78];
+
+// מערך מעורב (מומלץ להימנע)
+var data = ['Avi', 16, "avi@gmail.com", true, null, 96.3];
+
+// מערך ריק
+var emptyArray = [];</code></pre>
+
+            <div class="tip">
+                <h5>💡 מוסכמה:</h5>
+                <p>מקובל בקרב המתכנתים לקרוא למשתנה המכיל מערך בשם המרמז או מעלה קשר לערכים הנמצאים בתוך המערך (users, numbers, names וכו').</p>
+            </div>
+
+            <h4>דרך 2: Constructor</h4>
+            <pre><code class="language-javascript">// יצירת מערך עם המחלקה Array
+var cars = new Array("Saab", "Volvo", "BMW");
+
+// יצירת מערך ריק בגודל מסוים
+var emptyArray = new Array(5); // מערך של 5 תאים ריקים</code></pre>
+
+            <h3>גישה לנתונים (Read)</h3>
+            
+            <pre><code class="language-javascript">var data = ["Avi", 16, true];
+
+// גישה לערכים לפי index
+console.log(data[0]); // "Avi"
+console.log(data[1]); // 16
+console.log(data[2]); // true
+
+// קבלת אורך המערך
+console.log(data.length); // 3
+
+// גישה לאלמנט האחרון
+console.log(data[data.length - 1]); // true
+
+// גישה דינמית
+var index = 1;
+console.log(data[index]); // 16</code></pre>
+
+            <h3>עדכון נתונים (Update)</h3>
+            
+            <h4>שינוי ערך קיים:</h4>
+            <pre><code class="language-javascript">var users = ["Dana", "Avi", "Haim"];
+users[1] = "Shimi";
+console.log(users[1]); // "Shimi"
+console.log(users); // ["Dana", "Shimi", "Haim"]</code></pre>
+
+            <h4>הוספת אלמנטים:</h4>
+            
+            <h5>הוספה לסוף המערך - push()</h5>
+            <pre><code class="language-javascript">var users = ["Dana", "Avi", "Haim"];
+users.push("Shimi");
+users.push("Tali");
+console.log(users.length); // 5
+console.log(users[4]); // "Tali"
+
+// הוספת מספר אלמנטים בבת אחת
+users.push("Ron", "Maya");
+console.log(users); // ["Dana", "Avi", "Haim", "Shimi", "Tali", "Ron", "Maya"]</code></pre>
+
+            <h5>הוספה לתחילת המערך - unshift()</h5>
+            <pre><code class="language-javascript">var fruits = ["Banana", "Orange", "Apple", "Mango"];
+fruits.unshift("Lemon", "Pineapple");
+console.log(fruits[0]); // "Lemon"
+console.log(fruits[1]); // "Pineapple"
+console.log(fruits[2]); // "Banana"</code></pre>
+
+            <h5>הוספה במיקום ספציפי:</h5>
+            <pre><code class="language-javascript">var users = ["Dana", "Avi", "Haim"];
+users[3] = "Vered"; // הוספה לאינדקס 3
+console.log(users.length); // 4</code></pre>
+
+            <h3>מחיקת ערכים (Delete)</h3>
+            
+            <h4>מחיקה עם splice()</h4>
+            <p>הפונקציה splice() מאפשרת למחוק אלמנטים ממיקום מסוים. הפרמטרים: מיקום התחלה, כמות אלמנטים למחוק.</p>
+            
+            <pre><code class="language-javascript">// מחיקת אלמנט אחד
+var numbers = [10, 20, 30, 45];
+numbers.splice(2, 1); // מחק החל מאינדקס 2, אלמנט אחד
+console.log(numbers.length); // 3
+console.log(numbers); // [10, 20, 45]
+
+// מחיקת מספר אלמנטים
+var data = ['bmw', 'mazda', true, 63.9];
+data.splice(0, 2); // מחק החל מאינדקס 0, שני אלמנטים
+console.log(data.length); // 2
+console.log(data); // [true, 63.9]</code></pre>
+
+            <div class="warning">
+                <h5>⚠️ חשוב לדעת:</h5>
+                <p>לאחר מחיקת אלמנט מהמערך JavaScript מסדרת את המערך מחדש כאשר האלמנט שאחרי האלמנט שנמחק מקבל את האינדקס של זה שנמחק וכו'.</p>
+            </div>
+
+            <h4>שיטות מחיקה נוספות:</h4>
+            <pre><code class="language-javascript">var arr = [1, 2, 3, 4, 5];
+
+// מחיקת האלמנט האחרון
+arr.pop(); // מחזיר 5
+console.log(arr); // [1, 2, 3, 4]
+
+// מחיקת האלמנט הראשון
+arr.shift(); // מחזיר 1
+console.log(arr); // [2, 3, 4]</code></pre>
+        </section>
+
+        <!-- איטרציות במערכים -->
+        <section id="array-iterations">
+            <h3>איטרציות במערכים</h3>
+            <p>לא תמיד אנחנו יודעים את גודל המערך ולא את מספר האלמנטים במערך אך נרצה בכל זאת להוציא את כל הנתונים מהמערך. כדי לעשות כן יש צורך בפעולה המכונה "איטרציה" שפרושה הוא חזרה לאותו מקור מידע כדי להוציא ממקור המידע עוד ועוד נתונים.</p>
+
+            <h4>איטרציה עם לולאת for:</h4>
+            <pre><code class="language-javascript">var names = ['Tom', 'Bob', 'Rob', 'Jon'];
+var namesLen = names.length;
+
+for(var x = 0; x < namesLen; x++){
+    console.log(names[x]);
+}
+/* Output in console:
+Tom
+Bob
+Rob
+Jon */</code></pre>
+
+            <h4>איטרציה עם לולאת while:</h4>
+            <pre><code class="language-javascript">var names = ['Tom', 'Bob', 'Rob', 'Jon'];
+var namesLen = names.length;
+var i = 0;
+
+while(i < namesLen){
+    console.log(names[i]);
+    i++;
+}</code></pre>
+
+            <h4>הצגת נתונים בדפדפן:</h4>
+            <pre><code class="language-javascript">var users = ["Avi", "Shimi", "Haim", "Moshe"];
+var uLen = users.length;
+var $el = document.getElementById("users-list");
+
+for(var x = 0; x < uLen; x++){
+    var item = "&lt;li&gt;" + users[x] + "&lt;/li&gt;";
+    $el.innerHTML += item;
+}</code></pre>
+
+            <h3>שיטות מובנות למערכים</h3>
+
+            <h4>מיפוי המערך - map()</h4>
+            <p>הפונקציה map() מאפשרת לנו בקלות יחסית לעבור על כל אחד מהאלמנטים שבמערך כדי לבצע על כולם פעולה או פעולות כל שהם ללא יוצא מן הכלל.</p>
+
+            <pre><code class="language-javascript">// הסרת רווחים מתחילת וסוף השמות
+var names = [' avi', ' shimi ', 'haim', 'israel '];
+names = names.map(function(val){
+    return val.trim();
+});
+console.log(names[0].length); // 3
+
+// הכפלת מספרים בשתיים
+var numbers = [1, 2, 4, 7, 8];
+numbers = numbers.map(function(num){
+    return num * 2;
+});
+console.log(numbers[2]); // 8</code></pre>
+
+            <h4>פילטור המערך - filter()</h4>
+            <p>הפונקציה filter() עוזרת לנו להוציא ערכים רצויים מתוך מערך של נתונים שחלקם רצויים וחלקם לא.</p>
+
+            <pre><code class="language-javascript">// סינון רק המספרים
+var data = ['abc', 'df', 56, 'hij', 98.3];
+data = data.filter(function(value){
+    if(typeof value === 'number') return value;
+});
+console.log(data[0]); // 56
+console.log(data[1]); // 98.3
+
+// סינון רק מספרים זוגיים
+var numbers = [3, 6, 17, 88, 91, 102];
+var evens = numbers.filter(function(number){
+    if(number % 2 == 0) return number;
+});
+console.log(evens); // [6, 88, 102]</code></pre>
+
+            <h4>צמצום המערך - reduce()</h4>
+            <p>הפונקציה reduce() מאפשרת לצמצם את ערכי המערך לערך אחד בודד בהתאם לקריטריונים מסוימים.</p>
+
+            <pre><code class="language-javascript">var numbers = [1, 2, 3, 4];
+var sum = numbers.reduce(function(total, value, index, array){
+    return total + value;
+});
+console.log(sum); // 10
+
+// דוגמה מתקדמת - מציאת הערך הגבוה ביותר
+var maxValue = numbers.reduce(function(max, current){
+    return current > max ? current : max;
+});
+console.log(maxValue); // 4</code></pre>
+
+            <h4>חיפוש במערך - find() ו-findIndex()</h4>
+            <pre><code class="language-javascript">var data = ['simply', 'dummy', 'text', 'printing'];
+
+// מציאת האלמנט הראשון שעונה על התנאי
+var longerStr = data.find(function(str) {
+    return str.length > 5;
+});
+console.log(longerStr); // "simply"
+
+// מציאת אינדקס האלמנט
+var index = data.findIndex(function(str) {
+    return str.length > 5;
+});
+console.log(index); // 0</code></pre>
+
+            <h4>חיפוש עם indexOf()</h4>
+            <pre><code class="language-javascript">var fruits = ["Banana", "Orange", "Apple", "Mango"];
+console.log(fruits.indexOf("Apple")); // 2
+
+// בדיקה והוספה אם לא קיים
+var newFruit = "Kiwi";
+if(fruits.indexOf(newFruit) == -1) {
+    fruits.push(newFruit);
+}
+console.log(fruits[4]); // "Kiwi"</code></pre>
+
+            <h4>מיון המערך - sort() ו-reverse()</h4>
+            <pre><code class="language-javascript">var fruits = ["Banana", "Orange", "Apple", "Mango"];
+
+// מיון בסדר עולה (א-ת)
+fruits.sort();
+console.log(fruits[0]); // "Apple"
+
+// מיון בסדר יורד (ת-א)
+fruits.reverse();
+console.log(fruits[0]); // "Orange"
+
+// מיון מספרים (נדרש פונקציית השוואה)
+var numbers = [40, 100, 1, 5, 25, 10];
+numbers.sort(function(a, b) {
+    return a - b; // סדר עולה
+});
+console.log(numbers); // [1, 5, 10, 25, 40, 100]</code></pre>
+        </section>
+
+        <!-- פונקציות -->
+        <section id="functions">
+            <h2>4. פונקציות - הגדרה ושימוש</h2>
+            
+            <h3>מה היא פונקציה?</h3>
+            <p>פונקציות הם אחד המרכיבים החשובים בכתיבת קוד תיכנותי ובכללם גם בשפת JavaScript. פונקציות מאפשרות שימוש חוזר באותה פרוצדורה של קוד מספר פעמים ללא צורך בחזרה על הקוד ובכתיבת אותו קוד - קוד כפול.</p>
+
+            <p>יתרון נוסף לפונקציה היא העובדה שפונקציה מסוגלת ל"התנהג" שונה בהתאם לערכים המועברים לפונקציה באמצעות פרמטרים וארגומנטים.</p>
+
+            <h3>הגדרת פונקציה בסיסית</h3>
+            <pre><code class="language-javascript">// הגדרת פונקציה פשוטה
+function myFunk(){
+    console.log("Hello World");
+}
+
+// קריאה לפונקציה
+myFunk(); // Output: "Hello World"</code></pre>
+
+            <h3>פונקציות עם פרמטרים</h3>
+            <pre><code class="language-javascript">// פונקציה עם פרמטר אחד
+function greetUser(name){
+    console.log("שלום " + name);
+}
+
+greetUser("אבי"); // Output: "שלום אבי"
+
+// פונקציה עם מספר פרמטרים
+function addNumbers(a, b){
+    var sum = a + b;
+    console.log("התוצאה היא: " + sum);
+}
+
+addNumbers(5, 3); // Output: "התוצאה היא: 8"</code></pre>
+
+            <h3>פונקציות עם return</h3>
+            <pre><code class="language-javascript">// פונקציה שמחזירה ערך
+function multiply(x, y){
+    return x * y;
+}
+
+var result = multiply(4, 6);
+console.log(result); // 24
+
+// פונקציה שמחזירה ערך מורכב
+function getFullName(firstName, lastName){
+    return firstName + " " + lastName;
+}
+
+var fullName = getFullName("יוסי", "כהן");
+console.log(fullName); // "יוסי כהן"</code></pre>
+
+            <h3>פרמטרים ברירת מחדל (ES6)</h3>
+            <pre><code class="language-javascript">// פרמטרים עם ערכי ברירת מחדל
+function greet(name = "אורח", age = 0){
+    console.log("שלום " + name + ", גילך " + age);
+}
+
+greet(); // "שלום אורח, גילך 0"
+greet("דנה"); // "שלום דנה, גילך 0"
+greet("מיכל", 25); // "שלום מיכל, גילך 25"</code></pre>
+
+            <h3>דרכים שונות להגדיר פונקציות</h3>
+
+            <h4>1. Function Declaration (הכרזת פונקציה)</h4>
+            <pre><code class="language-javascript">function sayHello(){
+    return "Hello!";
+}
+// ניתן לקרוא לפונקציה לפני ההגדרה (hoisting)</code></pre>
+
+            <h4>2. Function Expression (ביטוי פונקציה)</h4>
+            <pre><code class="language-javascript">var sayHello = function(){
+    return "Hello!";
+};
+// לא ניתן לקרוא לפונקציה לפני ההגדרה</code></pre>
+
+            <h4>3. Arrow Functions (פונקציות חץ - ES6)</h4>
+            <pre><code class="language-javascript">// תחביר קצר
+var sayHello = () => "Hello!";
+
+// עם פרמטרים
+var add = (a, b) => a + b;
+
+// עם מספר שורות
+var processData = (data) => {
+    console.log("מעבד נתונים...");
+    return data.toUpperCase();
+};</code></pre>
+
+            <h3>Scope (תחום) במשתנים</h3>
+            
+            <h4>Global Scope (תחום גלובלי)</h4>
+            <pre><code class="language-javascript">var globalVar = "אני גלובלי";
+
+function testFunction(){
+    console.log(globalVar); // גישה למשתנה גלובלי
+}
+
+testFunction(); // "אני גלובלי"</code></pre>
+
+            <h4>Local Scope (תחום מקומי)</h4>
+            <pre><code class="language-javascript">function testFunction(){
+    var localVar = "אני מקומי";
+    console.log(localVar);
+}
+
+testFunction(); // "אני מקומי"
+// console.log(localVar); // שגיאה! לא נגיש מחוץ לפונקציה</code></pre>
+
+            <h3>Closures (סגירות)</h3>
+            <p>Closure היא פונקציה שיש לה גישה למשתנים מההקשר החיצוני שלה, גם אחרי שההקשר החיצוני כבר לא קיים.</p>
+
+            <pre><code class="language-javascript">function outerFunction(x) {
+    // משתנה בתחום החיצוני
+    
+    function innerFunction(y) {
+        // הפונקציה הפנימית יש לה גישה ל-x
+        return x + y;
+    }
+    
+    return innerFunction;
+}
+
+var addFive = outerFunction(5);
+console.log(addFive(3)); // 8
+
+// דוגמה מעשית - מונה
+function createCounter() {
+    var count = 0;
+    
+    return function() {
+        count++;
+        return count;
+    };
+}
+
+var counter = createCounter();
+console.log(counter()); // 1
+console.log(counter()); // 2
+console.log(counter()); // 3</code></pre>
+
+            <h3>פונקציות כפרמטרים (Callbacks)</h3>
+            <pre><code class="language-javascript">// פונקציה שמקבלת פונקציה אחרת כפרמטר
+function processArray(arr, callback) {
+    var result = [];
+    for(var i = 0; i < arr.length; i++) {
+        result.push(callback(arr[i]));
+    }
+    return result;
+}
+
+// פונקציות עזר
+function double(num) {
+    return num * 2;
+}
+
+function square(num) {
+    return num * num;
+}
+
+var numbers = [1, 2, 3, 4];
+var doubled = processArray(numbers, double);
+var squared = processArray(numbers, square);
+
+console.log(doubled); // [2, 4, 6, 8]
+console.log(squared); // [1, 4, 9, 16]</code></pre>
+        </section>
+
+        <!-- אלגוריתמים -->
+        <section id="algorithms">
+            <h2>6. אלגוריתמים - FizzBuzz ו-Reverse String</h2>
+            
+            <h3>מבוא לאלגוריתמים</h3>
+            <p>אלגוריתם הוא רצף של פעולות או הוראות המיועדות לפתור בעיה מסוימת. באלגוריתמים תכנותיים, אנו כותבים קוד שמבצע משימות ספציפיות בצורה יעילה ומובנת.</p>
+
+            <h3>אלגוריתם FizzBuzz</h3>
+            <p>FizzBuzz הוא אלגוריתם פופולרי ברקיוטינג. המטרה: להדפיס מספרים מ-1 עד 100, אבל:</p>
+            <ul>
+                <li>במקום מספרים שמתחלקים ב-3: הדפס "Fizz"</li>
+                <li>במקום מספרים שמתחלקים ב-5: הדפס "Buzz"</li>
+                <li>במקום מספרים שמתחלקים גם ב-3 וגם ב-5: הדפס "FizzBuzz"</li>
+            </ul>
+
+            <h4>פתרון FizzBuzz:</h4>
+            <pre><code class="language-javascript">function fizzBuzz() {
+    for(var i = 1; i <= 100; i++) {
+        if(i % 3 === 0 && i % 5 === 0) {
+            console.log("FizzBuzz");
+        } else if(i % 3 === 0) {
+            console.log("Fizz");
+        } else if(i % 5 === 0) {
+            console.log("Buzz");
+        } else {
+            console.log(i);
+        }
+    }
+}
+
+// פתרון אלטרנטיבי - קצר יותר
+function fizzBuzzShort() {
+    for(var i = 1; i <= 100; i++) {
+        var output = "";
+        if(i % 3 === 0) output += "Fizz";
+        if(i % 5 === 0) output += "Buzz";
+        console.log(output || i);
+    }
+}
+
+fizzBuzz();</code></pre>
+
+            <h4>תוצאות לדוגמה:</h4>
+            <pre><code>1
+2
+Fizz
+4
+Buzz
+Fizz
+7
+8
+Fizz
+Buzz
+11
+Fizz
+13
+14
+FizzBuzz
+...</code></pre>
+
+            <h3>אלגוריתם Reverse String</h3>
+            <p>המטרה: להפוך סדר התווים במחרוזת. יש מספר דרכים לעשות זאת:</p>
+
+            <h4>דרך 1: split().reverse().join()</h4>
+            <pre><code class="language-javascript">function reverseString1(str) {
+    return str.split("").reverse().join("");
+}
+
+console.log(reverseString1("שלום")); // "םולש"
+console.log(reverseString1("JavaScript")); // "tpircSavaJ"</code></pre>
+
+            <h4>דרך 2: לולאת for</h4>
+            <pre><code class="language-javascript">function reverseString2(str) {
+    var reversed = "";
+    for(var i = str.length - 1; i >= 0; i--) {
+        reversed += str[i];
+    }
+    return reversed;
+}
+
+console.log(reverseString2("שלום")); // "םולש"</code></pre>
+
+            <h4>דרך 3: רקורסיה</h4>
+            <pre><code class="language-javascript">function reverseString3(str) {
+    // תנאי עצירה
+    if(str === "") {
+        return "";
+    }
+    
+    // קריאה רקורסיבית
+    return reverseString3(str.substr(1)) + str.charAt(0);
+}
+
+console.log(reverseString3("שלום")); // "םולש"</code></pre>
+
+            <h4>דרך 4: reduce()</h4>
+            <pre><code class="language-javascript">function reverseString4(str) {
+    return str.split("").reduce(function(reversed, char) {
+        return char + reversed;
+    }, "");
+}
+
+console.log(reverseString4("שלום")); // "םולש"</code></pre>
+
+            <h3>אלגוריתמים נוספים לתרגול</h3>
+
+            <h4>מציאת המספר הגדול ביותר במערך</h4>
+            <pre><code class="language-javascript">function findMax(numbers) {
+    var max = numbers[0];
+    for(var i = 1; i < numbers.length; i++) {
+        if(numbers[i] > max) {
+            max = numbers[i];
+        }
+    }
+    return max;
+}
+
+// או בעזרת Math.max
+function findMaxBuiltIn(numbers) {
+    return Math.max.apply(null, numbers);
+}
+
+console.log(findMax([3, 7, 2, 9, 1])); // 9</code></pre>
+
+            <h4>בדיקה האם מחרוזת היא פלינדרום</h4>
+            <pre><code class="language-javascript">function isPalindrome(str) {
+    var cleanStr = str.toLowerCase().replace(/[^a-zא-ת]/g, "");
+    var reversed = cleanStr.split("").reverse().join("");
+    return cleanStr === reversed;
+}
+
+console.log(isPalindrome("אבא")); // true
+console.log(isPalindrome("רקע")); // false
+console.log(isPalindrome("A man a plan a canal Panama")); // true</code></pre>
+        </section>
+
+        <!-- CSS3 מתקדם -->
+        <section id="css3">
+            <h2>8. CSS3 - סלקטורים מתקדמים ותכונות חדשות</h2>
+            
+            <h3>סלקטורים מתקדמים</h3>
+            <p>CSS3 הביא איתו סלקטורים חדשים ומתקדמים המאפשרים בחירה מדויקת יותר של אלמנטים בדף.</p>
+
+            <h4>סלקטור ילד ישיר (Child Selector)</h4>
+            <p><strong>תחביר:</strong> <code>parent > child</code></p>
+            <p><strong>מטרה:</strong> בוחר אלמנטים שהם ילדים ישירים של האלמנט האב.</p>
+            
+            <pre><code class="language-css">/* בוחר רק li שהם ילדים ישירים של ul */
+ul > li {
+    color: blue;
+    font-weight: bold;
+}
+
+/* לא יבחר li שנמצאים בתוך ul מקונן */
+div > p {
+    margin-bottom: 20px;
+}</code></pre>
+
+            <div class="example">
+                <h5>דוגמה ב-HTML:</h5>
+                <pre><code class="language-html">&lt;ul&gt;
+    &lt;li&gt;רשימה ראשית - יצבע בכחול&lt;/li&gt;
+    &lt;li&gt;רשימה ראשית - יצבע בכחול
+        &lt;ul&gt;
+            &lt;li&gt;רשימת משנה - לא יצבע&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+            </div>
+
+            <h4>סלקטור אח סמוך (Adjacent Sibling)</h4>
+            <p><strong>תחביר:</strong> <code>element1 + element2</code></p>
+            <p><strong>מטרה:</strong> בוחר אלמנט שבא מיד אחרי אלמנט אחר באותה רמה.</p>
+
+            <pre><code class="language-css">/* בוחר p שבא מיד אחרי h2 */
+h2 + p {
+    font-size: 18px;
+    color: #666;
+    margin-top: 0;
+}
+
+/* בוחר input שבא מיד אחרי label */
+label + input {
+    margin-left: 10px;
+}</code></pre>
+
+            <h4>סלקטור אח כללי (General Sibling)</h4>
+            <p><strong>תחביר:</strong> <code>element1 ~ element2</code></p>
+            <p><strong>מטרה:</strong> בוחר כל האלמנטים שבאים אחרי אלמנט מסוים באותה רמה.</p>
+
+            <pre><code class="language-css">/* בוחר כל ה-p שבאים אחרי h2 */
+h2 ~ p {
+    padding-left: 20px;
+    border-left: 3px solid #ccc;
+}
+
+/* יבחר כל div שבא אחרי .warning */
+.warning ~ div {
+    opacity: 0.7;
+}</code></pre>
+
+            <h4>סלקטורי תכונות (Attribute Selectors)</h4>
+            
+            <h5>1. סלקטור תכונה בסיסי</h5>
+            <pre><code class="language-css">/* בוחר כל אלמנט עם תכונה title */
+[title] {
+    cursor: help;
+    border-bottom: 1px dotted #999;
+}
+
+/* בוחר input עם תכונה required */
+input[required] {
+    border-color: red;
+}</code></pre>
+
+            <h5>2. סלקטור תכונה עם ערך מדויק</h5>
+            <pre><code class="language-css">/* בוחר input עם type="email" */
+input[type="email"] {
+    background-color: #e8f4f8;
+}
+
+/* בוחר link עם target="_blank" */
+a[target="_blank"] {
+    color: #ff6600;
+}</code></pre>
+
+            <h5>3. סלקטורי תכונות מתקדמים</h5>
+            <pre><code class="language-css">/* מתחיל ב... */
+a[href^="https://"] {
+    color: green;
+}
+
+/* מסתיים ב... */
+a[href$=".pdf"] {
+    background: url(pdf-icon.png) no-repeat;
+    padding-left: 20px;
+}
+
+/* מכיל... */
+img[src*="thumbnail"] {
+    border: 2px solid #ccc;
+}
+
+/* מכיל מילה שלמה */
+div[class~="highlight"] {
+    background-color: yellow;
+}</code></pre>
+
+            <h3>תכונות CSS3 חדשות</h3>
+
+            <h4>Border Radius (פינות מעוגלות)</h4>
+            <pre><code class="language-css">/* פינות מעוגלות בסיסיות */
+.rounded {
+    border-radius: 10px;
+}
+
+/* פינות שונות לכל צד */
+.custom-rounded {
+    border-radius: 15px 5px 25px 10px; /* למעלה-שמאל, למעלה-ימין, למטה-ימין, למטה-שמאל */
+}
+
+/* עיגול מלא */
+.circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}</code></pre>
+
+            <h4>Box Shadow (צלליות)</h4>
+            <pre><code class="language-css">/* צל בסיסי */
+.shadow {
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+}
+
+/* צל מורכב עם מספר שכבות */
+.complex-shadow {
+    box-shadow: 
+        0 1px 3px rgba(0,0,0,0.12),
+        0 1px 2px rgba(0,0,0,0.24);
+}
+
+/* צל פנימי */
+.inset-shadow {
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+}</code></pre>
+
+            <h4>Text Shadow (צל טקסט)</h4>
+            <pre><code class="language-css">/* צל טקסט בסיסי */
+.text-shadow {
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+/* אפקט זוהר */
+.glow {
+    text-shadow: 0 0 10px #00ff00;
+}
+
+/* אפקט תלת מימד */
+.three-d {
+    text-shadow: 
+        1px 1px 0 #ccc,
+        2px 2px 0 #c9c9c9,
+        3px 3px 0 #bbb;
+}</code></pre>
+
+            <h4>Gradients (מעברי צבע)</h4>
+
+            <h5>Linear Gradient (מעבר ליניארי)</h5>
+            <pre><code class="language-css">/* מעבר בסיסי מלמעלה למטה */
+.linear-gradient {
+    background: linear-gradient(to bottom, #ff7e5f, #feb47b);
+}
+
+/* מעבר אלכסוני */
+.diagonal-gradient {
+    background: linear-gradient(45deg, #667db6, #0082c8, #0082c8, #667db6);
+}
+
+/* מעבר עם נקודות עצירה */
+.stops-gradient {
+    background: linear-gradient(
+        to right, 
+        red 0%, 
+        orange 25%, 
+        yellow 50%, 
+        green 75%, 
+        blue 100%
+    );
+}</code></pre>
+
+            <h5>Radial Gradient (מעבר רדיאלי)</h5>
+            <pre><code class="language-css">/* מעבר מעגלי */
+.radial-gradient {
+    background: radial-gradient(circle, #ff7e5f, #feb47b);
+}
+
+/* מעבר אליפטי עם מיקום */
+.positioned-radial {
+    background: radial-gradient(
+        ellipse at center top,
+        #667db6 0%,
+        #0082c8 100%
+    );
+}</code></pre>
+
+            <h4>Transformations (טרנספורמציות)</h4>
+
+            <h5>Transform בסיסי</h5>
+            <pre><code class="language-css">/* סיבוב */
+.rotate {
+    transform: rotate(45deg);
+}
+
+/* שינוי גודל */
+.scale {
+    transform: scale(1.5);
+}
+
+/* הזזה */
+.translate {
+    transform: translate(50px, 100px);
+}
+
+/* שילוב טרנספורמציות */
+.combined {
+    transform: rotate(45deg) scale(1.2) translate(20px, 30px);
+}</code></pre>
+
+            <h5>Transform מתקדם</h5>
+            <pre><code class="language-css">/* הטייה */
+.skew {
+    transform: skewX(20deg) skewY(10deg);
+}
+
+/* טרנספורמציה תלת מימדית */
+.transform-3d {
+    transform: rotateX(60deg) rotateY(30deg) rotateZ(45deg);
+    transform-style: preserve-3d;
+}</code></pre>
+
+            <h4>Transitions (מעברים חלקים)</h4>
+            <pre><code class="language-css">/* מעבר בסיסי */
+.transition {
+    background-color: blue;
+    transition: background-color 0.3s ease;
+}
+
+.transition:hover {
+    background-color: red;
+}
+
+/* מעברים מרובים */
+.multi-transition {
+    transition: 
+        background-color 0.3s ease,
+        transform 0.2s ease-in-out,
+        box-shadow 0.4s ease;
+}
+
+/* מעבר עם עיכוב */
+.delayed-transition {
+    transition: all 0.5s ease 0.2s; /* property duration timing delay */
+}</code></pre>
+
+            <h4>Layout מתקדם</h4>
+
+            <h5>CSS Columns</h5>
+            <pre><code class="language-css">/* יצירת עמודות */
+.columns {
+    column-count: 3;
+    column-gap: 20px;
+    column-rule: 1px solid #ddd;
+}
+
+/* רוחב עמודות */
+.column-width {
+    column-width: 200px;
+    column-gap: 30px;
+}</code></pre>
+
+            <div class="tip">
+                <h5>💡 טיפים לשימוש בסלקטורים מתקדמים:</h5>
+                <ul>
+                    <li><strong>ביצועים:</strong> סלקטורים מורכבים יכולים להאט את הדף. השתמשו בהם במידה.</li>
+                    <li><strong>תחזוקה:</strong> סלקטורים פשוטים קלים יותר לתחזוקה.</li>
+                    <li><strong>תמיכה:</strong> בדקו תמיכה בדפדפנים ישנים.</li>
+                    <li><strong>ספציפיות:</strong> סלקטורים מורכבים יותר ספציפיים יותר.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- תרגילים -->
+        <section id="exercises">
+            <h2>9. תרגילים מעשיים</h2>
+            
+            <h3>תרגילים בסיסיים</h3>
+            
+            <div class="exercise">
+                <h4>תרגיל 1: משתנים וטיפוסי נתונים</h4>
+                <p>הכרז על 4 משתנים לבחירתך (בעזרת הפקודה var) כאשר כל אחד מהמשתנים יכיל סוג מידע שונה (טיפוס נתון). הצג את ערכם של המשתנים ב-console.</p>
+                
+                <details>
+                    <summary>פתרון</summary>
+                    <pre><code class="language-javascript">var userName = "אבי";         // string
+var userAge = 25;             // number
+var isLoggedIn = true;        // boolean
+var hobbies = ["ספורט", "מוזיקה"]; // array
+
+console.log(userName);
+console.log(userAge);
+console.log(isLoggedIn);
+console.log(hobbies);</code></pre>
+                </details>
+            </div>
+
+            <div class="exercise">
+                <h4>תרגיל 2: מערכים ולולאות</h4>
+                <p>צור לולאת while שתציג ב-console את המספרים 1,3,5,7,9 (מספרים אי-זוגיים).</p>
+                
+                <details>
+                    <summary>פתרון</summary>
+                    <pre><code class="language-javascript">var i = 1;
+while(i <= 9) {
+    console.log(i);
+    i += 2; // הוספת 2 כדי לקפוץ למספר האי-זוגי הבא
+}</code></pre>
+                </details>
+            </div>
+
+            <div class="exercise">
+                <h4>תרגיל 3: פונקציות</h4>
+                <p>כתוב פונקציה שמקבלת שני מספרים ומחזירה את הגדול מביניהם.</p>
+                
+                <details>
+                    <summary>פתרון</summary>
+                    <pre><code class="language-javascript">function getMax(a, b) {
+    if(a > b) {
+        return a;
+    } else {
+        return b;
+    }
+}
+
+// או בצורה קצרה:
+function getMaxShort(a, b) {
+    return a > b ? a : b;
+}
+
+console.log(getMax(15, 23)); // 23</code></pre>
+                </details>
+            </div>
+
+            <h3>תרגילים מתקדמים</h3>
+
+            <div class="exercise">
+                <h4>תרגיל 4: עבודה עם מערכים</h4>
+                <p>יש לך מערך של ציונים: [85, 92, 78, 96, 87, 74, 89]. כתוב קוד ש:</p>
+                <ol>
+                    <li>מחשב את הממוצע</li>
+                    <li>מוצא את הציון הגבוה ביותר</li>
+                    <li>סופר כמה ציונים מעל 85</li>
+                </ol>
+                
+                <details>
+                    <summary>פתרון</summary>
+                    <pre><code class="language-javascript">var grades = [85, 92, 78, 96, 87, 74, 89];
+
+// חישוב ממוצע
+var sum = 0;
+for(var i = 0; i < grades.length; i++) {
+    sum += grades[i];
+}
+var average = sum / grades.length;
+console.log("הממוצע: " + average);
+
+// מציאת הציון הגבוה ביותר
+var maxGrade = grades[0];
+for(var i = 1; i < grades.length; i++) {
+    if(grades[i] > maxGrade) {
+        maxGrade = grades[i];
+    }
+}
+console.log("הציון הגבוה ביותר: " + maxGrade);
+
+// ספירת ציונים מעל 85
+var highGradesCount = 0;
+for(var i = 0; i < grades.length; i++) {
+    if(grades[i] > 85) {
+        highGradesCount++;
+    }
+}
+console.log("ציונים מעל 85: " + highGradesCount);</code></pre>
+                </details>
+            </div>
+
+            <div class="exercise">
+                <h4>תרגיל 5: אלגוריתם מציאת פלינדרום</h4>
+                <p>כתוב פונקציה שבודקת האם מחרוזת היא פלינדרום (נקראת אותו דבר מהתחלה ומהסוף).</p>
+                
+                <details>
+                    <summary>פתרון</summary>
+                    <pre><code class="language-javascript">function isPalindrome(str) {
+    // הפיכת המחרוזת לאותיות קטנות והסרת רווחים
+    var cleanStr = str.toLowerCase().replace(/\s/g, '');
+    
+    // השוואה עם המחרוזת ההפוכה
+    var reversed = cleanStr.split('').reverse().join('');
+    
+    return cleanStr === reversed;
+}
+
+// פתרון אלטרנטיבי עם לולאה
+function isPalindromeLoop(str) {
+    var cleanStr = str.toLowerCase().replace(/\s/g, '');
+    var len = cleanStr.length;
+    
+    for(var i = 0; i < len / 2; i++) {
+        if(cleanStr[i] !== cleanStr[len - 1 - i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+console.log(isPalindrome("אבא")); // true
+console.log(isPalindrome("שלום")); // false
+console.log(isPalindrome("A man a plan a canal Panama")); // true</code></pre>
+                </details>
+            </div>
+
+            <div class="exercise">
+                <h4>תרגיל 6: ניהול רשימת משימות</h4>
+                <p>צור מערך של משימות עם פונקציות להוספה, מחיקה והצגה.</p>
+                
+                <details>
+                    <summary>פתרון</summary>
+                    <pre><code class="language-javascript">var todoList = [];
+
+function addTodo(task) {
+    todoList.push(task);
+    console.log("נוסף: " + task);
+}
+
+function removeTodo(index) {
+    if(index >= 0 && index < todoList.length) {
+        var removed = todoList.splice(index, 1)[0];
+        console.log("נמחק: " + removed);
+    } else {
+        console.log("אינדקס לא תקין");
+    }
+}
+
+function showTodos() {
+    console.log("רשימת המשימות:");
+    for(var i = 0; i < todoList.length; i++) {
+        console.log((i + 1) + ". " + todoList[i]);
+    }
+}
+
+// שימוש
+addTodo("ללמוד JavaScript");
+addTodo("לכתוב קוד");
+addTodo("לבדוק תרגילים");
+showTodos();
+removeTodo(1);
+showTodos();</code></pre>
+                </details>
+            </div>
+        </section>
+
+        <!-- אובייקטים ליטרליים -->
+        <section id="objects">
+            <h2>5. אובייקטים ליטרליים</h2>
+            
+            <h3>מבוא לאובייקטים</h3>
+            <p>אובייקטים ליטרליים ב-JavaScript הם אחד ממבני הנתונים החשובים ביותר. הם מאפשרים לאחסן נתונים בצורה מבנית עם זוגות של מפתח-ערך (key-value pairs).</p>
+
+            <h3>יצירת אובייקט</h3>
+            <h4>Object Literal (מומלץ)</h4>
+            <pre><code class="language-javascript">// אובייקט פשוט
+var user = {
+    name: "אבי",
+    age: 30,
+    email: "avi@example.com",
+    isActive: true
+};
+
+// אובייקט מורכב עם מערכים ואובייקטים מקוננים
+var student = {
+    name: "שרה",
+    grades: [95, 87, 92],
+    address: {
+        city: "תל אביב",
+        street: "רחוב הרצל 15"
+    },
+    subjects: ["מתמטיקה", "פיזיקה", "כימיה"]
+};</code></pre>
+
+            <h4>Constructor (דרך אלטרנטיבית)</h4>
+            <pre><code class="language-javascript">var user = new Object();
+user.name = "אבי";
+user.age = 30;
+user.email = "avi@example.com";</code></pre>
+
+            <h3>גישה לתכונות</h3>
+            
+            <h4>Dot Notation (נקודה)</h4>
+            <pre><code class="language-javascript">var user = {
+    name: "אבי",
+    age: 30,
+    email: "avi@example.com"
+};
+
+console.log(user.name);  // "אבי"
+console.log(user.age);   // 30
+console.log(user.email); // "avi@example.com"</code></pre>
+
+            <h4>Bracket Notation (סוגריים מרובעות)</h4>
+            <pre><code class="language-javascript">console.log(user["name"]);  // "אבי"
+console.log(user["age"]);   // 30
+
+// שימושי עם מפתחות דינמיים
+var property = "email";
+console.log(user[property]); // "avi@example.com"
+
+// מפתחות עם רווחים או תווים מיוחדים
+var car = {
+    "model name": "טויוטה קורולה",
+    "year-made": 2023
+};
+
+console.log(car["model name"]); // "טויוטה קורולה"
+console.log(car["year-made"]);  // 2023</code></pre>
+
+            <h3>הוספה ועדכון תכונות</h3>
+            <pre><code class="language-javascript">var user = {
+    name: "אבי",
+    age: 30
+};
+
+// הוספת תכונות חדשות
+user.email = "avi@example.com";
+user["phone"] = "050-1234567";
+user.isActive = true;
+
+// עדכון תכונות קיימות
+user.age = 31;
+user["name"] = "אברהם";
+
+console.log(user);
+// {name: "אברהם", age: 31, email: "avi@example.com", phone: "050-1234567", isActive: true}</code></pre>
+
+            <h3>מחיקת תכונות</h3>
+            <pre><code class="language-javascript">var user = {
+    name: "אבי",
+    age: 30,
+    email: "avi@example.com",
+    tempData: "זמני"
+};
+
+// מחיקת תכונה
+delete user.tempData;
+delete user["email"];
+
+console.log(user); // {name: "אבי", age: 30}</code></pre>
+
+            <h3>מפתחות דינמיים</h3>
+            <pre><code class="language-javascript">var keyName = "dynamicProperty";
+var value = "ערך דינמי";
+
+var obj = {
+    staticProperty: "ערך סטטי",
+    [keyName]: value // מפתח דינמי
+};
+
+console.log(obj.dynamicProperty); // "ערך דינמי"
+
+// בניית אובייקט דינמי
+function createUser(name, age, role) {
+    return {
+        name: name,
+        age: age,
+        [`is${role}`]: true // מפתח דינמי
+    };
+}
+
+var admin = createUser("יוסי", 35, "Admin");
+console.log(admin); // {name: "יוסי", age: 35, isAdmin: true}</code></pre>
+
+            <h3>אובייקטים מקוננים</h3>
+            <pre><code class="language-javascript">var company = {
+    name: "חברת הטכנולוגיה",
+    employees: [
+        {
+            name: "אבי",
+            position: "מפתח",
+            skills: ["JavaScript", "React", "Node.js"]
+        },
+        {
+            name: "שרה",
+            position: "מעצבת",
+            skills: ["Photoshop", "Figma", "CSS"]
+        }
+    ],
+    address: {
+        city: "תל אביב",
+        street: "רחוב הרצל",
+        number: 123,
+        coordinates: {
+            lat: 32.0853,
+            lng: 34.7818
+        }
+    }
+};
+
+// גישה לנתונים מקוננים
+console.log(company.employees[0].name); // "אבי"
+console.log(company.address.coordinates.lat); // 32.0853</code></pre>
+
+            <h3>methods באובייקטים</h3>
+            <pre><code class="language-javascript">var calculator = {
+    result: 0,
+    
+    add: function(number) {
+        this.result += number;
+        return this; // מאפשר method chaining
+    },
+    
+    subtract: function(number) {
+        this.result -= number;
+        return this;
+    },
+    
+    multiply: function(number) {
+        this.result *= number;
+        return this;
+    },
+    
+    getResult: function() {
+        return this.result;
+    },
+    
+    reset: function() {
+        this.result = 0;
+        return this;
+    }
+};
+
+// שימוש במתודות
+calculator.add(10).multiply(2).subtract(5);
+console.log(calculator.getResult()); // 15
+
+// איפוס
+calculator.reset();
+console.log(calculator.getResult()); // 0</code></pre>
+
+            <h3>this במתודות</h3>
+            <pre><code class="language-javascript">var person = {
+    firstName: "יוסי",
+    lastName: "כהן",
+    age: 25,
+    
+    getFullName: function() {
+        return this.firstName + " " + this.lastName;
+    },
+    
+    introduce: function() {
+        return "שלום, שמי " + this.getFullName() + " ואני בן " + this.age;
+    },
+    
+    haveBirthday: function() {
+        this.age++;
+        console.log("יום הולדת שמח! עכשיו אני בן " + this.age);
+    }
+};
+
+console.log(person.getFullName()); // "יוסי כהן"
+console.log(person.introduce()); // "שלום, שמי יוסי כהן ואני בן 25"
+person.haveBirthday(); // "יום הולדת שמח! עכשיו אני בן 26"</code></pre>
+
+            <h3>איטרציה על אובייקטים</h3>
+            
+            <h4>for...in loop</h4>
+            <pre><code class="language-javascript">var user = {
+    name: "אבי",
+    age: 30,
+    email: "avi@example.com",
+    city: "תל אביב"
+};
+
+// איטרציה על כל התכונות
+for(var key in user) {
+    console.log(key + ": " + user[key]);
+}
+// Output:
+// name: אבי
+// age: 30
+// email: avi@example.com
+// city: תל אביב</code></pre>
+
+            <h4>Object.keys(), Object.values(), Object.entries()</h4>
+            <pre><code class="language-javascript">var user = {
+    name: "אבי",
+    age: 30,
+    email: "avi@example.com"
+};
+
+// קבלת כל המפתחות
+var keys = Object.keys(user);
+console.log(keys); // ["name", "age", "email"]
+
+// קבלת כל הערכים
+var values = Object.values(user);
+console.log(values); // ["אבי", 30, "avi@example.com"]
+
+// קבלת זוגות מפתח-ערך
+var entries = Object.entries(user);
+console.log(entries); 
+// [["name", "אבי"], ["age", 30], ["email", "avi@example.com"]]
+
+// איטרציה עם forEach
+Object.keys(user).forEach(function(key) {
+    console.log(key + ": " + user[key]);
+});</code></pre>
+
+            <h3>העתקת אובייקטים</h3>
+            
+            <h4>העתקה רדודה (Shallow Copy)</h4>
+            <pre><code class="language-javascript">var original = {
+    name: "אבי",
+    age: 30,
+    hobbies: ["ספורט", "מוזיקה"]
+};
+
+// Object.assign
+var copy1 = Object.assign({}, original);
+
+// Spread operator (ES6)
+var copy2 = {...original};
+
+// שינוי בעותק לא משפיע על המקור
+copy1.name = "יוסי";
+console.log(original.name); // "אבי"
+
+// אבל שינוי במערכים/אובייקטים פנימיים כן משפיע!
+copy1.hobbies.push("קריאה");
+console.log(original.hobbies); // ["ספורט", "מוזיקה", "קריאה"]</code></pre>
+
+            <h4>העתקה עמוקה (Deep Copy)</h4>
+            <pre><code class="language-javascript">// דרך פשוטה (עובדת רק עם JSON)
+var original = {
+    name: "אבי",
+    age: 30,
+    hobbies: ["ספורט", "מוזיקה"],
+    address: {
+        city: "תל אביב",
+        street: "רחוב הרצל"
+    }
+};
+
+var deepCopy = JSON.parse(JSON.stringify(original));
+
+// שינוי בעותק לא משפיע על המקור
+deepCopy.address.city = "ירושלים";
+deepCopy.hobbies.push("קריאה");
+
+console.log(original.address.city); // "תל אביב"
+console.log(original.hobbies); // ["ספורט", "מוזיקה"]</code></pre>
+
+            <div class="tip">
+                <h5>💡 טיפים חשובים:</h5>
+                <ul>
+                    <li><strong>השוואת אובייקטים:</strong> אובייקטים מושווים לפי reference, לא לפי תוכן</li>
+                    <li><strong>Falsy objects:</strong> אובייקטים ריקים ({}) נחשבים truthy</li>
+                    <li><strong>מפתחות:</strong> מפתחות באובייקט הם תמיד strings (או Symbols ב-ES6)</li>
+                    <li><strong>this context:</strong> הקשר של this משתנה לפי איך קוראים לפונקציה</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- HTML5 -->
+        <section id="html5">
+            <h2>7. HTML5 - אלמנטים סמנטיים</h2>
+            
+            <h3>מבוא ל-HTML5</h3>
+            <p>HTML5 הביא איתו אלמנטים סמנטיים חדשים שמספקים משמעות ומבנה טוב יותר לתוכן הדף. האלמנטים הללו לא רק משפרים את הקריאות של הקוד, אלא גם עוזרים לכלי נגישות, מנועי חיפוש וכלים אחרים להבין טוב יותר את המבנה והתוכן.</p>
+
+            <h3>המבנה הבסיסי של HTML5</h3>
+            <pre><code class="language-html">&lt;!doctype html&gt;
+&lt;html lang="he" dir="rtl"&gt;
+&lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+    &lt;title&gt;כותרת הדף&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;!-- התוכן כאן --&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+            <h3>אלמנטים סמנטיים עיקריים</h3>
+
+            <h4>&lt;header&gt; - כותרת</h4>
+            <p><strong>מטרה:</strong> מכיל תוכן פתיחה או כותרת עיקרית של הדף או קטע.</p>
+            <pre><code class="language-html">&lt;header&gt;
+    &lt;h1&gt;שם האתר&lt;/h1&gt;
+    &lt;nav&gt;
+        &lt;ul&gt;
+            &lt;li&gt;&lt;a href="#home"&gt;בית&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="#about"&gt;אודות&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="#contact"&gt;צור קשר&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/nav&gt;
+&lt;/header&gt;</code></pre>
+
+            <h4>&lt;nav&gt; - ניווט</h4>
+            <p><strong>מטרה:</strong> מכיל קישורי ניווט עיקריים באתר.</p>
+            <pre><code class="language-html">&lt;nav aria-label="ניווט ראשי"&gt;
+    &lt;ul&gt;
+        &lt;li&gt;&lt;a href="/" aria-current="page"&gt;דף הבית&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="/products"&gt;מוצרים&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="/services"&gt;שירותים&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="/blog"&gt;בלוג&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/nav&gt;</code></pre>
+
+            <h4>&lt;main&gt; - תוכן עיקרי</h4>
+            <p><strong>מטרה:</strong> מכיל את התוכן העיקרי והמרכזי של הדף. שימוש יחיד בדף.</p>
+            <pre><code class="language-html">&lt;main&gt;
+    &lt;h1&gt;כותרת הדף הראשית&lt;/h1&gt;
+    &lt;p&gt;תוכן עיקרי של הדף...&lt;/p&gt;
+    
+    &lt;section&gt;
+        &lt;h2&gt;קטע ראשון&lt;/h2&gt;
+        &lt;p&gt;תוכן הקטע...&lt;/p&gt;
+    &lt;/section&gt;
+&lt;/main&gt;</code></pre>
+
+            <h4>&lt;section&gt; - קטע</h4>
+            <p><strong>מטרה:</strong> מגדיר קטע תמטי בתוכן עם כותרת מתאימה.</p>
+            <pre><code class="language-html">&lt;section&gt;
+    &lt;h2&gt;השירותים שלנו&lt;/h2&gt;
+    &lt;p&gt;אנו מציעים מגוון רחב של שירותים...&lt;/p&gt;
+    
+    &lt;article&gt;
+        &lt;h3&gt;פיתוח אתרים&lt;/h3&gt;
+        &lt;p&gt;פיתוח אתרים מותאמים אישית...&lt;/p&gt;
+    &lt;/article&gt;
+&lt;/section&gt;</code></pre>
+
+            <h4>&lt;article&gt; - מאמר</h4>
+            <p><strong>מטרה:</strong> תוכן עצמאי שיכול לעמוד בפני עצמו (מאמר, פוסט בבלוג, הודעה).</p>
+            <pre><code class="language-html">&lt;article&gt;
+    &lt;header&gt;
+        &lt;h2&gt;כותרת המאמר&lt;/h2&gt;
+        &lt;time datetime="2023-10-15"&gt;15 באוקטובר 2023&lt;/time&gt;
+        &lt;address&gt;מאת: &lt;a href="mailto:author@example.com"&gt;יוסי כהן&lt;/a&gt;&lt;/address&gt;
+    &lt;/header&gt;
+    
+    &lt;p&gt;תוכן המאמר...&lt;/p&gt;
+    
+    &lt;footer&gt;
+        &lt;p&gt;תגיות: &lt;a href="#tech"&gt;טכנולוgiה&lt;/a&gt;, &lt;a href="#web"&gt;פיתוח אתרים&lt;/a&gt;&lt;/p&gt;
+    &lt;/footer&gt;
+&lt;/article&gt;</code></pre>
+
+            <h4>&lt;aside&gt; - תוכן צדדי</h4>
+            <p><strong>מטרה:</strong> תוכן צדדי הקשור לתוכן העיקרי אבל לא חלק ממנו (sidebar, פרסומות).</p>
+            <pre><code class="language-html">&lt;aside&gt;
+    &lt;h3&gt;מאמרים קשורים&lt;/h3&gt;
+    &lt;ul&gt;
+        &lt;li&gt;&lt;a href="#article1"&gt;מאמר קשור ראשון&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#article2"&gt;מאמר קשור שני&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+    
+    &lt;h3&gt;הירשם לעדכונים&lt;/h3&gt;
+    &lt;form&gt;
+        &lt;input type="email" placeholder="כתובת אימייל"&gt;
+        &lt;button type="submit"&gt;הירשם&lt;/button&gt;
+    &lt;/form&gt;
+&lt;/aside&gt;</code></pre>
+
+            <h4>&lt;footer&gt; - כותרת תחתונה</h4>
+            <p><strong>מטרה:</strong> מכיל מידע על הדף או הקטע, כמו זכויות יוצרים, קישורים וכו'.</p>
+            <pre><code class="language-html">&lt;footer&gt;
+    &lt;p&gt;&amp;copy; 2023 שם החברה. כל הזכויות שמורות.&lt;/p&gt;
+    &lt;nav aria-label="ניווט פוטר"&gt;
+        &lt;ul&gt;
+            &lt;li&gt;&lt;a href="/privacy"&gt;מדיניות פרטיות&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="/terms"&gt;תנאי שימוש&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="/contact"&gt;צור קשר&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/nav&gt;
+&lt;/footer&gt;</code></pre>
+
+            <h3>אלמנטים סמנטיים נוספים</h3>
+
+            <h4>&lt;figure&gt; ו-&lt;figcaption&gt;</h4>
+            <p><strong>מטרה:</strong> עיצוב תמונות, גרפיקות או תוכן ויזואלי עם כיתוב.</p>
+            <pre><code class="language-html">&lt;figure&gt;
+    &lt;img src="chart.png" alt="גרף מכירות רבעוניות"&gt;
+    &lt;figcaption&gt;גרף המציג את מכירות החברה ברבעון האחרון&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;figure&gt;
+    &lt;blockquote&gt;
+        &lt;p&gt;"החינוך הוא הנשק החזק ביותר שבו ניתן להשתמש כדי לשנות את העולם."&lt;/p&gt;
+    &lt;/blockquote&gt;
+    &lt;figcaption&gt;נלסון מנדלה&lt;/figcaption&gt;
+&lt;/figure&gt;</code></pre>
+
+            <h4>&lt;time&gt; - זמן</h4>
+            <p><strong>מטרה:</strong> מייצג תאריך או זמן בפורמט קריא למכונה.</p>
+            <pre><code class="language-html">&lt;p&gt;הפוסט פורסם ב-&lt;time datetime="2023-10-15T14:30:00"&gt;15 באוקטובר 2023, 14:30&lt;/time&gt;&lt;/p&gt;
+
+&lt;p&gt;האירוע יתקיים &lt;time datetime="2023-12-25"&gt;ביום חג המולד&lt;/time&gt;&lt;/p&gt;</code></pre>
+
+            <h4>&lt;address&gt; - פרטי קשר</h4>
+            <p><strong>מטרה:</strong> מכיל פרטי קשר של המחבר או הבעלים.</p>
+            <pre><code class="language-html">&lt;address&gt;
+    ליצירת קשר עם המחבר:&lt;br&gt;
+    &lt;a href="mailto:author@example.com"&gt;author@example.com&lt;/a&gt;&lt;br&gt;
+    &lt;a href="tel:+972501234567"&gt;050-123-4567&lt;/a&gt;
+&lt;/address&gt;</code></pre>
+
+            <h3>דוגמה למבנה דף מלא</h3>
+            <pre><code class="language-html">&lt;!doctype html&gt;
+&lt;html lang="he" dir="rtl"&gt;
+&lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+    &lt;title&gt;בלוג טכנולוגיה&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;header&gt;
+        &lt;h1&gt;בלוג הטכנולוגיה&lt;/h1&gt;
+        &lt;nav&gt;
+            &lt;ul&gt;
+                &lt;li&gt;&lt;a href="/"&gt;בית&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="/articles"&gt;מאמרים&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="/about"&gt;אודות&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/nav&gt;
+    &lt;/header&gt;
+
+    &lt;main&gt;
+        &lt;article&gt;
+            &lt;header&gt;
+                &lt;h2&gt;מבוא ל-HTML5 סמנטי&lt;/h2&gt;
+                &lt;time datetime="2023-10-15"&gt;15 באוקטובר 2023&lt;/time&gt;
+            &lt;/header&gt;
+            
+            &lt;p&gt;HTML5 הביא איתו שינויים משמעותיים...&lt;/p&gt;
+            
+            &lt;section&gt;
+                &lt;h3&gt;יתרונות HTML5&lt;/h3&gt;
+                &lt;ul&gt;
+                    &lt;li&gt;נגישות משופרת&lt;/li&gt;
+                    &lt;li&gt;SEO טוב יותר&lt;/li&gt;
+                    &lt;li&gt;קוד ברור יותר&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/section&gt;
+        &lt;/article&gt;
+    &lt;/main&gt;
+
+    &lt;aside&gt;
+        &lt;h3&gt;מאמרים אחרונים&lt;/h3&gt;
+        &lt;ul&gt;
+            &lt;li&gt;&lt;a href="#css3"&gt;CSS3 ואנימציות&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="#js"&gt;JavaScript מתקדם&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/aside&gt;
+
+    &lt;footer&gt;
+        &lt;p&gt;&amp;copy; 2023 בלוג הטכנולוגיה&lt;/p&gt;
+        &lt;address&gt;
+            צרו קשר: &lt;a href="mailto:info@blog.com"&gt;info@blog.com&lt;/a&gt;
+        &lt;/address&gt;
+    &lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+            <div class="tip">
+                <h5>💡 יתרונות HTML5 סמנטי:</h5>
+                <ul>
+                    <li><strong>נגישות:</strong> קוראי מסך יכולים לנווט טוב יותר בתוכן</li>
+                    <li><strong>SEO:</strong> מנועי חיפוש מבינים טוב יותר את המבנה</li>
+                    <li><strong>תחזוקה:</strong> הקוד קריא וברור יותר למפתחים</li>
+                    <li><strong>עתידיות:</strong> תמיכה טובה יותר בכלים עתידיים</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- חידון טריוויה -->
+        <section id="trivia">
+            <h2>10. חידון טריוויה - 50 שאלות</h2>
+            
+            <div class="quiz-intro">
+                <p>חידון מקיף הכולל 50 שאלות על React, JavaScript, HTML, CSS, HTTP, בסיסי נתונים ועוד נושאים שהועברו בחומרי הלימוד.</p>
+                <p><strong>הוראות:</strong> בחר את התשובה הנכונה מבין האפשרויות. לחץ על "בדוק תשובות" בסוף לקבלת הניקוד.</p>
+            </div>
+
+            <div class="quiz-container">
+                <div class="quiz-question" data-question="1">
+                    <h4>שאלה 1: מה היתרון המרכזי של שימוש ב־React ב־SPA לעומת HTML סטטי?</h4>
+                    <div class="quiz-options">
+                        <label><input type="radio" name="q1" value="א"> ביצועים גבוהים יותר תמיד</label>
+                        <label><input type="radio" name="q1" value="ב"> ניהול סטייט ו־UI דינמי</label>
+                        <label><input type="radio" name="q1" value="ג"> פחות קוד בשרת</label>
+                        <label><input type="radio" name="q1" value="ד"> אין יתרון ממשי</label>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-question="2">
+                    <h4>שאלה 2: מה תפקידה של ספריית Axios בפרויקט?</h4>
+                    <div class="quiz-options">
+                        <label><input type="radio" name="q2" value="א"> ניהול סטייט גלובלי</label>
+                        <label><input type="radio" name="q2" value="ב"> ביצוע קריאות HTTP לשרת</label>
+                        <label><input type="radio" name="q2" value="ג"> ניהול עיצוב רספונסיבי</label>
+                        <label><input type="radio" name="q2" value="ד"> הצפנת סיסמאות</label>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-question="3">
+                    <h4>שאלה 3: מה המשמעות של Controlled Component בטפסים ב־React?</h4>
+                    <div class="quiz-options">
+                        <label><input type="radio" name="q3" value="א"> הקלט מנוהל ע"י הדפדפן</label>
+                        <label><input type="radio" name="q3" value="ב"> הקלט מנוהל ע"י ה־state של React</label>
+                        <label><input type="radio" name="q3" value="ג"> הקלט נשמר במסד הנתונים</label>
+                        <label><input type="radio" name="q3" value="ד"> אין קשר בין הטופס ל־state</label>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-question="4">
+                    <h4>שאלה 4: למה חשוב להשתמש ב־alt לכל תמונה באתר?</h4>
+                    <div class="quiz-options">
+                        <label><input type="radio" name="q4" value="א"> כדי לשפר SEO ונגישות</label>
+                        <label><input type="radio" name="q4" value="ב"> כדי להקטין את גודל התמונה</label>
+                        <label><input type="radio" name="q4" value="ג"> כדי להוסיף אנימציה</label>
+                        <label><input type="radio" name="q4" value="ד"> זה לא חובה</label>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-question="5">
+                    <h4>שאלה 5: מה ההבדל בין props ל־state ב-React?</h4>
+                    <div class="quiz-options">
+                        <label><input type="radio" name="q5" value="א"> props משתנה ישירות</label>
+                        <label><input type="radio" name="q5" value="ב"> props מהורה ו־state פנימי</label>
+                        <label><input type="radio" name="q5" value="ג"> אין הבדל</label>
+                        <label><input type="radio" name="q5" value="ד"> props רק ב־Class</label>
+                    </div>
+                </div>
+
+                <!-- הוספת עוד שאלות... -->
+                <div class="quiz-more-questions" style="display: none;">
+                    <p><em>בחוברת המלאה יהיו כל 50 השאלות מבנק השאלות</em></p>
+                </div>
+
+                <button type="button" class="quiz-submit" onclick="checkQuizAnswers()">בדוק תשובות</button>
+                <div class="quiz-result" id="quiz-result" style="display: none;"></div>
+            </div>
+        </section>
+
+        <!-- משחק זיכרון -->
+        <section id="memory">
+            <h2>11. משחק זיכרון</h2>
+            
+            <div class="memory-intro">
+                <p>משחק זיכרון אינטראקטיבי המבוסס על המונחים שלמדנו. מטרת המשחק: למצוא זוגות של מונחים והגדרות.</p>
+                <p><strong>הוראות:</strong> לחץ על הקלפים כדי לחשוף אותם. מצא זוגות של מונח והגדרה שלו.</p>
+            </div>
+
+            <div class="memory-stats">
+                <span>מהלכים: <span id="moves-count">0</span></span>
+                <span>זוגות נמצאו: <span id="pairs-found">0</span></span>
+                <button onclick="resetMemoryGame()">משחק חדש</button>
+            </div>
+
+            <div class="memory-grid" id="memory-grid">
+                <!-- הקלפים יווצרו ב-JavaScript -->
+            </div>
+
+            <div class="memory-completion" id="memory-completion" style="display: none;">
+                <h3>כל הכבוד! סיימת את המשחק!</h3>
+                <p>סיימת במספר מהלכים: <span id="final-moves"></span></p>
+                <button onclick="resetMemoryGame()">שחק שוב</button>
+            </div>
+        </section>
+
+        <!-- פוטר -->
+        <footer class="container small muted">
+            <p>נוצר אוטומטית לצורכי לימוד והפקה ל-PDF. מכיל את כל חומרי הלימוד שהועברו.</p>
+            <p>כולל: JavaScript בסיסי, מערכים, פונקציות, אובייקטים, אלגוריתמים, HTML5, CSS3, תרגילים, חידון ומשחקים.</p>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
