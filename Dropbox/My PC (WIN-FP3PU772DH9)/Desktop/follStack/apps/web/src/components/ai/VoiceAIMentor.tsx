@@ -33,7 +33,7 @@ export function VoiceAIMentor({ isOpen, onClose }: VoiceAIMentorProps) {
   const [isARMode, setIsARMode] = useState(false)
   const [isMetaverseMode, setIsMetaverseMode] = useState(false)
 
-  const recognitionRef = useRef<any>(null)
+  const recognitionRef = useRef<SpeechRecognition | null>(null)
   const synthesisRef = useRef<SpeechSynthesisUtterance | null>(null)
   const audioContextRef = useRef<AudioContext | null>(null)
 
@@ -382,10 +382,52 @@ export function VoiceAIMentor({ isOpen, onClose }: VoiceAIMentorProps) {
   )
 }
 
+// Speech Recognition interfaces
+interface SpeechRecognition extends EventTarget {
+  continuous: boolean
+  interimResults: boolean
+  lang: string
+  start(): void
+  stop(): void
+  abort(): void
+  onresult: ((event: SpeechRecognitionEvent) => void) | null
+  onerror: ((event: SpeechRecognitionErrorEvent) => void) | null
+  onend: (() => void) | null
+  onstart: (() => void) | null
+}
+
+interface SpeechRecognitionEvent extends Event {
+  resultIndex: number
+  results: SpeechRecognitionResultList
+}
+
+interface SpeechRecognitionResultList {
+  readonly length: number
+  item(index: number): SpeechRecognitionResult
+  [index: number]: SpeechRecognitionResult
+}
+
+interface SpeechRecognitionResult {
+  readonly isFinal: boolean
+  readonly length: number
+  item(index: number): SpeechRecognitionAlternative
+  [index: number]: SpeechRecognitionAlternative
+}
+
+interface SpeechRecognitionAlternative {
+  readonly transcript: string
+  readonly confidence: number
+}
+
+interface SpeechRecognitionErrorEvent extends Event {
+  readonly error: string
+  readonly message: string
+}
+
 // Extend Window interface for speech recognition
 declare global {
   interface Window {
-    webkitSpeechRecognition: any
-    SpeechRecognition: any
+    webkitSpeechRecognition: new () => SpeechRecognition
+    SpeechRecognition: new () => SpeechRecognition
   }
 }

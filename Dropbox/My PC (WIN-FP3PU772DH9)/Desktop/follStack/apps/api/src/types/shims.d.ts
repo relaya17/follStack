@@ -3,11 +3,13 @@ declare module 'xss-clean';
 
 // Allow importing these modules without TS declarations
 declare module 'hpp' {
-  const hpp: (...args: any[]) => any
+  import { RequestHandler } from 'express'
+  const hpp: (...args: unknown[]) => RequestHandler
   export default hpp
 }
 declare module 'xss-clean' {
-  const xssClean: (...args: any[]) => any
+  import { RequestHandler } from 'express'
+  const xssClean: (...args: unknown[]) => RequestHandler
   export default xssClean
 }
 

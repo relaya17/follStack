@@ -5,14 +5,69 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { Camera, Target, Zap, Eye, Layers, RotateCcw, Play, Pause } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
+interface ARNode {
+  id: string
+  x: number
+  y: number
+  label?: string
+}
+
+interface AREdge {
+  id: string
+  from: string
+  to: string
+  label?: string
+}
+
+interface ARDiagramContent {
+  nodes: ARNode[]
+  edges: AREdge[]
+}
+
+interface ARCodeContent {
+  language: string
+  code: string
+  syntaxHighlighting: boolean
+}
+
+interface AR3DModelContent {
+  modelUrl: string
+  textureUrl?: string
+  animations?: string[]
+}
+
+interface ARAnimationContent {
+  type: 'rotation' | 'translation' | 'scale' | 'custom'
+  duration: number
+  loop: boolean
+  keyframes: Array<{
+    time: number
+    value: Record<string, number>
+  }>
+}
+
+type ARContent = ARDiagramContent | ARCodeContent | AR3DModelContent | ARAnimationContent
+
 interface ARObject {
   id: string
   type: 'code' | 'diagram' | '3d-model' | 'animation'
   position: { x: number; y: number; z: number }
   rotation: { x: number; y: number; z: number }
   scale: { x: number; y: number; z: number }
-  content: any
+  content: ARContent
   interactive: boolean
+}
+
+interface ARLessonData {
+  arObjects: Array<{
+    id: string
+    type: 'code' | 'diagram' | '3d-model' | 'animation'
+    position?: { x: number; y: number; z: number }
+    rotation?: { x: number; y: number; z: number }
+    scale?: { x: number; y: number; z: number }
+    content: ARContent
+    interactive?: boolean
+  }>
 }
 
 interface ARLearningExperienceProps {
@@ -32,7 +87,7 @@ export function ARLearningExperience({ isActive, lessonId, onClose }: ARLearning
 
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const arContextRef = useRef<any>(null)
+  const arContextRef = useRef<WebGLRenderingContext | null>(null)
 
   // Initialize AR
   useEffect(() => {
@@ -95,7 +150,7 @@ export function ARLearningExperience({ isActive, lessonId, onClose }: ARLearning
       const data = await response.json()
       
       // Create AR objects based on lesson content
-      const objects: ARObject[] = data.arObjects.map((obj: any) => ({
+      const objects: ARObject[] = data.arObjects.map((obj) => ({
         id: obj.id,
         type: obj.type,
         position: obj.position || { x: 0, y: 0, z: 0 },
@@ -188,7 +243,7 @@ console.log(greet('World'));`
         return (
           <div className="bg-white p-4 rounded-lg shadow-lg">
             <svg width="200" height="200" viewBox="0 0 200 200">
-              {object.content.nodes.map((node: any) => (
+              {(object.content as ARDiagramContent).nodes.map((node) => (
                 <circle
                   key={node.id}
                   cx={node.x + 100}
@@ -198,7 +253,7 @@ console.log(greet('World'));`
                   className="cursor-pointer hover:fill-blue-600"
                 />
               ))}
-              {object.content.edges.map((edge: any, index: number) => (
+              {(object.content as ARDiagramContent).edges.map((edge, index: number) => (
                 <line
                   key={index}
                   x1="100"

@@ -27,6 +27,15 @@ interface MetaverseClassroomProps {
   roomId: string
 }
 
+interface RoomMessage {
+  type: 'avatar_joined' | 'avatar_left' | 'chat_message' | 'system_message' | 'hand_raised' | 'hand_lowered'
+  avatar?: Avatar
+  avatarId?: string
+  message?: string
+  user?: string
+  timestamp?: Date
+}
+
 export function MetaverseClassroom({ isOpen, onClose, roomId }: MetaverseClassroomProps) {
   const [avatars, setAvatars] = useState<Avatar[]>([])
   const [currentUser, setCurrentUser] = useState<Avatar | null>(null)
@@ -140,7 +149,7 @@ export function MetaverseClassroom({ isOpen, onClose, roomId }: MetaverseClassro
     }
   }, [roomId])
 
-  const handleRoomMessage = (data: any) => {
+  const handleRoomMessage = (data: RoomMessage) => {
     switch (data.type) {
       case 'avatar_joined':
         setAvatars(prev => [...prev, data.avatar])
