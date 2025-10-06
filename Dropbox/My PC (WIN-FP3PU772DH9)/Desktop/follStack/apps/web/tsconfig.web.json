@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "jsx": "preserve",
+    "noEmit": true,
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/components/*": ["./src/components/*"],
+      "@/lib/*": ["./src/lib/*"],
+      "@/hooks/*": ["./src/hooks/*"],
+      "@/store/*": ["./src/store/*"],
+      "@/types/*": ["./src/types/*"],
+      "@fullstack-hub/shared": ["../../packages/shared/src"],
+      "@fullstack-hub/ui": ["../../packages/ui/src"]
+    }
+  },
+  "include": ["next-env.d.ts", "src/**/*.{ts,tsx}"],
+  "exclude": ["node_modules", "dist", ".next"]
+}
