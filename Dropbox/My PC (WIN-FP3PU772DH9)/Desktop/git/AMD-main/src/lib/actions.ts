@@ -3,9 +3,11 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
+import connectDB from './mongodb';
+import Contact from '@/models/Contact';
 
 export async function setLanguage(lang: 'en' | 'he') {
-  cookies().set('lang', lang, { path: '/', maxAge: 60 * 60 * 24 * 365 });
+  (await cookies()).set('lang', lang, { path: '/', maxAge: 60 * 60 * 24 * 365 });
   redirect('/');
 }
 
@@ -27,11 +29,27 @@ export async function submitContactForm(formData: z.infer<typeof ContactFormSche
         };
     }
     
-    // Simulate a successful submission for now to ensure publish works
-    console.log('Simulating form submission with data:', validatedFields.data);
-    
-    return {
-        message: 'Thank you for your message! We will get back to you soon.',
-        success: true,
-    };
+    try {
+        await connectDB();
+        
+        const contact = new Contact({
+            name: validatedFields.data.name,
+            email: validatedFields.data.email,
+            phone: validatedFields.data.phone,
+            message: validatedFields.data.message,
+        });
+        
+        await contact.save();
+        
+        return {
+            message: 'Thank you for your message! We will get back to you soon.',
+            success: true,
+        };
+    } catch (error) {
+        console.error('Database error:', error);
+        return {
+            message: 'An error occurred while saving your message. Please try again.',
+            success: false,
+        };
+    }
 }

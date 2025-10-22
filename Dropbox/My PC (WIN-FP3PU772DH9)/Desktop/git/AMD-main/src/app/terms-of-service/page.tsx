@@ -4,8 +4,8 @@ import { Header } from '@/components/landing/header';
 import { Footer } from '@/components/landing/footer';
 import { translations } from '@/lib/translations';
 
-export default function TermsOfServicePage() {
-  const cookieStore = cookies();
+export default async function TermsOfServicePage() {
+  const cookieStore = await cookies();
   const lang = (cookieStore.get('lang')?.value || 'he') as Language;
   const t = translations[lang];
 

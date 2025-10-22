@@ -8,8 +8,8 @@ import { CtaSection } from '@/components/landing/cta-section';
 import { Footer } from '@/components/landing/footer';
 import { translations, type Language } from '@/lib/translations';
 
-export default function HomePage() {
-  const cookieStore = cookies();
+export default async function HomePage() {
+  const cookieStore = await cookies();
   const lang = (cookieStore.get('lang')?.value as Language) || 'he';
   const t = translations[lang];
 

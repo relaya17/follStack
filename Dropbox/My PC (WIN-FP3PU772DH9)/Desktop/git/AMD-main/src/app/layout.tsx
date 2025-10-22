@@ -8,12 +8,12 @@ export const metadata: Metadata = {
   description: 'מעבירים את הניירת שלך לעידן הדיגיטלי',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const lang = cookieStore.get('lang')?.value || 'he';
 
   return (
