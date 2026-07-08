@@ -1,0 +1,20 @@
+{
+  "name": "follstack",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@10.33.2",
+  "scripts": {
+    "dev": "pnpm --filter @follstack/web dev",
+    "build": "pnpm --filter @follstack/shared --filter @follstack/ui --filter @follstack/web run build",
+    "start": "pnpm --filter @follstack/web start",
+    "lint": "pnpm --filter @follstack/web lint",
+    "typecheck": "pnpm -r run typecheck"
+  },
+  "engines": {
+    "node": ">=20.9.0",
+    "pnpm": ">=10"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

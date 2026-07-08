@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["dom", "dom.iterable", "es2022"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "preserve",
+    "strict": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@follstack/shared": ["packages/shared/src/index.ts"],
+      "@follstack/shared/*": ["packages/shared/src/*"],
+      "@follstack/ui": ["packages/ui/src/index.ts"],
+      "@follstack/ui/*": ["packages/ui/src/*"]
+    }
+  },
+  "include": [],
+  "references": [
+    { "path": "./packages/shared" },
+    { "path": "./packages/ui" },
+    { "path": "./apps/web" }
+  ]
+}
