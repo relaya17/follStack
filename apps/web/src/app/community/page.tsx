@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Users, MessageCircle, Trophy, Calendar, TrendingUp, Award } from 'lucide-react'
+import { Users, MessageCircle, Trophy, Calendar, TrendingUp } from 'lucide-react'
 import { Card } from '@follstack/ui'
 
 
@@ -266,7 +266,7 @@ export default function CommunityPage() {
                 </div>
 
                 <div className="space-y-4">
-                  {mockLeaderboard.map((user, index) => (
+                  {mockLeaderboard.map((user) => (
                     <Card key={user.id} className="p-4 hover:shadow-lg transition-shadow duration-300">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4 rtl:space-x-reverse">

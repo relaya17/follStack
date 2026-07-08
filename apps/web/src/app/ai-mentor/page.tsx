@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Card } from '@follstack/ui'
-import { Brain, Mic, MicOff, Send, MessageCircle, Sparkles, BookOpen, Code, Lightbulb } from 'lucide-react'
+import { Brain, Mic, MicOff, Send, Sparkles, BookOpen, Code, Lightbulb } from 'lucide-react'
 
 
 interface ChatMessage {

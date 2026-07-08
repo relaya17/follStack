@@ -14,6 +14,12 @@
     "node": ">=20.9.0",
     "pnpm": ">=10"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "sharp",
+      "unrs-resolver"
+    ]
+  },
   "devDependencies": {
     "typescript": "^5.9.3"
   }
