@@ -97,6 +97,76 @@ export const askQuestion = async (req: any, res: Response, next: NextFunction): 
   }
 }
 
+export const analyzeLearningPattern = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const { userId = 'demo-user', currentLesson = 'intro' } = req.body || {}
+
+    res.status(200).json({
+      learningStyle: 'visual',
+      pace: 'moderate',
+      difficulty: 'intermediate',
+      strengths: ['JavaScript', 'React components', 'Debugging'],
+      weaknesses: ['Async patterns', 'Testing'],
+      preferences: {
+        videoLength: 12,
+        exerciseTypes: ['coding', 'quiz'],
+        feedbackFrequency: 'immediate',
+        repetitionLevel: 'medium',
+      },
+      performance: {
+        averageScore: 86,
+        completionRate: 0.78,
+        timePerLesson: 38,
+        retentionRate: 0.71,
+      },
+      recommendations: [
+        {
+          action: 'תרגל useEffect עם cleanup',
+          confidence: 0.86,
+          reason: `בהתבסס על השיעור הנוכחי (${currentLesson})`,
+        },
+        {
+          action: 'בנה מיני-פרויקט CRUD קטן',
+          confidence: 0.8,
+          reason: `מתאים לפרופיל של ${userId}`,
+        },
+      ],
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const generateAdaptiveContent = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const { currentLesson = 'intro', profile } = req.body || {}
+    const difficulty =
+      profile?.difficulty === 'advanced' ? 8 : profile?.difficulty === 'intermediate' ? 5 : 3
+
+    res.status(200).json({
+      id: `content-${Date.now()}`,
+      type: 'exercise',
+      difficulty,
+      estimatedTime: 25,
+      prerequisites: ['JavaScript basics'],
+      learningObjectives: ['להבין את הנושא', 'ליישם בתרגיל קצר'],
+      content: {
+        title: `תרגול מותאם: ${currentLesson}`,
+        description: 'תוכן אדפטיבי לדמו — מותאם לסגנון הלמידה שלך.',
+        materials: ['הסבר קצר', 'דוגמת קוד', 'תרגיל מעשי'],
+        adaptiveElements: {
+          hints: ['התחל מהמקרה הפשוט ביותר', 'בדוק edge cases'],
+          explanations: ['חלק את הבעיה לשלבים קטנים'],
+          examples: ['דוגמה מינימלית עם useState'],
+          exercises: ['כתוב קומפוננטה שמציגה מונה עם כפתור איפוס'],
+        },
+      },
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 /**
  * @swagger
  * /api/ai/chat/history:

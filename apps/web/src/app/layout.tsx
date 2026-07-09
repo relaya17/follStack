@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="he" dir="rtl" className={`${heebo.variable} ${rubik.variable}`}>
+    <html lang="he" dir="rtl" data-scroll-behavior="smooth" className={`${heebo.variable} ${rubik.variable}`}>
       <body className="min-h-screen font-sans antialiased">
         <SiteHeader />
         <main className="relative">{children}</main>

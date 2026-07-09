@@ -1,6 +1,8 @@
 import { Router } from 'express'
 import {
     askQuestion,
+    analyzeLearningPattern,
+    generateAdaptiveContent,
     getChatHistory,
     clearChatHistory,
     getCodeReview,
@@ -11,32 +13,9 @@ import { protect, optionalAuth } from '@/middleware/auth'
 
 const router = Router()
 
-/**
- * @swagger
- * /api/ai/ask:
- *   post:
- *     summary: Ask AI mentor a question
- *     tags: [AI Mentor]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - question
- *             properties:
- *               question:
- *                 type: string
- *               context:
- *                 type: string
- *               code:
- *                 type: string
- *     responses:
- *       200:
- *         description: AI response received successfully
- */
 router.post('/ask', optionalAuth, askQuestion)
+router.post('/learning-analysis', optionalAuth, analyzeLearningPattern)
+router.post('/adaptive-content', optionalAuth, generateAdaptiveContent)
 
 // Remaining AI routes require auth
 router.use(protect)
