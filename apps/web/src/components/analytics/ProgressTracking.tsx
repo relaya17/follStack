@@ -29,6 +29,7 @@ import {
   RefreshCw
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { apiUrl } from '@/lib/api'
 
 interface LearningSession {
   id: string
@@ -117,12 +118,15 @@ export function ProgressTracking({
     setIsLoading(true)
     
     try {
-      const response = await fetch(`/api/analytics/progress?userId=${userId}&period=${selectedPeriod}`, {
+      const response = await fetch(apiUrl(`/api/analytics/progress?userId=${userId}&period=${selectedPeriod}`), {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       })
       
+      if (!response.ok) return
+      const contentType = response.headers.get('content-type') || ''
+      if (!contentType.includes('application/json')) return
       const data = await response.json()
       setSessions(data.sessions || [])
       setMetrics(data.metrics || null)

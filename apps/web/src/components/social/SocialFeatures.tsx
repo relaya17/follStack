@@ -29,6 +29,7 @@ import {
   Settings
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { apiUrl } from '@/lib/api'
 
 interface User {
   id: string
@@ -129,12 +130,15 @@ export function SocialFeatures({
   // Load social data
   const loadSocialData = useCallback(async () => {
     try {
-      const response = await fetch('/api/social/feed', {
+      const response = await fetch(apiUrl('/api/social/feed'), {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       })
       
+      if (!response.ok) return
+      const contentType = response.headers.get('content-type') || ''
+      if (!contentType.includes('application/json')) return
       const data = await response.json()
       setPosts(data.posts || [])
       setGroups(data.groups || [])
@@ -151,7 +155,7 @@ export function SocialFeatures({
     if (!newPost.trim()) return
 
     try {
-      const response = await fetch('/api/social/posts', {
+      const response = await fetch(apiUrl('/api/social/posts'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -163,6 +167,9 @@ export function SocialFeatures({
         })
       })
 
+      if (!response.ok) return
+      const contentType = response.headers.get('content-type') || ''
+      if (!contentType.includes('application/json')) return
       const post = await response.json()
       setPosts(prev => [post, ...prev])
       setNewPost('')
@@ -174,7 +181,7 @@ export function SocialFeatures({
   // Like/Unlike post
   const toggleLike = useCallback(async (postId: string) => {
     try {
-      const response = await fetch(`/api/social/posts/${postId}/like`, {
+      const response = await fetch(apiUrl(`/api/social/posts/${postId}/like`), {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -196,7 +203,7 @@ export function SocialFeatures({
   // Join study group
   const joinGroup = useCallback(async (groupId: string) => {
     try {
-      const response = await fetch(`/api/social/groups/${groupId}/join`, {
+      const response = await fetch(apiUrl(`/api/social/groups/${groupId}/join`), {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -217,7 +224,7 @@ export function SocialFeatures({
     setIsJoiningChallenge(challengeId)
     
     try {
-      const response = await fetch(`/api/social/challenges/${challengeId}/join`, {
+      const response = await fetch(apiUrl(`/api/social/challenges/${challengeId}/join`), {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -238,7 +245,7 @@ export function SocialFeatures({
   // Create study group
   const createGroup = useCallback(async (groupData: Partial<StudyGroup>) => {
     try {
-      const response = await fetch('/api/social/groups', {
+      const response = await fetch(apiUrl('/api/social/groups'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
