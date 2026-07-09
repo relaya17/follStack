@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { Card } from '@follstack/ui'
-import { Brain, Mic, MicOff, Send, Sparkles, BookOpen, Code, Lightbulb, Loader2 } from 'lucide-react'
+import { Brain, Mic, MicOff, Send, Sparkles, Lightbulb, Loader2, BookOpen, Code } from 'lucide-react'
 import { apiUrl } from '@/lib/api'
 
 interface ChatMessage {
@@ -50,7 +51,8 @@ const aiFeatures = [
   },
 ]
 
-export default function AIMentorPage() {
+function AIMentorChat() {
+  const searchParams = useSearchParams()
   const [isListening, setIsListening] = useState(false)
   const [isSending, setIsSending] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -65,10 +67,18 @@ export default function AIMentorPage() {
   ])
   const [inputMessage, setInputMessage] = useState('')
   const bottomRef = useRef<HTMLDivElement>(null)
+  const bootstrappedQuery = useRef(false)
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, isSending])
+
+  useEffect(() => {
+    const q = searchParams.get('q')
+    if (!q || bootstrappedQuery.current) return
+    bootstrappedQuery.current = true
+    setInputMessage(q)
+  }, [searchParams])
 
   const askMentor = async (question: string) => {
     const trimmed = question.trim()
@@ -166,7 +176,7 @@ export default function AIMentorPage() {
   }
 
   return (
-    <div className="page-shell">
+    <>
       <header className="page-hero">
         <div className="mb-4 flex items-center justify-center gap-3">
           <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-600 text-white shadow-lg shadow-primary-600/25">
@@ -339,6 +349,16 @@ export default function AIMentorPage() {
           </Card>
         </aside>
       </div>
+    </>
+  )
+}
+
+export default function AIMentorPage() {
+  return (
+    <div className="page-shell">
+      <Suspense fallback={<p className="page-subtitle text-center">טוען את המנטור...</p>}>
+        <AIMentorChat />
+      </Suspense>
     </div>
   )
 }

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { FolderOpen, Star, GitBranch, Users, Calendar, ExternalLink } from 'lucide-react'
 import { Card } from '@follstack/ui'
 
@@ -286,14 +287,20 @@ export default function ProjectsPage() {
                   </div>
                 </div>
 
-                {/* Action Buttons */}
                 <div className="flex gap-3">
-                  <button className="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+                  <Link
+                    href={`/projects/${project.id}`}
+                    className="flex-1 rounded-lg bg-primary-600 py-2 px-4 text-center font-medium text-white transition-colors duration-200 hover:bg-primary-700 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+                  >
                     הצטרף לפרויקט
-                  </button>
-                  <button className="p-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                  </Link>
+                  <Link
+                    href={`/projects/${project.id}`}
+                    className="rounded-lg border border-gray-300 p-2 text-gray-700 transition-colors duration-200 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+                    aria-label="פתח פרויקט"
+                  >
                     <ExternalLink className="h-4 w-4" />
-                  </button>
+                  </Link>
                 </div>
               </div>
             </Card>
@@ -319,9 +326,12 @@ export default function ProjectsPage() {
           <p className="text-xl mb-6 opacity-90">
             הצטרף לקהילה, בנה פרויקטים מרשימים וצבור ניסיון אמיתי בפיתוח.
           </p>
-          <button className="bg-white text-primary-600 hover:bg-gray-100 font-medium py-3 px-8 rounded-lg transition-colors duration-200">
+          <Link
+            href="/projects/1"
+            className="inline-block rounded-lg bg-white px-8 py-3 font-medium text-primary-600 transition-colors duration-200 hover:bg-gray-100"
+          >
             צור פרויקט חדש
-          </button>
+          </Link>
         </div>
       </div>
   )

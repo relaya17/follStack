@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { Code2, Play, Target, Trophy, Clock, Users } from 'lucide-react'
 import { Card } from '@follstack/ui'
 
@@ -248,14 +249,19 @@ export default function PracticePage() {
                 </div>
               </div>
 
-              {/* Action Buttons */}
               <div className="flex gap-3">
-                <button className="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+                <Link
+                  href={`/practice/${exercise.id}`}
+                  className="flex-1 rounded-lg bg-primary-600 py-3 px-4 text-center font-medium text-white transition-colors duration-200 hover:bg-primary-700 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+                >
                   התחל תרגיל
-                </button>
-                <button className="px-4 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                </Link>
+                <Link
+                  href={`/practice/${exercise.id}`}
+                  className="rounded-lg border border-gray-300 px-4 py-3 text-gray-700 transition-colors duration-200 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+                >
                   תצוגה מקדימה
-                </button>
+                </Link>
               </div>
             </Card>
           ))}
@@ -280,9 +286,12 @@ export default function PracticePage() {
           <p className="text-xl mb-6 opacity-90">
             בחר תרגיל והתחל לבנות את המיומנויות שלך. כל תרגיל כולל הנחיות מפורטות ופתרון מוכן.
           </p>
-          <button className="bg-white text-primary-600 hover:bg-gray-100 font-medium py-3 px-8 rounded-lg transition-colors duration-200">
+          <Link
+            href="/practice/1"
+            className="inline-block rounded-lg bg-white px-8 py-3 font-medium text-primary-600 transition-colors duration-200 hover:bg-gray-100"
+          >
             התחל עכשיו
-          </button>
+          </Link>
         </div>
       </div>
   )

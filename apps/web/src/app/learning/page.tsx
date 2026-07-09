@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { BookOpen, Code, Database, Globe, Zap, Layers } from 'lucide-react'
 import { Card } from '@follstack/ui'
 
@@ -199,10 +200,12 @@ export default function LearningPage() {
                   )}
                 </div>
 
-                {/* Action Button */}
-                <button className="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+                <Link
+                  href={`/learning/${module.id}`}
+                  className="block w-full rounded-lg bg-primary-600 py-3 px-4 text-center font-medium text-white transition-colors duration-200 hover:bg-primary-700 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+                >
                   {module.progress > 0 ? 'המשך למידה' : 'התחל למידה'}
-                </button>
+                </Link>
               </Card>
             )
           })}
@@ -229,15 +232,15 @@ export default function LearningPage() {
               מתחיל? התחל עם HTML & CSS, עבור ל-JavaScript, ואז ל-React ו-Node.js
             </p>
             <div className="flex flex-wrap justify-center gap-4 text-sm">
-              <span className="bg-white bg-opacity-20 px-4 py-2 rounded-full">HTML & CSS</span>
+              <Link href="/learning/html-css" className="rounded-full bg-white/20 px-4 py-2 hover:bg-white/30">HTML & CSS</Link>
               <span className="text-2xl">→</span>
-              <span className="bg-white bg-opacity-20 px-4 py-2 rounded-full">JavaScript</span>
+              <Link href="/learning/javascript" className="rounded-full bg-white/20 px-4 py-2 hover:bg-white/30">JavaScript</Link>
               <span className="text-2xl">→</span>
-              <span className="bg-white bg-opacity-20 px-4 py-2 rounded-full">React</span>
+              <Link href="/learning/react" className="rounded-full bg-white/20 px-4 py-2 hover:bg-white/30">React</Link>
               <span className="text-2xl">→</span>
-              <span className="bg-white bg-opacity-20 px-4 py-2 rounded-full">Node.js</span>
+              <Link href="/learning/nodejs" className="rounded-full bg-white/20 px-4 py-2 hover:bg-white/30">Node.js</Link>
               <span className="text-2xl">→</span>
-              <span className="bg-white bg-opacity-20 px-4 py-2 rounded-full">MongoDB</span>
+              <Link href="/learning/mongodb" className="rounded-full bg-white/20 px-4 py-2 hover:bg-white/30">MongoDB</Link>
             </div>
           </div>
         </div>

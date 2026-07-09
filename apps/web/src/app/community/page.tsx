@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { Users, MessageCircle, Trophy, Calendar, TrendingUp } from 'lucide-react'
 import { Card } from '@follstack/ui'
 
@@ -207,9 +208,12 @@ export default function CommunityPage() {
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white">אירועים קרובים</h2>
-                  <button className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                  <Link
+                    href="/ai-mentor?q=%D7%A2%D7%96%D7%95%D7%A8%20%D7%9C%D7%99%20%D7%9C%D7%AA%D7%9B%D7%A0%D7%9F%20%D7%90%D7%99%D7%A8%D7%95%D7%A2%20%D7%A7%D7%94%D7%99%D7%9C%D7%94"
+                    className="rounded-lg bg-primary-600 px-4 py-2 text-white transition-colors duration-200 hover:bg-primary-700"
+                  >
                     הוסף אירוע
-                  </button>
+                  </Link>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -245,9 +249,12 @@ export default function CommunityPage() {
                         </div>
                       </div>
 
-                      <button className="w-full mt-4 bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200">
+                      <Link
+                        href={`/ai-mentor?q=${encodeURIComponent(`אני רוצה להירשם לאירוע: ${event.title}`)}`}
+                        className="mt-4 block w-full rounded-lg bg-primary-600 py-2 px-4 text-center font-medium text-white transition-colors duration-200 hover:bg-primary-700"
+                      >
                         הרשם לאירוע
-                      </button>
+                      </Link>
                     </Card>
                   ))}
                 </div>
@@ -307,9 +314,12 @@ export default function CommunityPage() {
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white">פורום הקהילה</h2>
-                  <button className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                  <Link
+                    href="/ai-mentor?q=%D7%A2%D7%96%D7%95%D7%A8%20%D7%9C%D7%99%20%D7%9C%D7%9B%D7%AA%D7%95%D7%91%20%D7%A4%D7%95%D7%A1%D7%98%20%D7%9C%D7%A4%D7%95%D7%A8%D7%95%D7%9D"
+                    className="rounded-lg bg-primary-600 px-4 py-2 text-white transition-colors duration-200 hover:bg-primary-700"
+                  >
                     פוסט חדש
-                  </button>
+                  </Link>
                 </div>
 
                 <div className="text-center py-12">
@@ -332,9 +342,12 @@ export default function CommunityPage() {
           <p className="text-xl mb-6 opacity-90">
             הצטרף לאלפי מפתחים שכבר משתפים ידע, עוזרים זה לזה ובונים יחד את העתיד.
           </p>
-          <button className="bg-white text-primary-600 hover:bg-gray-100 font-medium py-3 px-8 rounded-lg transition-colors duration-200">
+          <Link
+            href="/ai-mentor?q=%D7%90%D7%A0%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%9C%D7%94%D7%A6%D7%98%D7%A8%D7%A3%20%D7%9C%D7%A7%D7%94%D7%99%D7%9C%D7%94"
+            className="inline-block rounded-lg bg-white px-8 py-3 font-medium text-primary-600 transition-colors duration-200 hover:bg-gray-100"
+          >
             הצטרף עכשיו
-          </button>
+          </Link>
         </div>
       </div>
   )
