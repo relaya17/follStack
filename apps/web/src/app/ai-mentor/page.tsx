@@ -1,9 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Card } from '@follstack/ui'
-import { Brain, Mic, MicOff, Send, Sparkles, BookOpen, Code, Lightbulb } from 'lucide-react'
-
+import { Brain, Mic, MicOff, Send, Sparkles, BookOpen, Code, Lightbulb, Loader2 } from 'lucide-react'
+import { apiUrl } from '@/lib/api'
 
 interface ChatMessage {
   id: string
@@ -12,279 +12,332 @@ interface ChatMessage {
   timestamp: Date
 }
 
-interface AIFeature {
-  id: string
-  title: string
-  description: string
-  icon: React.ComponentType<{ className?: string }>
-  color: string
-  status: 'active' | 'coming-soon'
-}
+const quickPrompts = [
+  'איך מתחילים עם React Hooks?',
+  'תסביר לי מה זה API בפשטות',
+  'איך בונים מסלול למידת Full-Stack?',
+  'תן לי תרגיל קצר ב-JavaScript',
+]
 
-const aiFeatures: AIFeature[] = [
+const aiFeatures = [
   {
     id: '1',
-    title: 'Voice Mentor',
-    description: 'שיחה קולית עם ה-AI Mentor שלך - שאל שאלות וקבל תשובות מידיות',
-    icon: Mic,
-    color: 'bg-blue-500',
-    status: 'active'
+    title: 'שיחה חכמה',
+    description: 'שאל כל שאלה בפיתוח וקבל תשובה ברורה בעברית',
+    icon: Brain,
+    color: 'bg-primary-600',
   },
   {
     id: '2',
     title: 'Code Review',
-    description: 'העלה קוד וקבל ביקורת מקצועית עם המלצות לשיפור',
+    description: 'העלה קוד וקבל ביקורת עם המלצות לשיפור',
     icon: Code,
-    color: 'bg-green-500',
-    status: 'active'
+    color: 'bg-emerald-600',
   },
   {
     id: '3',
-    title: 'Learning Path',
-    description: 'מסלול למידה מותאם אישית בהתאם לרמה ולמטרות שלך',
+    title: 'מסלול למידה',
+    description: 'המלצות מותאמות לפי הרמה והמטרות שלך',
     icon: BookOpen,
-    color: 'bg-purple-500',
-    status: 'active'
+    color: 'bg-violet-600',
   },
   {
     id: '4',
-    title: 'Smart Suggestions',
-    description: 'הצעות חכמות לפרויקטים, משאבים וכלים לפי ההתקדמות שלך',
+    title: 'טיפים חכמים',
+    description: 'רעיונות לפרויקטים, תרגול וכלים מתקדמים',
     icon: Lightbulb,
-    color: 'bg-yellow-500',
-    status: 'coming-soon'
-  }
+    color: 'bg-amber-500',
+  },
 ]
 
 export default function AIMentorPage() {
   const [isListening, setIsListening] = useState(false)
+  const [isSending, setIsSending] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
-      id: '1',
+      id: 'welcome',
       type: 'ai',
-      content: 'שלום! אני ה-AI Mentor שלך. איך אני יכול לעזור לך היום?',
-      timestamp: new Date()
-    }
+      content:
+        'שלום! אני ה־AI Mentor של follStack. אפשר לשאול אותי על React, Node, MongoDB, או כל נושא Full-Stack — ואעזור לך צעד־אחר־צעד.',
+      timestamp: new Date(),
+    },
   ])
   const [inputMessage, setInputMessage] = useState('')
+  const bottomRef = useRef<HTMLDivElement>(null)
 
-  const handleSendMessage = () => {
-    if (!inputMessage.trim()) return
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages, isSending])
 
-    const userMessage: ChatMessage = {
-      id: Date.now().toString(),
-      type: 'user',
-      content: inputMessage,
-      timestamp: new Date()
-    }
+  const askMentor = async (question: string) => {
+    const trimmed = question.trim()
+    if (!trimmed || isSending) return
 
-    setMessages(prev => [...prev, userMessage])
+    setError(null)
+    setIsSending(true)
     setInputMessage('')
 
-    // Simulate AI response
-    setTimeout(() => {
-      const aiMessage: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        type: 'ai',
-        content: 'זוהי תשובה לדוגמה מה-AI Mentor. בפועל, זה יהיה מחובר למערכת AI אמיתית שתספק תשובות מקצועיות ומעודכנות.',
-        timestamp: new Date()
+    const userMessage: ChatMessage = {
+      id: `u-${Date.now()}`,
+      type: 'user',
+      content: trimmed,
+      timestamp: new Date(),
+    }
+    setMessages((prev) => [...prev, userMessage])
+
+    try {
+      const response = await fetch(apiUrl('/api/ai/ask'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: trimmed }),
+      })
+
+      const contentType = response.headers.get('content-type') || ''
+      if (!response.ok || !contentType.includes('application/json')) {
+        throw new Error('השרת לא החזיר תשובה תקינה. ודא שה־API רץ על פורט 3001.')
       }
-      setMessages(prev => [...prev, aiMessage])
-    }, 1000)
+
+      const payload = await response.json()
+      const answer =
+        payload?.data?.answer ||
+        payload?.answer ||
+        'לא התקבלה תשובה מהמנטור. נסה שוב בעוד רגע.'
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `a-${Date.now()}`,
+          type: 'ai',
+          content: answer,
+          timestamp: new Date(),
+        },
+      ])
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'שגיאה בשליחה למנטור'
+      setError(message)
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `e-${Date.now()}`,
+          type: 'ai',
+          content: `לא הצלחתי להתחבר ל־AI כרגע.\n${message}\n\nטיפ: הרץ pnpm dev ובדוק ש־OPENAI_API_KEY מוגדר ב־apps/api/.env`,
+          timestamp: new Date(),
+        },
+      ])
+    } finally {
+      setIsSending(false)
+    }
   }
 
   const handleVoiceToggle = () => {
-    setIsListening(!isListening)
-    // Here you would implement actual voice recognition
+    const SpeechRecognition =
+      typeof window !== 'undefined'
+        ? (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+        : null
+
+    if (!SpeechRecognition) {
+      setError('זיהוי קול לא נתמך בדפדפן הזה. אפשר להקליד במקום.')
+      return
+    }
+
+    if (isListening) {
+      setIsListening(false)
+      return
+    }
+
+    const recognition = new SpeechRecognition()
+    recognition.lang = 'he-IL'
+    recognition.interimResults = false
+    recognition.maxAlternatives = 1
+
+    recognition.onstart = () => setIsListening(true)
+    recognition.onend = () => setIsListening(false)
+    recognition.onerror = () => {
+      setIsListening(false)
+      setError('זיהוי הקול נכשל. נסה שוב או הקלד.')
+    }
+    recognition.onresult = (event: any) => {
+      const transcript = event.results?.[0]?.[0]?.transcript
+      if (transcript) setInputMessage(transcript)
+    }
+
+    recognition.start()
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
-      <div className="container mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center mb-4">
-            <Brain className="h-12 w-12 text-primary-600 ml-4" />
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
-              AI Mentor
-            </h1>
+    <div className="page-shell">
+      <header className="page-hero">
+        <div className="mb-4 flex items-center justify-center gap-3">
+          <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-600 text-white shadow-lg shadow-primary-600/25">
+            <Brain className="h-6 w-6" />
+          </span>
+        </div>
+        <p className="page-kicker">AI Mentor</p>
+        <h1 className="page-title">המנטור החכם שלך</h1>
+        <p className="page-subtitle">
+          שאל שאלות, קבל הסברים ברורים, וקבל כיוון מעשי ללמידה ולעבודה מול AI — בעברית, ממוקד וברור.
+        </p>
+      </header>
+
+      <section className="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {aiFeatures.map((feature) => {
+          const Icon = feature.icon
+          return (
+            <Card key={feature.id} className="p-5 text-center">
+              <div
+                className={`mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl ${feature.color} text-white`}
+              >
+                <Icon className="h-7 w-7" />
+              </div>
+              <h2 className="mb-2 font-[family-name:var(--font-display)] text-lg font-bold text-slate-900 dark:text-white">
+                {feature.title}
+              </h2>
+              <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                {feature.description}
+              </p>
+            </Card>
+          )
+        })}
+      </section>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <Card className="flex min-h-[34rem] flex-col overflow-hidden lg:col-span-2">
+          <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4 dark:border-slate-700">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary-600 text-white">
+                <Brain className="h-5 w-5" />
+              </div>
+              <div className="text-right">
+                <h2 className="font-[family-name:var(--font-display)] text-lg font-bold text-slate-900 dark:text-white">
+                  שיחה עם המנטור
+                </h2>
+                <p className="text-sm text-emerald-600 dark:text-emerald-400">מוכן לעזור</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={handleVoiceToggle}
+              aria-label={isListening ? 'עצור האזנה' : 'התחל האזנה'}
+              className={`rounded-xl p-2.5 transition ${
+                isListening
+                  ? 'bg-red-100 text-red-600'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300'
+              }`}
+            >
+              {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
+            </button>
           </div>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            המנטור האישי שלך לפיתוח - זמין 24/7 לענות על שאלות, לתת עצות ולהדריך אותך בדרך להצלחה.
-          </p>
-        </div>
 
-        {/* AI Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {aiFeatures.map((feature) => {
-            const Icon = feature.icon
-            return (
-              <Card key={feature.id} className="p-6 text-center hover:shadow-lg transition-shadow duration-300">
-                <div className={`w-16 h-16 ${feature.color} rounded-full flex items-center justify-center mx-auto mb-4`}>
-                  <Icon className="h-8 w-8 text-white" />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">
-                  {feature.description}
-                </p>
-                <span className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${
-                  feature.status === 'active' 
-                    ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                    : 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
-                }`}>
-                  {feature.status === 'active' ? 'פעיל' : 'בקרוב'}
-                </span>
-              </Card>
-            )
-          })}
-        </div>
-
-        {/* Chat Interface */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Chat Area */}
-          <div className="lg:col-span-2">
-            <Card className="h-96 flex flex-col">
-              {/* Chat Header */}
-              <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-                <div className="flex items-center">
-                  <div className="w-10 h-10 bg-primary-600 rounded-full flex items-center justify-center">
-                    <Brain className="h-6 w-6 text-white" />
-                  </div>
-                  <div className="mr-3">
-                    <h3 className="font-semibold text-gray-900 dark:text-white">AI Mentor</h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">מחובר</p>
-                  </div>
-                </div>
-                <button
-                  onClick={handleVoiceToggle}
-                  className={`p-2 rounded-full transition-colors duration-200 ${
-                    isListening 
-                      ? 'bg-red-100 text-red-600 hover:bg-red-200' 
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300'
+          <div className="flex-1 space-y-4 overflow-y-auto px-5 py-5">
+            {messages.map((message) => (
+              <div
+                key={message.id}
+                className={`flex ${message.type === 'user' ? 'justify-start' : 'justify-end'}`}
+              >
+                <div
+                  className={`max-w-[min(100%,34rem)] rounded-2xl px-4 py-3 text-right shadow-sm ${
+                    message.type === 'user'
+                      ? 'bg-primary-600 text-white'
+                      : 'bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-100'
                   }`}
                 >
-                  {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
-                </button>
-              </div>
-
-              {/* Messages */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                {messages.map((message) => (
-                  <div
-                    key={message.id}
-                    className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+                  <p className="whitespace-pre-wrap text-[0.98rem] leading-relaxed">{message.content}</p>
+                  <p
+                    className={`mt-2 text-xs ${
+                      message.type === 'user' ? 'text-primary-100' : 'text-slate-500 dark:text-slate-400'
+                    }`}
                   >
-                    <div
-                      className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                        message.type === 'user'
-                          ? 'bg-primary-600 text-white'
-                          : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
-                      }`}
-                    >
-                      <p className="text-sm">{message.content}</p>
-                      <p className={`text-xs mt-1 ${
-                        message.type === 'user' ? 'text-primary-100' : 'text-gray-500 dark:text-gray-400'
-                      }`}>
-                        {message.timestamp.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' })}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Input Area */}
-              <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-                <div className="flex space-x-2 rtl:space-x-reverse">
-                  <input
-                    type="text"
-                    value={inputMessage}
-                    onChange={(e) => setInputMessage(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                    placeholder="שאל את ה-AI Mentor שלך..."
-                    className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  />
-                  <button
-                    onClick={handleSendMessage}
-                    className="bg-primary-600 hover:bg-primary-700 text-white p-2 rounded-lg transition-colors duration-200"
-                  >
-                    <Send className="h-5 w-5" />
-                  </button>
+                    {message.timestamp.toLocaleTimeString('he-IL', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </p>
                 </div>
               </div>
-            </Card>
+            ))}
+            {isSending && (
+              <div className="flex justify-end">
+                <div className="inline-flex items-center gap-2 rounded-2xl bg-slate-100 px-4 py-3 text-sm text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  המנטור חושב...
+                </div>
+              </div>
+            )}
+            <div ref={bottomRef} />
           </div>
 
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Quick Actions */}
-            <Card className="p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                פעולות מהירות
-              </h3>
-              <div className="space-y-3">
-                <button className="w-full text-right p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200">
-                  <div className="font-medium text-gray-900 dark:text-white">בדוק קוד שלי</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-300">העלה קבצי קוד לבדיקה</div>
+          <div className="border-t border-slate-200 px-5 py-4 dark:border-slate-700">
+            {error && (
+              <p className="mb-3 rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-950/40 dark:text-red-300">
+                {error}
+              </p>
+            )}
+            <div className="mb-3 flex flex-wrap justify-center gap-2">
+              {quickPrompts.map((prompt) => (
+                <button
+                  key={prompt}
+                  type="button"
+                  disabled={isSending}
+                  onClick={() => askMentor(prompt)}
+                  className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:border-primary-300 hover:text-primary-700 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
+                >
+                  {prompt}
                 </button>
-                <button className="w-full text-right p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200">
-                  <div className="font-medium text-gray-900 dark:text-white">מסלול למידה</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-300">קבל המלצות מותאמות</div>
-                </button>
-                <button className="w-full text-right p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200">
-                  <div className="font-medium text-gray-900 dark:text-white">פתור בעיה</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-300">תיאור הבעיה וקבל פתרון</div>
-                </button>
-              </div>
-            </Card>
-
-            {/* Recent Conversations */}
-            <Card className="p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                שיחות אחרונות
-              </h3>
-              <div className="space-y-3">
-                <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                  <div className="font-medium text-gray-900 dark:text-white text-sm">React Hooks</div>
-                  <div className="text-xs text-gray-600 dark:text-gray-300">לפני 2 שעות</div>
-                </div>
-                <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                  <div className="font-medium text-gray-900 dark:text-white text-sm">JavaScript ES6</div>
-                  <div className="text-xs text-gray-600 dark:text-gray-300">אתמול</div>
-                </div>
-                <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                  <div className="font-medium text-gray-900 dark:text-white text-sm">CSS Grid</div>
-                  <div className="text-xs text-gray-600 dark:text-gray-300">לפני 3 ימים</div>
-                </div>
-              </div>
-            </Card>
-
-            {/* Tips */}
-            <Card className="p-6">
-              <div className="flex items-center mb-4">
-                <Sparkles className="h-5 w-5 text-yellow-500 ml-2" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">טיפים</h3>
-              </div>
-              <div className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
-                <p>• שאל שאלות ספציפיות לקבלת תשובות מדויקות יותר</p>
-                <p>• השתמש בכפתור הקול לשיחה טבעית יותר</p>
-                <p>• העלה קבצי קוד לקבלת ביקורת מקצועית</p>
-              </div>
-            </Card>
+              ))}
+            </div>
+            <form
+              className="flex items-center gap-2"
+              onSubmit={(e) => {
+                e.preventDefault()
+                void askMentor(inputMessage)
+              }}
+            >
+              <input
+                type="text"
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+                placeholder="כתוב שאלה למנטור..."
+                disabled={isSending}
+                className="min-w-0 flex-1 rounded-2xl border border-slate-300 bg-white px-4 py-3 text-right text-slate-900 outline-none ring-primary-500 placeholder:text-slate-400 focus:ring-2 disabled:opacity-60 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
+              />
+              <button
+                type="submit"
+                disabled={isSending || !inputMessage.trim()}
+                className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-600 text-white transition hover:bg-primary-700 disabled:opacity-50"
+                aria-label="שלח"
+              >
+                {isSending ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
+              </button>
+            </form>
           </div>
-        </div>
+        </Card>
 
-        {/* Call to Action */}
-        <div className="mt-16 bg-gradient-to-r from-primary-600 to-primary-800 rounded-lg p-8 text-white text-center">
-          <h2 className="text-3xl font-bold mb-4">מוכן להתחיל ללמוד?</h2>
-          <p className="text-xl mb-6 opacity-90">
-            ה-AI Mentor שלך זמין 24/7 לעזור לך בכל שלב בדרך להצלחה בפיתוח.
-          </p>
-          <button className="bg-white text-primary-600 hover:bg-gray-100 font-medium py-3 px-8 rounded-lg transition-colors duration-200">
-            התחל שיחה
-          </button>
-        </div>
+        <aside className="space-y-5">
+          <Card className="p-6 text-right">
+            <h2 className="section-title mb-3 text-xl">איך לעבוד מול AI</h2>
+            <ul className="space-y-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+              <li>כתוב מה המטרה, מה ניסית, ומה לא עובד.</li>
+              <li>צרף שפת תכנות + קטע קוד קצר אם יש.</li>
+              <li>בקש צעדים מסודרים או דוגמה מינימלית.</li>
+              <li>אחרי תשובה — שאל “מה הצעד הבא לתרגול?”</li>
+            </ul>
+          </Card>
+
+          <Card className="p-6 text-right">
+            <div className="mb-3 flex items-center justify-start gap-2">
+              <Sparkles className="h-5 w-5 text-amber-500" />
+              <h2 className="font-[family-name:var(--font-display)] text-lg font-bold text-slate-900 dark:text-white">
+                טיפים מהירים
+              </h2>
+            </div>
+            <div className="space-y-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+              <p>• שאלות ספציפיות = תשובות מדויקות יותר</p>
+              <p>• אפשר להשתמש בכפתור המיקרופון להכתבה</p>
+              <p>• לחיבור מלא: הוסף OPENAI_API_KEY ב־apps/api/.env</p>
+            </div>
+          </Card>
+        </aside>
       </div>
     </div>
   )

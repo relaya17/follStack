@@ -10,7 +10,8 @@
     "declaration": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "types": []
   },
   "include": ["src"]
 }

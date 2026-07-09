@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Heebo } from 'next/font/google'
+import { Heebo, Rubik } from 'next/font/google'
 import { SiteHeader } from '@/components/SiteHeader'
 import './globals.css'
 
@@ -7,6 +7,13 @@ const heebo = Heebo({
   subsets: ['hebrew', 'latin'],
   variable: '--font-heebo',
   display: 'swap',
+})
+
+const rubik = Rubik({
+  subsets: ['hebrew', 'latin'],
+  variable: '--font-rubik',
+  display: 'swap',
+  weight: ['500', '600', '700', '800'],
 })
 
 export const metadata: Metadata = {
@@ -19,10 +26,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="he" dir="rtl" className={heebo.variable}>
+    <html lang="he" dir="rtl" className={`${heebo.variable} ${rubik.variable}`}>
       <body className="min-h-screen font-sans antialiased">
         <SiteHeader />
-        <main>{children}</main>
+        <main className="relative">{children}</main>
       </body>
     </html>
   )

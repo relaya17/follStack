@@ -7,12 +7,9 @@ import {
     getInterviewQuestions,
     getLearningRecommendations
 } from '@/controllers/aiController'
-import { protect } from '@/middleware/auth'
+import { protect, optionalAuth } from '@/middleware/auth'
 
 const router = Router()
-
-// All routes are protected
-router.use(protect)
 
 /**
  * @swagger
@@ -20,8 +17,6 @@ router.use(protect)
  *   post:
  *     summary: Ask AI mentor a question
  *     tags: [AI Mentor]
- *     security:
- *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -41,7 +36,10 @@ router.use(protect)
  *       200:
  *         description: AI response received successfully
  */
-router.post('/ask', askQuestion)
+router.post('/ask', optionalAuth, askQuestion)
+
+// Remaining AI routes require auth
+router.use(protect)
 
 /**
  * @swagger

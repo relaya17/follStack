@@ -1,5 +1,32 @@
-import { Request, Response, NextFunction } from 'express'
+import { Response, NextFunction } from 'express'
+import OpenAI from 'openai'
 import { AppError } from '@/middleware/errorHandler'
+import { logger } from '@/utils/logger'
+
+const SYSTEM_PROMPT = `אתה AI Mentor של follStack — פלטפורמת למידת Full-Stack בעברית.
+ענה בעברית ברורה, ממוקדת ומעשית.
+התמחה ב: HTML, CSS, JavaScript, TypeScript, React, Next.js, Node.js, Express, MongoDB.
+כשמתאים — תן דוגמאות קוד קצרות, שלבים מסודרים, וטיפים לתרגול.
+אם חסר מידע בשאלה — שאל שאלת הבהרה אחת קצרה.`
+
+function buildFallbackAnswer(question: string, context?: string, code?: string): string {
+  return [
+    `שאלה מצוינת: "${question}"`,
+    '',
+    context ? `הקשר שסיפקת: ${context}` : null,
+    code ? `לגבי הקוד שצירפת — בדוק שמות משתנים, טיפול בשגיאות, וקריאות.\n\`\`\`\n${code}\n\`\`\`` : null,
+    '',
+    'כרגע אין מפתח OpenAI מוגדר בשרת (`OPENAI_API_KEY`), לכן זו תשובת עזרה כללית.',
+    'הוסף מפתח ב־apps/api/.env והפעל מחדש את ה־API לקבלת תשובות חכמות מלאות.',
+    '',
+    'בינתיים נסה:',
+    '1. לנסח את השאלה עם שפת תכנות + מה ניסית + מה השגיאה',
+    '2. לצרף קטע קוד קצר אם רלוונטי',
+    '3. לשאול על צעד הבא במסלול הלמידה שלך',
+  ]
+    .filter(Boolean)
+    .join('\n')
+}
 
 /**
  * @swagger
@@ -12,31 +39,58 @@ export const askQuestion = async (req: any, res: Response, next: NextFunction): 
   try {
     const { question, context, code } = req.body
 
-    if (!question) {
+    if (!question || typeof question !== 'string' || !question.trim()) {
       throw new AppError('שאלה היא שדה חובה', 400)
     }
 
-    // This would typically call OpenAI API
-    // For now, we'll return a mock response
+    const apiKey = process.env.OPENAI_API_KEY?.trim()
+    const model = process.env.AI_MODEL || 'gpt-4o-mini'
+    let answer = ''
+    let provider: 'openai' | 'fallback' = 'fallback'
+
+    if (apiKey) {
+      try {
+        const openai = new OpenAI({ apiKey })
+        const userParts = [
+          `שאלה: ${question.trim()}`,
+          context ? `הקשר: ${context}` : null,
+          code ? `קוד:\n\`\`\`\n${code}\n\`\`\`` : null,
+        ].filter(Boolean)
+
+        const completion = await openai.chat.completions.create({
+          model,
+          temperature: 0.4,
+          messages: [
+            { role: 'system', content: SYSTEM_PROMPT },
+            { role: 'user', content: userParts.join('\n\n') },
+          ],
+        })
+
+        answer = completion.choices[0]?.message?.content?.trim() || ''
+        if (answer) provider = 'openai'
+      } catch (err) {
+        logger.error('OpenAI ask failed, using fallback', err)
+      }
+    }
+
+    if (!answer) {
+      answer = buildFallbackAnswer(question.trim(), context, code)
+    }
+
     const response = {
       id: Date.now().toString(),
-      question,
-      answer: `תודה על השאלה! "${question}" - זו שאלה מצוינת. הנה תשובה מפורטת:
-
-${context ? `תבסס על ההקשר שסיפקת: ${context}` : ''}
-
-${code ? `לגבי הקוד שצירפת:\n\`\`\`\n${code}\n\`\`\`` : ''}
-
-הנה הסבר מפורט עם דוגמאות מעשיות...`,
+      question: question.trim(),
+      answer,
       context,
       code,
+      provider,
       timestamp: new Date().toISOString(),
-      userId: req.user.id
+      userId: req.user?.id ?? null,
     }
 
     res.status(200).json({
       success: true,
-      data: response
+      data: response,
     })
   } catch (error) {
     next(error)
