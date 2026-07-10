@@ -10,6 +10,7 @@ import crypto from 'crypto'
 import mongoose from 'mongoose'
 import { User } from '@/models/User'
 import { Module } from '@/models/Module'
+import { Quiz } from '@/models/Quiz'
 import { logger } from '@/utils/logger'
 
 const SEED_ADMIN_EMAIL = 'seed-admin@follstack.local'
@@ -446,6 +447,310 @@ const MODULES: SeedModule[] = [
   },
 ]
 
+type SeedQuestion = {
+  question: string
+  type: 'multiple-choice' | 'true-false'
+  options: string[]
+  correctAnswerIndex: number
+  explanation: string
+  points?: number
+}
+
+type SeedQuiz = {
+  slug: string
+  title: string
+  description: string
+  category: string
+  moduleSlug: string
+  difficulty: 'easy' | 'medium' | 'hard'
+  timeLimit: number
+  passingScore: number
+  questions: SeedQuestion[]
+}
+
+const QUIZZES: SeedQuiz[] = [
+  {
+    slug: 'html-css-advanced',
+    title: 'HTML & CSS Advanced',
+    description: 'מבחן על HTML5, CSS3, Flexbox, Grid ו-Responsive Design',
+    category: 'Frontend',
+    moduleSlug: 'html-css',
+    difficulty: 'medium',
+    timeLimit: 20,
+    passingScore: 70,
+    questions: [
+      {
+        question: 'מהו התג הנכון ליצירת כותרת ראשית ב-HTML?',
+        type: 'multiple-choice',
+        options: ['<h1>', '<header>', '<title>', '<head>'],
+        correctAnswerIndex: 0,
+        explanation: '<h1> הוא התג הנכון לכותרת ראשית. <header> הוא כותרת של אזור בדף, <title> לכותרת בדפדפן, <head> למידע מטא.',
+      },
+      {
+        question: 'איזה תג משמש ליצירת קישור?',
+        type: 'multiple-choice',
+        options: ['<link>', '<a>', '<href>', '<url>'],
+        correctAnswerIndex: 1,
+        explanation: '<a> הוא תג הקישור. <link> משמש לקישור למשאבים חיצוניים כמו CSS.',
+      },
+      {
+        question: 'HTML הוא שפת תכנות',
+        type: 'true-false',
+        options: ['נכון', 'לא נכון'],
+        correctAnswerIndex: 1,
+        explanation: 'HTML היא שפת סימון (Markup Language), לא שפת תכנות — אין בה לוגיקה או תנאים.',
+      },
+      {
+        question: 'איזו תכונת CSS משמשת ליצירת פריסת Flexbox?',
+        type: 'multiple-choice',
+        options: ['display: flex', 'position: flex', 'float: flex', 'layout: flex'],
+        correctAnswerIndex: 0,
+        explanation: 'display: flex על אלמנט הורה הופך אותו למיכל Flexbox.',
+      },
+      {
+        question: 'מה עושה box-sizing: border-box?',
+        type: 'multiple-choice',
+        options: [
+          'מוסיף מסגרת לכל קופסה',
+          'כולל padding ו-border בתוך הרוחב המוצהר',
+          'מסתיר את גבולות האלמנט',
+          'מבטל את ה-margin',
+        ],
+        correctAnswerIndex: 1,
+        explanation: 'border-box גורם ל-width/height לכלול padding ו-border, מה שמפשט חישובי פריסה.',
+      },
+    ],
+  },
+  {
+    slug: 'javascript-fundamentals',
+    title: 'JavaScript Fundamentals',
+    description: 'בדוק את הידע שלך ב-JavaScript בסיסי — משתנים, פונקציות, אובייקטים',
+    category: 'JavaScript',
+    moduleSlug: 'javascript',
+    difficulty: 'easy',
+    timeLimit: 20,
+    passingScore: 70,
+    questions: [
+      {
+        question: 'מה ההבדל העיקרי בין let ל-const?',
+        type: 'multiple-choice',
+        options: [
+          'אין הבדל',
+          'const לא ניתן להצבה מחדש, let כן',
+          'let עובד רק במערכים',
+          'const עובד רק עם מספרים',
+        ],
+        correctAnswerIndex: 1,
+        explanation: 'משתנה שהוגדר עם const לא ניתן להצבה מחדש, בעוד let כן.',
+      },
+      {
+        question: 'מה תחזיר הפעולה: typeof "5" === 5',
+        type: 'true-false',
+        options: ['נכון', 'לא נכון'],
+        correctAnswerIndex: 1,
+        explanation: '=== משווה גם ערך וגם טיפוס. "5" היא מחרוזת ו-5 הוא מספר, לכן ההשוואה false.',
+      },
+      {
+        question: 'איזו מתודת מערך מחזירה מערך חדש עם כל הפריטים שעברו תנאי?',
+        type: 'multiple-choice',
+        options: ['map', 'filter', 'reduce', 'forEach'],
+        correctAnswerIndex: 1,
+        explanation: 'filter מחזירה מערך חדש עם הפריטים שעבורם הפונקציה שהועברה מחזירה true.',
+      },
+      {
+        question: 'מהי התוצאה של async function שמוחזרת בלי await?',
+        type: 'multiple-choice',
+        options: ['הערך עצמו', 'undefined', 'Promise', 'שגיאה'],
+        correctAnswerIndex: 2,
+        explanation: 'פונקציית async תמיד מחזירה Promise, גם אם בגוף הפונקציה יש return של ערך רגיל.',
+      },
+      {
+        question: 'איך בודקים אם משתנה שווה בדיוק ל-undefined (ולא null)?',
+        type: 'multiple-choice',
+        options: ['x == undefined', 'x === undefined', 'x = undefined', '!x'],
+        correctAnswerIndex: 1,
+        explanation: '=== בודקת גם טיפוס — היא הדרך הבטוחה להבדיל בין undefined ל-null.',
+      },
+    ],
+  },
+  {
+    slug: 'react-components-hooks',
+    title: 'React Components & Hooks',
+    description: 'מבחן מעמיק על React — קומפוננטות, hooks, state management',
+    category: 'React',
+    moduleSlug: 'react',
+    difficulty: 'medium',
+    timeLimit: 25,
+    passingScore: 70,
+    questions: [
+      {
+        question: 'מה מחזיר useState?',
+        type: 'multiple-choice',
+        options: [
+          'רק את הערך הנוכחי',
+          'זוג: הערך הנוכחי ופונקציה לעדכונו',
+          'פונקציה בלבד',
+          'אובייקט קונפיגורציה',
+        ],
+        correctAnswerIndex: 1,
+        explanation: 'useState מחזיר מערך של שני איברים — הערך הנוכחי ופונקציית setter.',
+      },
+      {
+        question: 'מתי useEffect עם מערך תלויות ריק ([]) ירוץ?',
+        type: 'multiple-choice',
+        options: ['בכל רינדור', 'פעם אחת בלבד, אחרי הרינדור הראשון', 'אף פעם', 'רק ב-unmount'],
+        correctAnswerIndex: 1,
+        explanation: 'מערך תלויות ריק אומר ל-React להריץ את ה-effect פעם אחת בלבד, אחרי הרינדור הראשוני.',
+      },
+      {
+        question: 'Props הם ניתנים לשינוי (mutable) בתוך הקומפוננטה שמקבלת אותם',
+        type: 'true-false',
+        options: ['נכון', 'לא נכון'],
+        correctAnswerIndex: 1,
+        explanation: 'Props הם read-only — קומפוננטה לעולם לא צריכה לשנות props שהיא מקבלת.',
+      },
+      {
+        question: 'למה חשוב key ייחודי בעת רינדור רשימה עם map?',
+        type: 'multiple-choice',
+        options: [
+          'זה קוסמטי בלבד',
+          'עוזר ל-React לזהות אילו פריטים השתנו/נוספו/הוסרו',
+          'משפר את מהירות ה-CSS',
+          'חובה רק במובייל',
+        ],
+        correctAnswerIndex: 1,
+        explanation: 'key עוזר ל-React לעקוב אחרי זהות הפריטים בין רינדורים ולעדכן רק את מה שבאמת השתנה.',
+      },
+      {
+        question: 'מה ההבדל בין state ל-props?',
+        type: 'multiple-choice',
+        options: [
+          'אין הבדל',
+          'state מנוהל בתוך הקומפוננטה, props מגיעים מבחוץ',
+          'props ניתנים לשינוי, state לא',
+          'state קיים רק ב-class components',
+        ],
+        correctAnswerIndex: 1,
+        explanation: 'state הוא נתון פנימי שהקומפוננטה מנהלת בעצמה; props מועברים אליה מקומפוננטת ההורה.',
+      },
+    ],
+  },
+  {
+    slug: 'nodejs-express',
+    title: 'Node.js & Express',
+    description: 'בדוק את הידע שלך ב-Node.js, Express, MongoDB ו-API development',
+    category: 'Backend',
+    moduleSlug: 'nodejs',
+    difficulty: 'hard',
+    timeLimit: 30,
+    passingScore: 70,
+    questions: [
+      {
+        question: 'איזו פונקציה מפעילה שרת Express להאזין לבקשות?',
+        type: 'multiple-choice',
+        options: ['app.start()', 'app.listen()', 'app.run()', 'app.serve()'],
+        correctAnswerIndex: 1,
+        explanation: 'app.listen(PORT) מפעיל את שרת ה-HTTP ומתחיל להאזין לבקשות נכנסות.',
+      },
+      {
+        question: 'מה תפקידה של middleware בExpress?',
+        type: 'multiple-choice',
+        options: [
+          'רק להגיש קבצים סטטיים',
+          'לרוץ בין קבלת הבקשה למענה, ולקרוא ל-next() כדי להעביר הלאה',
+          'להחליף את ה-router',
+          'לחבר למסד הנתונים בלבד',
+        ],
+        correctAnswerIndex: 1,
+        explanation: 'Middleware מקבלת (req, res, next) ורצה בשרשרת — לוגים, אימות, ולידציה וכו׳.',
+      },
+      {
+        question: 'איזה קוד סטטוס HTTP מתאים ל"נוצר בהצלחה"?',
+        type: 'multiple-choice',
+        options: ['200', '201', '204', '301'],
+        correctAnswerIndex: 1,
+        explanation: '201 Created מציין שמשאב חדש נוצר בהצלחה בעקבות הבקשה.',
+      },
+      {
+        question: 'JWT הוא מנגנון session מבוסס זיכרון בשרת',
+        type: 'true-false',
+        options: ['נכון', 'לא נכון'],
+        correctAnswerIndex: 1,
+        explanation: 'JWT הוא stateless — כל המידע נמצא באסימון עצמו, השרת לא שומר session בזיכרון.',
+      },
+      {
+        question: 'מה עושה Mongoose Schema Validation?',
+        type: 'multiple-choice',
+        options: [
+          'משפר ביצועי רשת',
+          'דוחה נתונים לא תקינים לפני שהם נשמרים במסד הנתונים',
+          'מצפין סיסמאות אוטומטית',
+          'מייצר תיעוד Swagger',
+        ],
+        correctAnswerIndex: 1,
+        explanation: 'הגדרות required/enum/min/max ב-Schema מונעות שמירת נתונים לא תקינים ב-DB.',
+      },
+    ],
+  },
+  {
+    slug: 'typescript-mastery',
+    title: 'TypeScript Mastery',
+    description: 'מבחן מתקדם על TypeScript — types, interfaces, generics',
+    category: 'TypeScript',
+    moduleSlug: 'typescript',
+    difficulty: 'hard',
+    timeLimit: 25,
+    passingScore: 70,
+    questions: [
+      {
+        question: 'מתי שגיאות טיפוסים ב-TypeScript מתגלות?',
+        type: 'multiple-choice',
+        options: ['בזמן ריצה בלבד', 'בזמן קומפילציה, לפני הרצה', 'רק בבדיקות (tests)', 'אף פעם'],
+        correctAnswerIndex: 1,
+        explanation: 'TypeScript בודק טיפוסים בזמן קומפילציה — לפני שהקוד בכלל רץ.',
+      },
+      {
+        question: 'למה כדאי להימנע מ-any?',
+        type: 'multiple-choice',
+        options: [
+          'זה מילת מפתח שמורה',
+          'הוא מבטל את כל בדיקת הטיפוסים על אותו ערך',
+          'הוא איטי יותר בזמן ריצה',
+          'אין סיבה, זה מומלץ',
+        ],
+        correctAnswerIndex: 1,
+        explanation: 'any מכבה את בדיקת הטיפוסים לחלוטין עבור אותו ערך, ומאבד את היתרון המרכזי של TypeScript.',
+      },
+      {
+        question: 'interface מגדיר התנהגות בזמן ריצה (runtime)',
+        type: 'true-false',
+        options: ['נכון', 'לא נכון'],
+        correctAnswerIndex: 1,
+        explanation: 'interface הוא קונסטרוקט קומפילציה בלבד — הוא "נעלם" לגמרי בקוד ה-JavaScript המקומפל.',
+      },
+      {
+        question: 'מה מטרת ה-Generics (למשל function first<T>(arr: T[]): T)?',
+        type: 'multiple-choice',
+        options: [
+          'לכתוב קוד לשימוש חוזר תוך שמירה על בטיחות טיפוסים',
+          'להאיץ את זמן הריצה',
+          'להחליף מחלקות (classes)',
+          'לתמוך רק במערכים',
+        ],
+        correctAnswerIndex: 0,
+        explanation: 'Generics מאפשרים קוד גנרי שעדיין "יודע" את הטיפוס המדויק שהוזן, בלי לוותר על בדיקת טיפוסים.',
+      },
+      {
+        question: 'Union type (A | B) מתאר ערך שהוא...',
+        type: 'multiple-choice',
+        options: ['גם A וגם B בו-זמנית', 'אחד מ-A או B', 'לא A ולא B', 'מערך של A ו-B'],
+        correctAnswerIndex: 1,
+        explanation: 'Union type מתאר ערך שיכול להיות אחת מכמה אפשרויות טיפוס מוגדרות.',
+      },
+    ],
+  },
+]
+
 async function run() {
   const mongoUri = process.env.MONGODB_URI
   if (!mongoUri) {
@@ -516,6 +821,39 @@ async function run() {
   }
 
   logger.info(`Seed: done. ${created} module(s) created, ${updated} updated. Total lessons seeded: ${MODULES.reduce((n, m) => n + m.lessons.length, 0)}`)
+
+  // 3. Upsert quizzes by slug (idempotent — safe to re-run)
+  let quizzesCreated = 0
+  let quizzesUpdated = 0
+  for (const q of QUIZZES) {
+    const result = await Quiz.findOneAndUpdate(
+      { slug: q.slug },
+      {
+        $set: {
+          title: q.title,
+          description: q.description,
+          category: q.category,
+          moduleSlug: q.moduleSlug,
+          difficulty: q.difficulty,
+          timeLimit: q.timeLimit,
+          passingScore: q.passingScore,
+          questions: q.questions.map((question) => ({ ...question, points: question.points ?? 10 })),
+          isPublished: true,
+          createdBy: admin._id,
+          updatedBy: admin._id,
+        },
+      },
+      { upsert: true, new: true, setDefaultsOnInsert: true, runValidators: true },
+    )
+
+    if (result.createdAt.getTime() === result.updatedAt.getTime()) {
+      quizzesCreated += 1
+    } else {
+      quizzesUpdated += 1
+    }
+  }
+
+  logger.info(`Seed: ${quizzesCreated} quiz(zes) created, ${quizzesUpdated} updated. Total questions seeded: ${QUIZZES.reduce((n, q) => n + q.questions.length, 0)}`)
 
   await mongoose.disconnect()
   process.exit(0)

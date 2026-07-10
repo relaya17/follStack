@@ -104,7 +104,7 @@ router.get('/modules/:id', optionalAuth, getModule)
  *       404:
  *         description: Lesson not found
  */
-router.get('/modules/:moduleId/lessons/:lessonId', protect, getLesson)
+router.get('/modules/:moduleId/lessons/:lessonId', optionalAuth, getLesson)
 
 /**
  * @swagger

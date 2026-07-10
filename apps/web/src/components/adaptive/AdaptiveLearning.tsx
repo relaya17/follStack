@@ -121,24 +121,46 @@ export function AdaptiveLearning({
       if (!response || !response.ok) return
       const contentType = response.headers.get('content-type') || ''
       if (!contentType.includes('application/json')) return
-      const analysis = await response.json()
+      const analysis = await response.json() as {
+        learningStyle?: typeof profile.learningStyle
+        pace?: typeof profile.pace
+        difficulty?: typeof profile.difficulty
+        strengths?: string[]
+        weaknesses?: string[]
+        preferences?: Partial<typeof profile.preferences>
+        performance?: typeof profile.performance
+        recommendations?: Array<{
+          type?: 'content' | 'difficulty' | 'style' | 'pace' | 'review'
+          message?: string
+          reason?: string
+          action?: string
+          confidence?: number
+        }>
+      }
       
       // Update profile based on AI analysis
       setProfile(prev => ({
         ...prev,
-        learningStyle: analysis.learningStyle,
-        pace: analysis.pace,
-        difficulty: analysis.difficulty,
-        strengths: analysis.strengths,
-        weaknesses: analysis.weaknesses,
+        learningStyle: analysis.learningStyle ?? prev.learningStyle,
+        pace: analysis.pace ?? prev.pace,
+        difficulty: analysis.difficulty ?? prev.difficulty,
+        strengths: analysis.strengths ?? prev.strengths,
+        weaknesses: analysis.weaknesses ?? prev.weaknesses,
         preferences: {
           ...prev.preferences,
           ...analysis.preferences
         },
-        performance: analysis.performance
+        performance: analysis.performance ?? prev.performance
       }))
 
-      setRecommendations(analysis.recommendations)
+      setRecommendations(
+        (analysis.recommendations ?? []).map((rec) => ({
+          type: (rec.type === 'review' ? 'content' : rec.type) ?? 'content',
+          message: rec.message ?? rec.reason ?? 'המלצה מותאמת',
+          action: rec.action ?? 'המשך ללמוד',
+          confidence: rec.confidence ?? 0.7,
+        })),
+      )
     } catch (error) {
       console.error('Error analyzing learning pattern:', error)
     } finally {

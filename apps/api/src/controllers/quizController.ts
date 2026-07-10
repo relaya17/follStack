@@ -1,195 +1,343 @@
 import { AuthRequest } from '@/middleware/auth'
 import { Request, Response, NextFunction } from 'express'
+import { Quiz, QuizAttempt } from '@/models/Quiz'
 import { AppError } from '@/middleware/errorHandler'
+import {
+  findCuratedQuiz,
+  isMongoReady,
+  listCuratedQuizzes,
+  type CuratedQuiz,
+} from '@/data/curatedContent'
 
-/**
- * @swagger
- * /api/quiz/modules/{moduleId}:
- *   get:
- *     summary: Get quizzes for a module
- *     tags: [Quiz]
- */
+const HIDE_ANSWERS = '-questions.correctAnswerIndex -questions.explanation'
+
+function catalogItem(q: CuratedQuiz) {
+  return {
+    id: q.id,
+    slug: q.slug,
+    title: q.title,
+    description: q.description,
+    category: q.category,
+    difficulty: q.difficulty,
+    questionsCount: q.questions.length,
+    duration: q.timeLimit,
+    passingScore: q.passingScore,
+    moduleSlug: q.moduleSlug,
+  }
+}
+
+function publicQuizPayload(q: CuratedQuiz) {
+  return {
+    id: q.id,
+    slug: q.slug,
+    title: q.title,
+    description: q.description,
+    category: q.category,
+    difficulty: q.difficulty,
+    timeLimit: q.timeLimit,
+    passingScore: q.passingScore,
+    questions: q.questions.map((question, index) => ({
+      id: question.id,
+      index,
+      type: question.type,
+      question: question.question,
+      options: question.options,
+      points: question.points,
+    })),
+  }
+}
+
+export const getAllQuizzes = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const category = typeof req.query.category === 'string' ? req.query.category : undefined
+    const difficulty = typeof req.query.difficulty === 'string' ? req.query.difficulty : undefined
+
+    if (isMongoReady()) {
+      try {
+        const query: Record<string, unknown> = { isPublished: true }
+        if (category && category !== 'all') query.category = category
+        if (difficulty && difficulty !== 'all') query.difficulty = difficulty
+
+        const quizzes = await Quiz.find(query).select(HIDE_ANSWERS).sort({ createdAt: -1 })
+        if (quizzes.length > 0) {
+          const data = quizzes.map((q) => ({
+            id: String(q._id),
+            slug: q.slug,
+            title: q.title,
+            description: q.description,
+            category: q.category,
+            difficulty: q.difficulty,
+            questionsCount: q.questions.length,
+            duration: q.timeLimit,
+            passingScore: q.passingScore,
+            moduleSlug: q.moduleSlug,
+          }))
+          res.status(200).json({ success: true, count: data.length, source: 'database', data })
+          return
+        }
+      } catch {
+        // fall through to curated
+      }
+    }
+
+    const data = listCuratedQuizzes({ category, difficulty }).map(catalogItem)
+    res.status(200).json({ success: true, count: data.length, source: 'curated', data })
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const getQuizzes = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-        const { moduleId } = req.params
+  try {
+    const { moduleId } = req.params
 
-        // This would typically come from a Quiz model
-        // For now, we'll return a mock response
-        const quizzes = [
-            {
-                id: '1',
-                title: 'HTML Basics Quiz',
-                description: 'Test your knowledge of HTML fundamentals',
-                moduleId,
-                questions: 10,
-                timeLimit: 30, // minutes
-                passingScore: 70,
-                attempts: 0,
-                maxAttempts: 3,
-                isCompleted: false
-            },
-            {
-                id: '2',
-                title: 'CSS Fundamentals Quiz',
-                description: 'Test your knowledge of CSS basics',
-                moduleId,
-                questions: 15,
-                timeLimit: 45,
-                passingScore: 75,
-                attempts: 1,
-                maxAttempts: 3,
-                isCompleted: false
-            }
-        ]
-
-        res.status(200).json({
-            success: true,
-            count: quizzes.length,
-            data: quizzes
-        })
-    } catch (error) {
-        next(error)
+    if (isMongoReady()) {
+      try {
+        const quizzes = await Quiz.find({ moduleSlug: moduleId, isPublished: true }).select(HIDE_ANSWERS)
+        if (quizzes.length > 0) {
+          const data = quizzes.map((q) => ({
+            id: String(q._id),
+            slug: q.slug,
+            title: q.title,
+            description: q.description,
+            moduleId,
+            questionsCount: q.questions.length,
+            timeLimit: q.timeLimit,
+            passingScore: q.passingScore,
+          }))
+          res.status(200).json({ success: true, count: data.length, source: 'database', data })
+          return
+        }
+      } catch {
+        // curated fallback
+      }
     }
+
+    const data = listCuratedQuizzes()
+      .filter((q) => q.moduleSlug === moduleId)
+      .map(catalogItem)
+    res.status(200).json({ success: true, count: data.length, source: 'curated', data })
+  } catch (error) {
+    next(error)
+  }
 }
 
-/**
- * @swagger
- * /api/quiz/{id}:
- *   get:
- *     summary: Get a specific quiz
- *     tags: [Quiz]
- */
 export const getQuiz = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-        const { id } = req.params
+  try {
+    const { id } = req.params
 
-        // This would typically come from a Quiz model
-        // For now, we'll return a mock response
-        const quiz = {
-            id,
-            title: 'HTML Basics Quiz',
-            description: 'Test your knowledge of HTML fundamentals',
-            timeLimit: 30,
-            passingScore: 70,
-            questions: [
-                {
-                    id: '1',
-                    type: 'multiple-choice',
-                    question: 'מהו התג הנכון ליצירת כותרת ראשית?',
-                    options: ['<h1>', '<header>', '<title>', '<head>'],
-                    points: 10,
-                    difficulty: 'easy'
-                },
-                {
-                    id: '2',
-                    type: 'multiple-choice',
-                    question: 'איזה תג משמש ליצירת קישור?',
-                    options: ['<link>', '<a>', '<href>', '<url>'],
-                    points: 10,
-                    difficulty: 'easy'
-                },
-                {
-                    id: '3',
-                    type: 'true-false',
-                    question: 'HTML הוא שפת תכנות',
-                    points: 10,
-                    difficulty: 'medium'
-                }
-            ]
-        }
-
-        res.status(200).json({
+    if (isMongoReady() && id.match(/^[0-9a-fA-F]{24}$/)) {
+      try {
+        const quiz = await Quiz.findById(id).select(HIDE_ANSWERS)
+        if (quiz) {
+          res.status(200).json({
             success: true,
-            data: quiz
-        })
-    } catch (error) {
-        next(error)
+            source: 'database',
+            data: {
+              id: String(quiz._id),
+              slug: quiz.slug,
+              title: quiz.title,
+              description: quiz.description,
+              timeLimit: quiz.timeLimit,
+              passingScore: quiz.passingScore,
+              questions: quiz.questions.map((q, index) => ({
+                id: String(q._id),
+                index,
+                type: q.type,
+                question: q.question,
+                options: q.options,
+                points: q.points,
+              })),
+            },
+          })
+          return
+        }
+      } catch {
+        // curated
+      }
     }
+
+    if (isMongoReady()) {
+      try {
+        const quiz = await Quiz.findOne({ slug: id }).select(HIDE_ANSWERS)
+        if (quiz) {
+          res.status(200).json({
+            success: true,
+            source: 'database',
+            data: {
+              id: String(quiz._id),
+              slug: quiz.slug,
+              title: quiz.title,
+              description: quiz.description,
+              timeLimit: quiz.timeLimit,
+              passingScore: quiz.passingScore,
+              questions: quiz.questions.map((q, index) => ({
+                id: String(q._id),
+                index,
+                type: q.type,
+                question: q.question,
+                options: q.options,
+                points: q.points,
+              })),
+            },
+          })
+          return
+        }
+      } catch {
+        // curated
+      }
+    }
+
+    const curated = findCuratedQuiz(id)
+    if (!curated) {
+      throw new AppError('מבחן לא נמצא', 404)
+    }
+
+    res.status(200).json({ success: true, source: 'curated', data: publicQuizPayload(curated) })
+  } catch (error) {
+    next(error)
+  }
 }
 
-/**
- * @swagger
- * /api/quiz/{id}/submit:
- *   post:
- *     summary: Submit quiz answers
- *     tags: [Quiz]
- */
 export const submitQuiz = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
-    try {
-        const { id } = req.params
-        const { answers } = req.body
+  try {
+    const { id } = req.params
+    const { answers } = req.body
 
-        if (!answers || typeof answers !== 'object') {
-            throw new AppError('תשובות לא תקינות', 400)
-        }
-
-        // This would typically calculate the score and save results
-        // For now, we'll return a mock response
-        const result = {
-            quizId: id,
-            userId: req.user!.id,
-            answers,
-            score: 85,
-            totalQuestions: 3,
-            numCorrectAnswers: 2,
-            isPassed: true,
-            submittedAt: new Date().toISOString(),
-            timeSpent: 15 // minutes
-        }
-
-        res.status(200).json({
-            success: true,
-            data: result
-        })
-    } catch (error) {
-        next(error)
+    if (!Array.isArray(answers)) {
+      throw new AppError('תשובות לא תקינות — יש לשלוח מערך תשובות', 400)
     }
+
+    // Prefer curated scoring when id matches curated bank (works without DB / without login persistence)
+    const curated = findCuratedQuiz(id)
+    if (curated) {
+      let numCorrect = 0
+      let earnedPoints = 0
+      let totalPoints = 0
+      const breakdown = curated.questions.map((q, index) => {
+        totalPoints += q.points
+        const selected = typeof answers[index] === 'number' ? answers[index] : -1
+        const isCorrect = selected === q.correctAnswerIndex
+        if (isCorrect) {
+          numCorrect += 1
+          earnedPoints += q.points
+        }
+        return {
+          questionId: q.id,
+          selected,
+          correctAnswerIndex: q.correctAnswerIndex,
+          isCorrect,
+          explanation: q.explanation,
+        }
+      })
+
+      const score = totalPoints > 0 ? Math.round((earnedPoints / totalPoints) * 100) : 0
+      const isPassed = score >= curated.passingScore
+
+      res.status(200).json({
+        success: true,
+        source: 'curated',
+        data: {
+          quizId: curated.id,
+          score,
+          totalQuestions: curated.questions.length,
+          numCorrectAnswers: numCorrect,
+          isPassed,
+          submittedAt: new Date().toISOString(),
+          breakdown,
+        },
+      })
+      return
+    }
+
+    if (!isMongoReady()) {
+      throw new AppError('מבחן לא נמצא', 404)
+    }
+
+    const quiz = id.match(/^[0-9a-fA-F]{24}$/)
+      ? await Quiz.findById(id).select('+questions.correctAnswerIndex +questions.explanation')
+      : await Quiz.findOne({ slug: id }).select('+questions.correctAnswerIndex +questions.explanation')
+
+    if (!quiz) {
+      throw new AppError('מבחן לא נמצא', 404)
+    }
+
+    let numCorrect = 0
+    let earnedPoints = 0
+    let totalPoints = 0
+    const breakdown = quiz.questions.map((q, index) => {
+      totalPoints += q.points
+      const selected = typeof answers[index] === 'number' ? answers[index] : -1
+      const isCorrect = selected === q.correctAnswerIndex
+      if (isCorrect) {
+        numCorrect += 1
+        earnedPoints += q.points
+      }
+      return {
+        questionId: q._id,
+        selected,
+        correctAnswerIndex: q.correctAnswerIndex,
+        isCorrect,
+        explanation: q.explanation,
+      }
+    })
+
+    const score = totalPoints > 0 ? Math.round((earnedPoints / totalPoints) * 100) : 0
+    const isPassed = score >= quiz.passingScore
+
+    let attemptId: string | undefined
+    if (req.user) {
+      const attempt = await QuizAttempt.create({
+        quiz: quiz._id,
+        user: req.user.id,
+        answers,
+        score,
+        numCorrectAnswers: numCorrect,
+        totalQuestions: quiz.questions.length,
+        isPassed,
+      })
+      attemptId = String(attempt._id)
+    }
+
+    res.status(200).json({
+      success: true,
+      source: 'database',
+      data: {
+        attemptId,
+        quizId: quiz._id,
+        score,
+        totalQuestions: quiz.questions.length,
+        numCorrectAnswers: numCorrect,
+        isPassed,
+        submittedAt: new Date().toISOString(),
+        breakdown,
+      },
+    })
+  } catch (error) {
+    next(error)
+  }
 }
 
-/**
- * @swagger
- * /api/quiz/{id}/results:
- *   get:
- *     summary: Get quiz results
- *     tags: [Quiz]
- */
 export const getQuizResults = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
-    try {
-        const { id } = req.params
+  try {
+    const { id } = req.params
 
-        // This would typically come from a QuizResult model
-        // For now, we'll return a mock response
-        const results = {
-            quizId: id,
-            userId: req.user!.id,
-            score: 85,
-            totalQuestions: 3,
-            numCorrectAnswers: 2,
-            isPassed: true,
-            submittedAt: new Date().toISOString(),
-            timeSpent: 15,
-            answers: {
-                '1': '<h1>',
-                '2': '<a>',
-                '3': false
-            },
-            expectedAnswers: {
-                '1': '<h1>',
-                '2': '<a>',
-                '3': false
-            },
-            explanations: {
-                '1': 'התג <h1> משמש ליצירת כותרת ראשית',
-                '2': 'התג <a> משמש ליצירת קישור',
-                '3': 'HTML היא שפת סימון, לא שפת תכנות'
-            }
-        }
-
-        res.status(200).json({
-            success: true,
-            data: results
-        })
-    } catch (error) {
-        next(error)
+    if (!isMongoReady() || !req.user) {
+      res.status(200).json({ success: true, count: 0, data: [] })
+      return
     }
+
+    const quiz = id.match(/^[0-9a-fA-F]{24}$/)
+      ? await Quiz.findById(id)
+      : await Quiz.findOne({ slug: id })
+
+    if (!quiz) {
+      throw new AppError('מבחן לא נמצא', 404)
+    }
+
+    const attempts = await QuizAttempt.find({ quiz: quiz._id, user: req.user.id }).sort({ submittedAt: -1 })
+    res.status(200).json({ success: true, count: attempts.length, data: attempts })
+  } catch (error) {
+    next(error)
+  }
 }

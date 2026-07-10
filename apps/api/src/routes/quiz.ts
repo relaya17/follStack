@@ -1,16 +1,36 @@
 import { Router } from 'express'
 import {
+  getAllQuizzes,
   getQuizzes,
   getQuiz,
   submitQuiz,
   getQuizResults
 } from '@/controllers/quizController'
-import { protect } from '@/middleware/auth'
+import { protect, optionalAuth } from '@/middleware/auth'
 
 const router = Router()
 
-// All routes are protected
-router.use(protect)
+/**
+ * @swagger
+ * /api/quiz:
+ *   get:
+ *     summary: Get all published quizzes
+ *     tags: [Quiz]
+ *     parameters:
+ *       - in: query
+ *         name: category
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: difficulty
+ *         schema:
+ *           type: string
+ *           enum: [easy, medium, hard]
+ *     responses:
+ *       200:
+ *         description: Quizzes retrieved successfully
+ */
+router.get('/', optionalAuth, getAllQuizzes)
 
 /**
  * @swagger
@@ -18,8 +38,6 @@ router.use(protect)
  *   get:
  *     summary: Get quizzes for a module
  *     tags: [Quiz]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: moduleId
@@ -30,7 +48,7 @@ router.use(protect)
  *       200:
  *         description: Quizzes retrieved successfully
  */
-router.get('/modules/:moduleId', getQuizzes)
+router.get('/modules/:moduleId', optionalAuth, getQuizzes)
 
 /**
  * @swagger
@@ -52,7 +70,7 @@ router.get('/modules/:moduleId', getQuizzes)
  *       404:
  *         description: Quiz not found
  */
-router.get('/:id', getQuiz)
+router.get('/:id', optionalAuth, getQuiz)
 
 /**
  * @swagger
@@ -87,7 +105,7 @@ router.get('/:id', getQuiz)
  *       400:
  *         description: Bad request
  */
-router.post('/:id/submit', submitQuiz)
+router.post('/:id/submit', optionalAuth, submitQuiz)
 
 /**
  * @swagger
@@ -109,6 +127,6 @@ router.post('/:id/submit', submitQuiz)
  *       404:
  *         description: Quiz results not found
  */
-router.get('/:id/results', getQuizResults)
+router.get('/:id/results', protect, getQuizResults)
 
 export default router
