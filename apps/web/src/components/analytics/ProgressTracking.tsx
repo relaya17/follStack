@@ -274,16 +274,22 @@ export function ProgressTracking({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+      <div className="rounded-xl bg-white p-4 shadow-lg sm:p-6 dark:bg-gray-800">
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <h2 className="text-xl font-bold text-gray-900 sm:text-2xl dark:text-white">
             מעקב התקדמות
           </h2>
-          <div className="flex items-center space-x-3 rtl:space-x-reverse">
+          <div className="flex flex-wrap items-center gap-3">
+            <label htmlFor="progress-period" className="sr-only">
+              בחירת תקופה
+            </label>
             <select
+              id="progress-period"
               value={selectedPeriod}
-              onChange={(e) => setSelectedPeriod(e.target.value as 'week' | 'month' | 'year')}
-              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+              onChange={(e) =>
+                setSelectedPeriod(e.target.value as 'week' | 'month' | 'quarter' | 'year')
+              }
+              className="rounded-lg border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
             >
               <option value="week">שבוע אחרון</option>
               <option value="month">חודש אחרון</option>
@@ -291,33 +297,45 @@ export function ProgressTracking({
               <option value="year">שנה</option>
             </select>
             <button
+              type="button"
               onClick={loadProgressData}
               disabled={isLoading}
-              className="p-2 rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200 transition-colors disabled:opacity-50"
+              aria-label="רענן נתונים"
+              aria-busy={isLoading}
+              className="rounded-lg bg-blue-100 p-2 text-blue-600 transition-colors hover:bg-blue-200 focus-visible:ring-2 focus-visible:ring-primary-500 disabled:opacity-50 dark:bg-blue-900/40 dark:text-blue-200"
             >
-              <RefreshCw className={`h-5 w-5 ${isLoading ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`h-5 w-5 ${isLoading ? 'animate-spin' : ''}`} aria-hidden="true" />
             </button>
           </div>
         </div>
 
         {/* Navigation */}
-        <div className="flex space-x-1 rtl:space-x-reverse bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+        <div
+          className="flex gap-1 overflow-x-auto rounded-lg bg-gray-100 p-1 dark:bg-gray-700"
+          role="tablist"
+          aria-label="תצוגות התקדמות"
+        >
           {[
-            { id: 'overview', label: 'סקירה כללית', icon: BarChart3 },
-            { id: 'detailed', label: 'ניתוח מפורט', icon: PieChart },
-            { id: 'comparison', label: 'השוואה', icon: TrendingUp }
-          ].map(tab => (
+            { id: 'overview' as const, label: 'סקירה כללית', icon: BarChart3 },
+            { id: 'detailed' as const, label: 'ניתוח מפורט', icon: PieChart },
+            { id: 'comparison' as const, label: 'השוואה', icon: TrendingUp },
+          ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveView(tab.id as 'overview' | 'detailed' | 'comparison')}
-              className={`flex-1 flex items-center justify-center space-x-2 rtl:space-x-reverse px-4 py-2 rounded-md transition-colors ${
+              type="button"
+              role="tab"
+              id={`progress-tab-${tab.id}`}
+              aria-selected={activeView === tab.id}
+              aria-controls={`progress-panel-${tab.id}`}
+              onClick={() => setActiveView(tab.id)}
+              className={`flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 transition-colors sm:px-4 ${
                 activeView === tab.id
-                  ? 'bg-white dark:bg-gray-600 text-blue-600 shadow-sm'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                  ? 'bg-white text-blue-600 shadow-sm dark:bg-gray-600'
+                  : 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
               }`}
             >
-              <tab.icon className="h-4 w-4" />
-              <span className="text-sm font-medium">{tab.label}</span>
+              <tab.icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+              <span className="whitespace-nowrap text-xs font-medium sm:text-sm">{tab.label}</span>
             </button>
           ))}
         </div>
@@ -606,6 +624,21 @@ export function ProgressTracking({
         </div>
       </div>
 
+      {/* Comparison */}
+      {activeView === 'comparison' && (
+        <div
+          id="progress-panel-comparison"
+          role="tabpanel"
+          aria-labelledby="progress-tab-comparison"
+          className="rounded-xl bg-white p-6 shadow-lg dark:bg-gray-800"
+        >
+          <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-white">השוואת תקופות</h3>
+          <p className="text-gray-600 dark:text-gray-400">
+            השוואה מול תקופה קודמת תהיה זמינה כשיצטברו מספיק נתונים. בינתיים עקוב אחרי הסקירה והניתוח המפורט.
+          </p>
+        </div>
+      )}
+
       {/* Export Modal */}
       <AnimatePresence>
         {showExportModal && (
@@ -613,48 +646,57 @@ export function ProgressTracking({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
+            role="presentation"
+            onClick={() => setShowExportModal(false)}
           >
             <motion.div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="export-dialog-title"
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.9 }}
-              className="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-md w-full"
+              className="w-full max-w-md rounded-2xl bg-white p-6 dark:bg-gray-800"
+              onClick={(e) => e.stopPropagation()}
             >
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              <h3 id="export-dialog-title" className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
                 ייצוא נתונים
               </h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-6">
+              <p className="mb-6 text-gray-600 dark:text-gray-400">
                 בחר את הפורמט לייצוא נתוני ההתקדמות שלך
               </p>
               
               <div className="space-y-3">
                 <button
+                  type="button"
                   onClick={() => {
                     exportData()
                     setShowExportModal(false)
                   }}
-                  className="w-full flex items-center justify-center space-x-2 rtl:space-x-reverse px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-3 text-white transition-colors hover:bg-blue-700"
                 >
-                  <Download className="h-5 w-5" />
+                  <Download className="h-5 w-5" aria-hidden="true" />
                   <span>JSON (פורמט מלא)</span>
                 </button>
                 
                 <button
+                  type="button"
                   onClick={() => {
-                    // Export CSV
-                    const csvData = sessions.map(session => ({
+                    if (sessions.length === 0) {
+                      setShowExportModal(false)
+                      return
+                    }
+                    const csvData = sessions.map((session) => ({
                       date: new Date(session.startTime).toISOString().split('T')[0],
                       lesson: session.lessonTitle,
                       duration: session.duration,
                       score: Math.round(session.score * 100),
-                      completed: session.completed ? 'כן' : 'לא'
+                      completed: session.completed ? 'כן' : 'לא',
                     }))
                     
-                    const csv = [
-                      Object.keys(csvData[0]).join(','),
-                      ...csvData.map(row => Object.values(row).join(','))
-                    ].join('\n')
+                    const header = Object.keys(csvData[0]!).join(',')
+                    const csv = [header, ...csvData.map((row) => Object.values(row).join(','))].join('\n')
                     
                     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
                     const url = URL.createObjectURL(blob)
@@ -666,16 +708,17 @@ export function ProgressTracking({
                     
                     setShowExportModal(false)
                   }}
-                  className="w-full flex items-center justify-center space-x-2 rtl:space-x-reverse px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                  className="flex w-full items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-3 text-white transition-colors hover:bg-green-700"
                 >
-                  <Download className="h-5 w-5" />
+                  <Download className="h-5 w-5" aria-hidden="true" />
                   <span>CSV (טבלה)</span>
                 </button>
               </div>
               
               <button
+                type="button"
                 onClick={() => setShowExportModal(false)}
-                className="w-full mt-4 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+                className="mt-4 w-full px-4 py-2 text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
               >
                 ביטול
               </button>

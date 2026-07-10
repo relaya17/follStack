@@ -1,7 +1,8 @@
+import { AuthRequest } from '@/middleware/auth'
 import { Request, Response, NextFunction } from 'express'
 import crypto from 'crypto'
 import jwt from 'jsonwebtoken'
-import { User } from '@/models/User'
+import { IUser, User } from '@/models/User'
 import { AppError } from '@/middleware/errorHandler'
 import { logger } from '@/utils/logger'
 import { sendEmail } from '@/utils/sendEmail'
@@ -17,9 +18,9 @@ const generateToken = (id: string): string => {
 }
 
 // Send token response
-const sendTokenResponse = (user: any, statusCode: number, res: Response): void => {
+const sendTokenResponse = (user: IUser, statusCode: number, res: Response): void => {
     // Create token
-    const token = generateToken(user._id)
+    const token = generateToken(String(user._id))
 
     const options = {
         expires: new Date(
@@ -167,9 +168,9 @@ export const logout = async (req: Request, res: Response, next: NextFunction): P
  *     summary: Get current user
  *     tags: [Authentication]
  */
-export const getMe = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const getMe = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const user = await User.findById(req.user.id)
+        const user = await User.findById(req.user!.id)
 
         res.status(200).json({
             success: true,
@@ -187,9 +188,9 @@ export const getMe = async (req: any, res: Response, next: NextFunction): Promis
  *     summary: Update user password
  *     tags: [Authentication]
  */
-export const updatePassword = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const updatePassword = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const user = await User.findById(req.user.id).select('+password')
+        const user = await User.findById(req.user!.id).select('+password')
 
         if (!user) {
             throw new AppError('משתמש לא נמצא', 404)

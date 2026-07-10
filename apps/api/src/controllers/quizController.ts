@@ -1,3 +1,4 @@
+import { AuthRequest } from '@/middleware/auth'
 import { Request, Response, NextFunction } from 'express'
 import { AppError } from '@/middleware/errorHandler'
 
@@ -113,7 +114,7 @@ export const getQuiz = async (req: Request, res: Response, next: NextFunction): 
  *     summary: Submit quiz answers
  *     tags: [Quiz]
  */
-export const submitQuiz = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const submitQuiz = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { id } = req.params
         const { answers } = req.body
@@ -126,7 +127,7 @@ export const submitQuiz = async (req: any, res: Response, next: NextFunction): P
         // For now, we'll return a mock response
         const result = {
             quizId: id,
-            userId: req.user.id,
+            userId: req.user!.id,
             answers,
             score: 85,
             totalQuestions: 3,
@@ -152,7 +153,7 @@ export const submitQuiz = async (req: any, res: Response, next: NextFunction): P
  *     summary: Get quiz results
  *     tags: [Quiz]
  */
-export const getQuizResults = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const getQuizResults = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { id } = req.params
 
@@ -160,7 +161,7 @@ export const getQuizResults = async (req: any, res: Response, next: NextFunction
         // For now, we'll return a mock response
         const results = {
             quizId: id,
-            userId: req.user.id,
+            userId: req.user!.id,
             score: 85,
             totalQuestions: 3,
             numCorrectAnswers: 2,

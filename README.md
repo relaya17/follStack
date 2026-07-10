@@ -34,7 +34,10 @@ pnpm dev:api      # API only
 pnpm build:all
 pnpm typecheck
 pnpm lint
+pnpm --filter @follstack/api seed   # populate MongoDB with real learning modules
 ```
+
+The learning pages (`/learning`, `/learning/[id]`) fetch live from the API — without a MongoDB connection (`SKIP_DB=false` + `MONGODB_URI` set) and a run of `pnpm --filter @follstack/api seed`, the learning page will show an empty/error state instead of modules.
 
 ## API
 

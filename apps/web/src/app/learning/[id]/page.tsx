@@ -2,44 +2,45 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { BookOpen, ArrowRight } from 'lucide-react'
 import { Card } from '@follstack/ui'
+import { apiJson } from '@/lib/api'
 
-const MODULES: Record<
-  string,
-  { title: string; description: string; lessons: string[]; nextPractice?: string }
-> = {
-  'html-css': {
-    title: 'HTML & CSS',
-    description: 'יסודות Frontend: מבנה דף, עיצוב, Flexbox ו-Grid.',
-    lessons: ['HTML5 סמנטי', 'CSS Box Model', 'Flexbox', 'CSS Grid', 'Responsive Design'],
-    nextPractice: 'html-landing',
-  },
-  javascript: {
-    title: 'JavaScript',
-    description: 'ES6+, Async/Await, Modules ופונקציות מודרניות.',
-    lessons: ['משתנים וטיפוסים', 'פונקציות', 'מערכים ואובייקטים', 'Promises', 'DOM'],
-    nextPractice: 'js-array',
-  },
-  react: {
-    title: 'React',
-    description: 'Components, Hooks ו-State Management.',
-    lessons: ['JSX וקומפוננטות', 'useState', 'useEffect', 'Props', 'רשימות ומפתחות'],
-    nextPractice: 'react-counter',
-  },
-  nodejs: {
-    title: 'Node.js',
-    description: 'Backend עם Express, API ו-Authentication.',
-    lessons: ['מודולים', 'Express בסיסי', 'REST API', 'Middleware', 'JWT Intro'],
-  },
-  mongodb: {
-    title: 'MongoDB',
-    description: 'NoSQL, Schemas, Queries ו-Aggregation.',
-    lessons: ['Documents', 'CRUD', 'Indexes', 'Mongoose', 'Aggregation'],
-  },
-  typescript: {
-    title: 'TypeScript',
-    description: 'טיפוסים, Interfaces ו-Generics.',
-    lessons: ['Basic Types', 'Interfaces', 'Union Types', 'Generics', 'עם React'],
-  },
+interface ApiLesson {
+  _id: string
+  title: string
+  description: string
+  type: 'video' | 'text' | 'interactive' | 'quiz'
+  duration: number
+  order: number
+}
+
+interface ApiModule {
+  _id: string
+  slug: string
+  title: string
+  description: string
+  duration: string
+  lessons: ApiLesson[]
+  learningObjectives: string[]
+  prerequisites: string[]
+}
+
+interface ModuleResponse {
+  success: boolean
+  data: ApiModule
+}
+
+// Practice module isn't wired to the API yet — this is a temporary manual mapping.
+const NEXT_PRACTICE: Record<string, string> = {
+  'html-css': 'html-landing',
+  javascript: 'js-array',
+  react: 'react-counter',
+}
+
+const TYPE_LABELS: Record<ApiLesson['type'], string> = {
+  video: 'וידאו',
+  text: 'קריאה',
+  interactive: 'תרגול',
+  quiz: 'חידון',
 }
 
 export default async function LearningModulePage({
@@ -48,8 +49,13 @@ export default async function LearningModulePage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const learningModule = MODULES[id]
+  const res = await apiJson<ModuleResponse>(`/api/learning/modules/${id}`)
+  const learningModule = res?.success ? res.data : null
+
   if (!learningModule) notFound()
+
+  const sortedLessons = [...learningModule.lessons].sort((a, b) => a.order - b.order)
+  const nextPractice = NEXT_PRACTICE[learningModule.slug]
 
   return (
     <div className="page-shell">
@@ -69,18 +75,36 @@ export default async function LearningModulePage({
         <p className="page-subtitle">{learningModule.description}</p>
       </header>
 
+      {learningModule.learningObjectives?.length > 0 && (
+        <Card className="mb-8 p-6">
+          <h2 className="section-title mb-4">מה תלמד/י במודול</h2>
+          <ul className="space-y-2 text-right">
+            {learningModule.learningObjectives.map((goal) => (
+              <li key={goal} className="text-slate-700 dark:text-slate-200">
+                • {goal}
+              </li>
+            ))}
+          </ul>
+        </Card>
+      )}
+
       <Card className="mb-8 p-6">
         <h2 className="section-title mb-4">שיעורים במודול</h2>
         <ol className="space-y-3 text-right">
-          {learningModule.lessons.map((lesson, index) => (
+          {sortedLessons.map((lesson, index) => (
             <li
-              key={lesson}
-              className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-900"
+              key={lesson._id}
+              className="flex flex-col gap-1 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-900 sm:flex-row sm:items-center sm:justify-between"
             >
-              <span className="font-medium text-slate-900 dark:text-white">
-                {index + 1}. {lesson}
+              <div>
+                <span className="font-medium text-slate-900 dark:text-white">
+                  {index + 1}. {lesson.title}
+                </span>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{lesson.description}</p>
+              </div>
+              <span className="whitespace-nowrap text-xs font-semibold text-slate-500">
+                {TYPE_LABELS[lesson.type]} · {lesson.duration} דק&apos;
               </span>
-              <span className="text-xs font-semibold text-slate-500">שיעור</span>
             </li>
           ))}
         </ol>
@@ -93,9 +117,9 @@ export default async function LearningModulePage({
         >
           שאל את AI Mentor על המודול
         </Link>
-        {learningModule.nextPractice ? (
+        {nextPractice ? (
           <Link
-            href={`/practice/${learningModule.nextPractice}`}
+            href={`/practice/${nextPractice}`}
             className="inline-flex items-center gap-2 rounded-2xl border border-slate-300 bg-white px-6 py-3 font-bold text-slate-800 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
           >
             עבור לתרגול

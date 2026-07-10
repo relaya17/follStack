@@ -1,3 +1,4 @@
+import { AuthRequest } from '@/middleware/auth'
 import { Request, Response, NextFunction } from 'express'
 import { AppError } from '@/middleware/errorHandler'
 
@@ -86,7 +87,7 @@ export const getForums = async (req: Request, res: Response, next: NextFunction)
  *     summary: Create a new forum
  *     tags: [Community]
  */
-export const createForum = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const createForum = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { title, description, category } = req.body
 
@@ -103,9 +104,9 @@ export const createForum = async (req: any, res: Response, next: NextFunction): 
       category,
       postCount: 0,
       createdBy: {
-        id: req.user.id,
-        name: req.user.name,
-        avatar: req.user.avatar
+        id: req.user!.id,
+        name: req.user!.name,
+        avatar: req.user!.avatar
       },
       createdAt: new Date().toISOString()
     }
@@ -219,7 +220,7 @@ export const getForumPosts = async (req: Request, res: Response, next: NextFunct
  *     summary: Create a new forum post
  *     tags: [Community]
  */
-export const createForumPost = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const createForumPost = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params
     const { title, content } = req.body
@@ -236,9 +237,9 @@ export const createForumPost = async (req: any, res: Response, next: NextFunctio
       title,
       content,
       author: {
-        id: req.user.id,
-        name: req.user.name,
-        avatar: req.user.avatar
+        id: req.user!.id,
+        name: req.user!.name,
+        avatar: req.user!.avatar
       },
       replies: 0,
       views: 0,
@@ -312,7 +313,7 @@ export const getForumPost = async (req: Request, res: Response, next: NextFuncti
  *     summary: Update a forum post
  *     tags: [Community]
  */
-export const updateForumPost = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const updateForumPost = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params
     const updateData = req.body
@@ -341,7 +342,7 @@ export const updateForumPost = async (req: any, res: Response, next: NextFunctio
  *     summary: Delete a forum post
  *     tags: [Community]
  */
-export const deleteForumPost = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const deleteForumPost = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params
 
@@ -363,7 +364,7 @@ export const deleteForumPost = async (req: any, res: Response, next: NextFunctio
  *     summary: Get chat messages for a room
  *     tags: [Community]
  */
-export const getChatMessages = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const getChatMessages = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { roomId } = req.params
     const { limit = 50 } = req.query
@@ -412,7 +413,7 @@ export const getChatMessages = async (req: any, res: Response, next: NextFunctio
  *     summary: Send a chat message
  *     tags: [Community]
  */
-export const sendChatMessage = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const sendChatMessage = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { roomId } = req.params
     const { message } = req.body
@@ -428,9 +429,9 @@ export const sendChatMessage = async (req: any, res: Response, next: NextFunctio
       roomId,
       message,
       author: {
-        id: req.user.id,
-        name: req.user.name,
-        avatar: req.user.avatar
+        id: req.user!.id,
+        name: req.user!.name,
+        avatar: req.user!.avatar
       },
       createdAt: new Date().toISOString()
     }

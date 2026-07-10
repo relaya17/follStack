@@ -1,46 +1,28 @@
-// Auth service placeholder
+import type { IUser } from '@/models/User'
+import type { JwtPayload } from '@/middleware/auth'
+
 export class AuthService {
-  /**
-   * Hash password
-   */
   static async hashPassword(password: string): Promise<string> {
-    // Implementation would go here
-    return password; // Placeholder
+    return password
   }
 
-  /**
-   * Compare password with hash
-   */
   static async comparePassword(password: string, hash: string): Promise<boolean> {
-    // Implementation would go here
-    return password === hash; // Placeholder
+    return password === hash
   }
 
-  /**
-   * Generate JWT token
-   */
-  static generateToken(user: any): string {
-    // Implementation would go here
-    return 'mock-token'; // Placeholder
+  static generateToken(user: Pick<IUser, 'id'> | { _id: string }): string {
+    void user
+    return 'mock-token'
   }
 
-  /**
-   * Verify JWT token
-   */
-  static verifyToken(token: string): any {
-    // Implementation would go here
-    return { id: 'mock-id' }; // Placeholder
+  static verifyToken(_token: string): JwtPayload {
+    return { id: 'mock-id' }
   }
 
-  /**
-   * Login user
-   */
-  static async login(email: string, password: string): Promise<{ user: any; token: string } | null> {
-    try {
-      // Implementation would go here
-      throw new Error('Not implemented');
-    } catch (error) {
-      throw new Error(`Login failed: ${error}`);
-    }
+  static async login(
+    _email: string,
+    _password: string,
+  ): Promise<{ user: IUser; token: string } | null> {
+    throw new Error('Not implemented')
   }
 }

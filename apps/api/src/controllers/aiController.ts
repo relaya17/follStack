@@ -1,3 +1,4 @@
+import { AuthRequest } from '@/middleware/auth'
 import { Response, NextFunction } from 'express'
 import OpenAI from 'openai'
 import { AppError } from '@/middleware/errorHandler'
@@ -35,7 +36,7 @@ function buildFallbackAnswer(question: string, context?: string, code?: string):
  *     summary: Ask AI mentor a question
  *     tags: [AI Mentor]
  */
-export const askQuestion = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const askQuestion = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { question, context, code } = req.body
 
@@ -97,7 +98,7 @@ export const askQuestion = async (req: any, res: Response, next: NextFunction): 
   }
 }
 
-export const analyzeLearningPattern = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const analyzeLearningPattern = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { userId = 'demo-user', currentLesson = 'intro' } = req.body || {}
 
@@ -137,7 +138,7 @@ export const analyzeLearningPattern = async (req: any, res: Response, next: Next
   }
 }
 
-export const generateAdaptiveContent = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const generateAdaptiveContent = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { currentLesson = 'intro', profile } = req.body || {}
     const difficulty =
@@ -174,7 +175,7 @@ export const generateAdaptiveContent = async (req: any, res: Response, next: Nex
  *     summary: Get AI chat history
  *     tags: [AI Mentor]
  */
-export const getChatHistory = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const getChatHistory = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { limit = 50 } = req.query
 
@@ -212,7 +213,7 @@ export const getChatHistory = async (req: any, res: Response, next: NextFunction
  *     summary: Clear AI chat history
  *     tags: [AI Mentor]
  */
-export const clearChatHistory = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const clearChatHistory = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     // This would typically clear from a ChatHistory model
     // For now, we'll return a mock response
@@ -232,7 +233,7 @@ export const clearChatHistory = async (req: any, res: Response, next: NextFuncti
  *     summary: Get AI code review
  *     tags: [AI Mentor]
  */
-export const getCodeReview = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const getCodeReview = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { code, language, context } = req.body
 
@@ -278,7 +279,7 @@ export const getCodeReview = async (req: any, res: Response, next: NextFunction)
         ]
       },
       timestamp: new Date().toISOString(),
-      userId: req.user.id
+      userId: req.user!.id
     }
 
     res.status(200).json({
@@ -297,7 +298,7 @@ export const getCodeReview = async (req: any, res: Response, next: NextFunction)
  *     summary: Get AI-generated interview questions
  *     tags: [AI Mentor]
  */
-export const getInterviewQuestions = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const getInterviewQuestions = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { topic, level, count = 5 } = req.body
 
@@ -355,7 +356,7 @@ export const getInterviewQuestions = async (req: any, res: Response, next: NextF
  *     summary: Get AI learning recommendations
  *     tags: [AI Mentor]
  */
-export const getLearningRecommendations = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const getLearningRecommendations = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { type = 'modules' } = req.query
 

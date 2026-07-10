@@ -1,3 +1,4 @@
+import { AuthRequest } from '@/middleware/auth'
 import { Request, Response, NextFunction } from 'express'
 import { AppError } from '@/middleware/errorHandler'
 
@@ -8,7 +9,7 @@ import { AppError } from '@/middleware/errorHandler'
  *     summary: Get available metaverse rooms
  *     tags: [Metaverse Classroom]
  */
-export const getRooms = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const getRooms = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         // This would typically fetch from database
         // const rooms = await MetaverseRoom.find({ isActive: true })
@@ -70,7 +71,7 @@ export const getRooms = async (req: any, res: Response, next: NextFunction): Pro
  *     summary: Create a new metaverse room
  *     tags: [Metaverse Classroom]
  */
-export const createRoom = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const createRoom = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { name, description, maxParticipants = 50, isPrivate = false, environment = 'classroom' } = req.body
 
@@ -93,7 +94,7 @@ export const createRoom = async (req: any, res: Response, next: NextFunction): P
             currentParticipants: 0,
             isPrivate,
             environment,
-            createdBy: req.user.id,
+            createdBy: req.user!.id,
             createdAt: new Date(),
             isActive: true,
             participants: [],
@@ -119,7 +120,7 @@ export const createRoom = async (req: any, res: Response, next: NextFunction): P
  *     summary: Get room details
  *     tags: [Metaverse Classroom]
  */
-export const getRoomDetails = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const getRoomDetails = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { roomId } = req.params
 
@@ -190,7 +191,7 @@ export const getRoomDetails = async (req: any, res: Response, next: NextFunction
  *     summary: Join a metaverse room
  *     tags: [Metaverse Classroom]
  */
-export const joinRoom = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const joinRoom = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { roomId } = req.params
         const { avatar } = req.body
@@ -206,8 +207,8 @@ export const joinRoom = async (req: any, res: Response, next: NextFunction): Pro
 
         // Create participant
         const participant = {
-            id: req.user.id,
-            name: req.user.name,
+            id: req.user!.id,
+            name: req.user!.name,
             avatar: avatar || {
                 skin: 'light',
                 hair: 'brown',
@@ -247,13 +248,13 @@ export const joinRoom = async (req: any, res: Response, next: NextFunction): Pro
  *     summary: Leave a metaverse room
  *     tags: [Metaverse Classroom]
  */
-export const leaveRoom = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const leaveRoom = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { roomId } = req.params
 
         // This would typically update database
         // await MetaverseRoom.findByIdAndUpdate(roomId, {
-        //   $pull: { participants: { id: req.user.id } },
+        //   $pull: { participants: { id: req.user!.id } },
         //   $inc: { currentParticipants: -1 }
         // })
 
@@ -273,7 +274,7 @@ export const leaveRoom = async (req: any, res: Response, next: NextFunction): Pr
  *     summary: Update user avatar
  *     tags: [Metaverse Classroom]
  */
-export const updateAvatar = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const updateAvatar = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { avatar } = req.body
 
@@ -282,12 +283,12 @@ export const updateAvatar = async (req: any, res: Response, next: NextFunction):
         }
 
         // This would typically update user's avatar in database
-        // await User.findByIdAndUpdate(req.user.id, { avatar })
+        // await User.findByIdAndUpdate(req.user!.id, { avatar })
 
         res.status(200).json({
             success: true,
             data: {
-                userId: req.user.id,
+                userId: req.user!.id,
                 avatar,
                 updatedAt: new Date()
             }
@@ -304,7 +305,7 @@ export const updateAvatar = async (req: any, res: Response, next: NextFunction):
  *     summary: Send message to room
  *     tags: [Metaverse Classroom]
  */
-export const sendMessage = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const sendMessage = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { roomId } = req.params
         const { content, type = 'text' } = req.body
@@ -323,8 +324,8 @@ export const sendMessage = async (req: any, res: Response, next: NextFunction): 
         const message = {
             id: Date.now().toString(),
             roomId,
-            senderId: req.user.id,
-            senderName: req.user.name,
+            senderId: req.user!.id,
+            senderName: req.user!.name,
             content,
             type,
             timestamp: new Date()
@@ -349,7 +350,7 @@ export const sendMessage = async (req: any, res: Response, next: NextFunction): 
  *     summary: Get room messages
  *     tags: [Metaverse Classroom]
  */
-export const getMessages = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const getMessages = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { roomId } = req.params
         const { limit = 50 } = req.query
@@ -398,7 +399,7 @@ export const getMessages = async (req: any, res: Response, next: NextFunction): 
  *     summary: Raise or lower hand
  *     tags: [Metaverse Classroom]
  */
-export const raiseHand = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const raiseHand = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { roomId } = req.params
         const { raised } = req.body
@@ -409,14 +410,14 @@ export const raiseHand = async (req: any, res: Response, next: NextFunction): Pr
 
         // This would typically update participant's hand status in database
         // await MetaverseRoom.findOneAndUpdate(
-        //   { id: roomId, 'participants.id': req.user.id },
+        //   { id: roomId, 'participants.id': req.user!.id },
         //   { $set: { 'participants.$.isHandRaised': raised } }
         // )
 
         res.status(200).json({
             success: true,
             data: {
-                userId: req.user.id,
+                userId: req.user!.id,
                 roomId,
                 isHandRaised: raised,
                 timestamp: new Date()
@@ -434,7 +435,7 @@ export const raiseHand = async (req: any, res: Response, next: NextFunction): Pr
  *     summary: Start or stop screen sharing
  *     tags: [Metaverse Classroom]
  */
-export const shareScreen = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const shareScreen = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { roomId } = req.params
         const { sharing } = req.body
@@ -445,14 +446,14 @@ export const shareScreen = async (req: any, res: Response, next: NextFunction): 
 
         // This would typically update participant's screen share status in database
         // await MetaverseRoom.findOneAndUpdate(
-        //   { id: roomId, 'participants.id': req.user.id },
+        //   { id: roomId, 'participants.id': req.user!.id },
         //   { $set: { 'participants.$.isScreenSharing': sharing } }
         // )
 
         res.status(200).json({
             success: true,
             data: {
-                userId: req.user.id,
+                userId: req.user!.id,
                 roomId,
                 isScreenSharing: sharing,
                 timestamp: new Date()

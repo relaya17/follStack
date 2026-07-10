@@ -1,50 +1,22 @@
-// User service placeholder
+import type { IUser } from '@/models/User'
+
+type UserCreateInput = Partial<Pick<IUser, 'name' | 'email' | 'password' | 'role'>>
+type UserUpdateInput = Partial<Pick<IUser, 'name' | 'bio' | 'avatar' | 'skills' | 'experience'>>
+
 export class UserService {
-  /**
-   * Get user by ID
-   */
-  static async getUserById(id: string): Promise<any> {
-    try {
-      // Implementation would go here
-      return null;
-    } catch (error) {
-      throw new Error(`Failed to get user: ${error}`);
-    }
+  static async getUserById(_id: string): Promise<IUser | null> {
+    return null
   }
 
-  /**
-   * Create new user
-   */
-  static async createUser(userData: any): Promise<any> {
-    try {
-      // Implementation would go here
-      throw new Error('Not implemented');
-    } catch (error) {
-      throw new Error(`Failed to create user: ${error}`);
-    }
+  static async createUser(_userData: UserCreateInput): Promise<IUser> {
+    throw new Error('Not implemented')
   }
 
-  /**
-   * Update user
-   */
-  static async updateUser(id: string, userData: any): Promise<any> {
-    try {
-      // Implementation would go here
-      return null;
-    } catch (error) {
-      throw new Error(`Failed to update user: ${error}`);
-    }
+  static async updateUser(_id: string, _userData: UserUpdateInput): Promise<IUser | null> {
+    return null
   }
 
-  /**
-   * Delete user
-   */
-  static async deleteUser(id: string): Promise<boolean> {
-    try {
-      // Implementation would go here
-      return false;
-    } catch (error) {
-      throw new Error(`Failed to delete user: ${error}`);
-    }
+  static async deleteUser(_id: string): Promise<boolean> {
+    return false
   }
 }

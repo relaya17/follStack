@@ -1,3 +1,4 @@
+import { AuthRequest } from '@/middleware/auth'
 import { Request, Response, NextFunction } from 'express'
 import { User } from '@/models/User'
 import { AppError } from '@/middleware/errorHandler'
@@ -9,9 +10,9 @@ import { AppError } from '@/middleware/errorHandler'
  *     summary: Get user profile
  *     tags: [User]
  */
-export const getProfile = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const getProfile = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const user = await User.findById(req.user.id)
+        const user = await User.findById(req.user!.id)
 
         res.status(200).json({
             success: true,
@@ -29,7 +30,7 @@ export const getProfile = async (req: any, res: Response, next: NextFunction): P
  *     summary: Update user profile
  *     tags: [User]
  */
-export const updateProfile = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const updateProfile = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const fieldsToUpdate = {
             name: req.body.name,
@@ -53,7 +54,7 @@ export const updateProfile = async (req: any, res: Response, next: NextFunction)
             }
         })
 
-        const user = await User.findByIdAndUpdate(req.user.id, fieldsToUpdate, {
+        const user = await User.findByIdAndUpdate(req.user!.id, fieldsToUpdate, {
             new: true,
             runValidators: true
         })
@@ -74,7 +75,7 @@ export const updateProfile = async (req: any, res: Response, next: NextFunction)
  *     summary: Get user learning progress
  *     tags: [User]
  */
-export const getLearningProgress = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const getLearningProgress = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         // This would typically come from a separate Progress model
         // For now, we'll return a mock response
@@ -113,7 +114,7 @@ export const getLearningProgress = async (req: any, res: Response, next: NextFun
  *     summary: Update lesson progress
  *     tags: [User]
  */
-export const updateLessonProgress = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const updateLessonProgress = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { moduleId, lessonId, completed } = req.body
 
@@ -143,7 +144,7 @@ export const updateLessonProgress = async (req: any, res: Response, next: NextFu
  *     summary: Get user statistics
  *     tags: [User]
  */
-export const getUserStats = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const getUserStats = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         // This would typically come from a separate Stats model
         // For now, we'll return a mock response
@@ -173,7 +174,7 @@ export const getUserStats = async (req: any, res: Response, next: NextFunction):
  *     summary: Get user projects
  *     tags: [User]
  */
-export const getUserProjects = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const getUserProjects = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         // This would typically come from a separate Project model
         // For now, we'll return a mock response
@@ -210,7 +211,7 @@ export const getUserProjects = async (req: any, res: Response, next: NextFunctio
  *     summary: Get user badges
  *     tags: [User]
  */
-export const getUserBadges = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const getUserBadges = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         // This would typically come from a separate Badge model
         // For now, we'll return a mock response

@@ -1,3 +1,4 @@
+import { AuthRequest } from '@/middleware/auth'
 import { Request, Response, NextFunction } from 'express'
 import { AppError } from '@/middleware/errorHandler'
 import OpenAI from 'openai'
@@ -28,7 +29,7 @@ const SUPPORTED_LANGUAGES = [
  *     summary: Translate text using neural translation
  *     tags: [Neural Translation]
  */
-export const translateText = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const translateText = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { text, sourceLanguage, targetLanguage, context = 'general', realTime = false } = req.body
 
@@ -84,7 +85,7 @@ export const translateText = async (req: any, res: Response, next: NextFunction)
     // Save to history
     const translation = {
       id: Date.now().toString(),
-      userId: req.user.id,
+      userId: req.user!.id,
       originalText: text,
       translatedText: translatedText,
       sourceLanguage: sourceLanguage,
@@ -123,7 +124,7 @@ export const translateText = async (req: any, res: Response, next: NextFunction)
  *     summary: Detect language of text
  *     tags: [Neural Translation]
  */
-export const detectLanguage = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const detectLanguage = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { text } = req.body
 
@@ -199,12 +200,12 @@ export const getSupportedLanguages = async (req: Request, res: Response, next: N
  *     summary: Get translation history
  *     tags: [Neural Translation]
  */
-export const getTranslationHistory = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const getTranslationHistory = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { limit = 50 } = req.query
 
     // This would typically fetch from database
-    // const history = await Translation.find({ userId: req.user.id })
+    // const history = await Translation.find({ userId: req.user!.id })
     //   .sort({ timestamp: -1 })
     //   .limit(parseInt(limit as string))
 
@@ -247,10 +248,10 @@ export const getTranslationHistory = async (req: any, res: Response, next: NextF
  *     summary: Clear translation history
  *     tags: [Neural Translation]
  */
-export const clearTranslationHistory = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const clearTranslationHistory = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     // This would typically delete from database
-    // await Translation.deleteMany({ userId: req.user.id })
+    // await Translation.deleteMany({ userId: req.user!.id })
 
     res.status(200).json({
       success: true,

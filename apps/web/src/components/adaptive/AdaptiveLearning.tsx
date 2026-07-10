@@ -290,10 +290,14 @@ export function AdaptiveLearning({
             פרופיל למידה אדפטיבי
           </h3>
           <button
+            type="button"
             onClick={() => setShowInsights(!showInsights)}
-            className="p-2 rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200 transition-colors"
+            className="rounded-lg bg-blue-100 p-2 text-blue-600 transition-colors hover:bg-blue-200 focus-visible:ring-2 focus-visible:ring-primary-500 dark:bg-blue-900/40 dark:text-blue-200"
+            aria-label={showInsights ? 'הסתר המלצות' : 'הצג המלצות'}
+            aria-expanded={showInsights}
+            aria-controls="adaptive-insights-panel"
           >
-            <Lightbulb className="h-5 w-5" />
+            <Lightbulb className="h-5 w-5" aria-hidden="true" />
           </button>
         </div>
 
@@ -380,10 +384,13 @@ export function AdaptiveLearning({
       <AnimatePresence>
         {showInsights && (
           <motion.div
+            id="adaptive-insights-panel"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg"
+            className="rounded-xl bg-white p-4 shadow-lg sm:p-6 dark:bg-gray-800"
+            role="region"
+            aria-label="המלצות AI"
           >
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
               המלצות AI
@@ -400,11 +407,22 @@ export function AdaptiveLearning({
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center space-x-2 rtl:space-x-reverse mb-2">
-                        <div className={`w-2 h-2 rounded-full ${
+                        <div
+                          className={`h-2 w-2 rounded-full ${
                           rec.type === 'difficulty' ? 'bg-blue-500' :
                           rec.type === 'style' ? 'bg-green-500' :
                           rec.type === 'pace' ? 'bg-yellow-500' : 'bg-purple-500'
-                        }`} />
+                        }`}
+                          aria-label={
+                            rec.type === 'difficulty'
+                              ? 'המלצת רמת קושי'
+                              : rec.type === 'style'
+                                ? 'המלצת סגנון'
+                                : rec.type === 'pace'
+                                  ? 'המלצת קצב'
+                                  : 'המלצת חזרה'
+                          }
+                        />
                         <span className="text-sm font-medium text-gray-900 dark:text-white">
                           {rec.message}
                         </span>
@@ -510,9 +528,13 @@ export function AdaptiveLearning({
 
       {/* Analysis Status */}
       {isAnalyzing && (
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-          <div className="flex items-center justify-center space-x-3 rtl:space-x-reverse">
-            <RefreshCw className="h-5 w-5 animate-spin text-blue-600" />
+        <div
+          className="rounded-xl bg-white p-6 shadow-lg dark:bg-gray-800"
+          role="status"
+          aria-live="polite"
+        >
+          <div className="flex items-center justify-center gap-3">
+            <RefreshCw className="h-5 w-5 animate-spin text-blue-600" aria-hidden="true" />
             <span className="text-gray-600 dark:text-gray-400">
               מנתח דפוסי למידה...
             </span>

@@ -1,3 +1,4 @@
+import { AuthRequest } from '@/middleware/auth'
 import { Request, Response, NextFunction } from 'express'
 import { User } from '@/models/User'
 import { Module } from '@/models/Module'
@@ -71,7 +72,7 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction):
     const { page = 1, limit = 10, role, search } = req.query
 
     // Build query
-    let query: any = {}
+    let query: Record<string, unknown> = {}
     if (role) {
       query.role = role
     }
@@ -193,7 +194,7 @@ export const getModules = async (req: Request, res: Response, next: NextFunction
   try {
     const { status } = req.query
 
-    let query: any = {}
+    let query: Record<string, unknown> = {}
     if (status === 'published') {
       query.isPublished = true
     } else if (status === 'draft') {
@@ -222,12 +223,12 @@ export const getModules = async (req: Request, res: Response, next: NextFunction
  *     summary: Create a new module
  *     tags: [Admin]
  */
-export const createModule = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const createModule = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const moduleData = {
       ...req.body,
-      createdBy: req.user.id,
-      updatedBy: req.user.id
+      createdBy: req.user!.id,
+      updatedBy: req.user!.id
     }
 
     const module = await Module.create(moduleData)
@@ -248,13 +249,13 @@ export const createModule = async (req: any, res: Response, next: NextFunction):
  *     summary: Update a module
  *     tags: [Admin]
  */
-export const updateModule = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const updateModule = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const module = await Module.findByIdAndUpdate(
       req.params.id,
       {
         ...req.body,
-        updatedBy: req.user.id
+        updatedBy: req.user!.id
       },
       {
         new: true,

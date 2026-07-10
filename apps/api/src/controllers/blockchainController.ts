@@ -1,10 +1,29 @@
+import { AuthRequest } from '@/middleware/auth'
 import { Request, Response, NextFunction } from 'express'
 import { AppError } from '@/middleware/errorHandler'
 import crypto from 'crypto'
 
 // Mock blockchain service - in production, this would integrate with actual blockchain
+interface CertificateInput {
+  userId?: string
+  courseId?: string
+  title?: string
+  recipientName?: string
+  moduleId?: string
+  moduleTitle?: string
+  moduleDescription?: string
+  recipient?: string
+  recipientEmail?: string
+  walletAddress?: string
+  completionData?: Record<string, unknown>
+  issueDate?: Date | string
+  issuer?: string
+  network?: string
+  [key: string]: unknown
+}
+
 class BlockchainService {
-    async generateCertificate(data: any) {
+    async generateCertificate(data: CertificateInput) {
         // Generate unique hash
         const hash = crypto.createHash('sha256')
             .update(JSON.stringify(data))
@@ -50,10 +69,10 @@ const blockchainService = new BlockchainService()
  *     summary: Get user's blockchain certificates
  *     tags: [Blockchain Certificates]
  */
-export const getCertificates = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const getCertificates = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         // This would typically fetch from database
-        // const certificates = await Certificate.find({ userId: req.user.id })
+        // const certificates = await Certificate.find({ userId: req.user!.id })
 
         // Mock response for development
         const certificates = [
@@ -62,7 +81,7 @@ export const getCertificates = async (req: any, res: Response, next: NextFunctio
                 title: 'HTML & CSS Fundamentals',
                 description: 'תעודת השלמה למודול HTML & CSS',
                 issuer: 'FullStack Learning Hub',
-                recipient: req.user.name,
+                recipient: req.user!.name,
                 issueDate: new Date('2024-01-15'),
                 expiryDate: new Date('2025-01-15'),
                 skills: ['HTML', 'CSS', 'Responsive Design'],
@@ -87,7 +106,7 @@ export const getCertificates = async (req: any, res: Response, next: NextFunctio
                 title: 'JavaScript Advanced',
                 description: 'תעודת השלמה למודול JavaScript מתקדם',
                 issuer: 'FullStack Learning Hub',
-                recipient: req.user.name,
+                recipient: req.user!.name,
                 issueDate: new Date('2024-02-20'),
                 skills: ['JavaScript', 'ES6+', 'Async Programming'],
                 level: 'advanced',
@@ -125,7 +144,7 @@ export const getCertificates = async (req: any, res: Response, next: NextFunctio
  *     summary: Generate a new blockchain certificate
  *     tags: [Blockchain Certificates]
  */
-export const generateCertificate = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const generateCertificate = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { moduleId, completionData, walletAddress, network } = req.body
 
@@ -150,8 +169,8 @@ export const generateCertificate = async (req: any, res: Response, next: NextFun
             moduleId,
             moduleTitle: moduleDetails.title,
             moduleDescription: moduleDetails.description,
-            recipient: req.user.name,
-            recipientEmail: req.user.email,
+            recipient: req.user!.name,
+            recipientEmail: req.user!.email,
             walletAddress,
             completionData,
             issueDate: new Date(),
@@ -168,7 +187,7 @@ export const generateCertificate = async (req: any, res: Response, next: NextFun
             title: moduleDetails.title,
             description: `תעודת השלמה למודול ${moduleDetails.title}`,
             issuer: 'FullStack Learning Hub',
-            recipient: req.user.name,
+            recipient: req.user!.name,
             issueDate: new Date(),
             expiryDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year
             skills: moduleDetails.skills || [],
@@ -237,12 +256,12 @@ export const verifyCertificate = async (req: Request, res: Response, next: NextF
  *     summary: Get certificate details
  *     tags: [Blockchain Certificates]
  */
-export const getCertificateDetails = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const getCertificateDetails = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { id } = req.params
 
         // This would typically fetch from database
-        // const certificate = await Certificate.findOne({ id, userId: req.user.id })
+        // const certificate = await Certificate.findOne({ id, userId: req.user!.id })
 
         // Mock response for development
         const certificate = {
@@ -250,7 +269,7 @@ export const getCertificateDetails = async (req: any, res: Response, next: NextF
             title: 'HTML & CSS Fundamentals',
             description: 'תעודת השלמה למודול HTML & CSS',
             issuer: 'FullStack Learning Hub',
-            recipient: req.user.name,
+            recipient: req.user!.name,
             issueDate: new Date('2024-01-15'),
             expiryDate: new Date('2025-01-15'),
             skills: ['HTML', 'CSS', 'Responsive Design'],
@@ -291,7 +310,7 @@ export const getCertificateDetails = async (req: any, res: Response, next: NextF
  *     summary: Download certificate as PDF
  *     tags: [Blockchain Certificates]
  */
-export const downloadCertificate = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const downloadCertificate = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { id } = req.params
 
@@ -317,7 +336,7 @@ export const downloadCertificate = async (req: any, res: Response, next: NextFun
  *     summary: Transfer certificate to another wallet
  *     tags: [Blockchain Certificates]
  */
-export const transferCertificate = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const transferCertificate = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { id } = req.params
         const { toAddress } = req.body
@@ -338,7 +357,7 @@ export const transferCertificate = async (req: any, res: Response, next: NextFun
             success: true,
             data: {
                 certificateId: id,
-                fromAddress: req.user.walletAddress,
+                fromAddress: String(req.user!.id),
                 toAddress,
                 transactionId: transferResult.transactionId,
                 blockNumber: transferResult.blockNumber,

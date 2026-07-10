@@ -1,4 +1,6 @@
+import { AuthRequest } from '@/middleware/auth'
 import { Request, Response, NextFunction } from 'express'
+import mongoose from 'mongoose'
 import { Module } from '@/models/Module'
 import { AppError } from '@/middleware/errorHandler'
 
@@ -14,7 +16,7 @@ export const getModules = async (req: Request, res: Response, next: NextFunction
     const { category, difficulty, search, featured } = req.query
 
     // Build query
-    let query: any = { isPublished: true }
+    let query: Record<string, unknown> = { isPublished: true }
 
     if (category) {
       query.category = category
@@ -65,7 +67,7 @@ export const searchModules = async (req: Request, res: Response, next: NextFunct
       throw new AppError('אנא הכנס מילת חיפוש', 400)
     }
 
-    const modules = await (Module as any).search(q as string)
+    const modules = await Module.search(q as string)
       .populate('createdBy', 'name avatar')
 
     res.status(200).json({
@@ -87,9 +89,16 @@ export const searchModules = async (req: Request, res: Response, next: NextFunct
  */
 export const getModule = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const module = await Module.findById(req.params.id)
-      .populate('createdBy', 'name avatar')
-      .populate('updatedBy', 'name avatar')
+    const { id } = req.params
+
+    // Support lookup by Mongo _id or by human-readable slug (e.g. "javascript")
+    const module = mongoose.Types.ObjectId.isValid(id)
+      ? await Module.findById(id)
+          .populate('createdBy', 'name avatar')
+          .populate('updatedBy', 'name avatar')
+      : await Module.findOne({ slug: id })
+          .populate('createdBy', 'name avatar')
+          .populate('updatedBy', 'name avatar')
 
     if (!module) {
       throw new AppError('מודול לא נמצא', 404)
@@ -129,7 +138,7 @@ export const getLesson = async (req: Request, res: Response, next: NextFunction)
       throw new AppError('מודול לא זמין', 403)
     }
 
-    const lesson = (module.lessons as any).id(lessonId)
+    const lesson = module.lessons.id(lessonId)
 
     if (!lesson) {
       throw new AppError('שיעור לא נמצא', 404)
@@ -162,7 +171,7 @@ export const getLesson = async (req: Request, res: Response, next: NextFunction)
  *     summary: Mark lesson as completed
  *     tags: [Learning]
  */
-export const completeLesson = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const completeLesson = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { moduleId, lessonId } = req.params
 
@@ -171,7 +180,7 @@ export const completeLesson = async (req: any, res: Response, next: NextFunction
     const result = {
       moduleId,
       lessonId,
-      userId: req.user.id,
+      userId: req.user!.id,
       completed: true,
       completedAt: new Date().toISOString(),
       progress: 75 // This would be calculated based on completed lessons

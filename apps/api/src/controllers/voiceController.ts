@@ -1,3 +1,4 @@
+import { AuthRequest } from '@/middleware/auth'
 import { Request, Response, NextFunction } from 'express'
 import { AppError } from '@/middleware/errorHandler'
 import OpenAI from 'openai'
@@ -13,7 +14,7 @@ const openai = openaiApiKey ? new OpenAI({ apiKey: openaiApiKey }) : null
  *     summary: Process voice message and get AI response
  *     tags: [Voice AI]
  */
-export const processVoiceMessage = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const processVoiceMessage = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { message, language, context, arMode, metaverseMode } = req.body
 
@@ -61,7 +62,7 @@ export const processVoiceMessage = async (req: any, res: Response, next: NextFun
         // Save to history
         const voiceMessage = {
             id: Date.now().toString(),
-            userId: req.user.id,
+            userId: req.user!.id,
             originalMessage: message,
             response: response,
             language: language,
@@ -96,7 +97,7 @@ export const processVoiceMessage = async (req: any, res: Response, next: NextFun
  *     summary: Generate audio response from text
  *     tags: [Voice AI]
  */
-export const generateVoiceResponse = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const generateVoiceResponse = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { text, language, voice, speed = 1.0, pitch = 1.0 } = req.body
 
@@ -122,12 +123,12 @@ export const generateVoiceResponse = async (req: any, res: Response, next: NextF
  *     summary: Get voice chat history
  *     tags: [Voice AI]
  */
-export const getVoiceHistory = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const getVoiceHistory = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { limit = 50 } = req.query
 
         // This would typically fetch from database
-        // const history = await VoiceMessage.find({ userId: req.user.id })
+        // const history = await VoiceMessage.find({ userId: req.user!.id })
         //   .sort({ timestamp: -1 })
         //   .limit(parseInt(limit as string))
 
@@ -166,10 +167,10 @@ export const getVoiceHistory = async (req: any, res: Response, next: NextFunctio
  *     summary: Clear voice chat history
  *     tags: [Voice AI]
  */
-export const clearVoiceHistory = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const clearVoiceHistory = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         // This would typically delete from database
-        // await VoiceMessage.deleteMany({ userId: req.user.id })
+        // await VoiceMessage.deleteMany({ userId: req.user!.id })
 
         res.status(200).json({
             success: true,

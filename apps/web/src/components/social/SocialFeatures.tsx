@@ -122,10 +122,10 @@ export function SocialFeatures({
   const [leaderboard, setLeaderboard] = useState<User[]>([])
   const [friends, setFriends] = useState<User[]>([])
   
-  const [isCreatingGroup, setIsCreatingGroup] = useState(false)
   const [isJoiningChallenge, setIsJoiningChallenge] = useState<string | null>(null)
   const [newPost, setNewPost] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
+  const [createGroupNotice, setCreateGroupNotice] = useState(false)
 
   // Load social data
   const loadSocialData = useCallback(async () => {
@@ -276,7 +276,7 @@ export function SocialFeatures({
       if (response?.ok) {
         loadSocialData() // Refresh data
         onCreateGroup?.(groupData)
-        setIsCreatingGroup(false)
+        setCreateGroupNotice(false)
       }
     } catch (error) {
       console.error('Error creating group:', error)
@@ -301,55 +301,75 @@ export function SocialFeatures({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+      <div className="rounded-xl bg-white p-4 shadow-lg sm:p-6 dark:bg-gray-800">
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <h2 className="text-xl font-bold text-gray-900 sm:text-2xl dark:text-white">
             קהילת למידה
           </h2>
-          <div className="flex items-center space-x-3 rtl:space-x-reverse">
-            <button className="p-2 rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200 transition-colors">
-              <Bell className="h-5 w-5" />
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              className="rounded-lg bg-blue-100 p-2 text-blue-600 transition-colors hover:bg-blue-200 focus-visible:ring-2 focus-visible:ring-primary-500 dark:bg-blue-900/40 dark:text-blue-200"
+              aria-label="התראות"
+            >
+              <Bell className="h-5 w-5" aria-hidden="true" />
             </button>
-            <button className="p-2 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors">
-              <Settings className="h-5 w-5" />
+            <button
+              type="button"
+              className="rounded-lg bg-gray-100 p-2 text-gray-600 transition-colors hover:bg-gray-200 focus-visible:ring-2 focus-visible:ring-primary-500 dark:bg-gray-700 dark:text-gray-200"
+              aria-label="הגדרות"
+            >
+              <Settings className="h-5 w-5" aria-hidden="true" />
             </button>
           </div>
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex space-x-1 rtl:space-x-reverse bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+        <div
+          className="flex gap-1 overflow-x-auto rounded-lg bg-gray-100 p-1 dark:bg-gray-700"
+          role="tablist"
+          aria-label="אזורי קהילה"
+        >
           {[
-            { id: 'feed', label: 'פיד', icon: MessageCircle },
-            { id: 'groups', label: 'קבוצות', icon: Users },
-            { id: 'challenges', label: 'אתגרים', icon: Trophy },
-            { id: 'leaderboard', label: 'לוח מובילים', icon: Crown }
-          ].map(tab => (
+            { id: 'feed' as const, label: 'פיד', icon: MessageCircle },
+            { id: 'groups' as const, label: 'קבוצות', icon: Users },
+            { id: 'challenges' as const, label: 'אתגרים', icon: Trophy },
+            { id: 'leaderboard' as const, label: 'לוח מובילים', icon: Crown },
+          ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as 'feed' | 'groups' | 'leaderboard' | 'challenges')}
-              className={`flex-1 flex items-center justify-center space-x-2 rtl:space-x-reverse px-4 py-2 rounded-md transition-colors ${
+              type="button"
+              role="tab"
+              aria-selected={activeTab === tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex flex-1 items-center justify-center gap-2 rounded-md px-2 py-2 transition-colors sm:px-4 ${
                 activeTab === tab.id
-                  ? 'bg-white dark:bg-gray-600 text-blue-600 shadow-sm'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                  ? 'bg-white text-blue-600 shadow-sm dark:bg-gray-600'
+                  : 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
               }`}
+              aria-label={tab.label}
             >
-              <tab.icon className="h-4 w-4" />
-              <span className="text-sm font-medium">{tab.label}</span>
+              <tab.icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+              <span className="hidden text-sm font-medium sm:inline">{tab.label}</span>
             </button>
           ))}
         </div>
       </div>
 
       {/* Search Bar */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg">
+      <div className="rounded-xl bg-white p-4 shadow-lg dark:bg-gray-800">
         <div className="relative">
-          <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <Search className="absolute top-1/2 right-3 h-5 w-5 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+          <label htmlFor="social-search" className="sr-only">
+            חיפוש קבוצות, אתגרים או משתמשים
+          </label>
           <input
-            type="text"
+            id="social-search"
+            type="search"
             placeholder="חיפוש קבוצות, אתגרים או משתמשים..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pr-10 pl-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+            className="w-full rounded-lg border border-gray-300 py-2 pr-10 pl-4 focus:border-transparent focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
           />
         </div>
       </div>
@@ -371,20 +391,32 @@ export function SocialFeatures({
                   {userId.charAt(0).toUpperCase()}
                 </div>
                 <div className="flex-1">
+                  <label htmlFor="new-post" className="sr-only">
+                    כתיבת פוסט חדש
+                  </label>
                   <textarea
+                    id="new-post"
                     value={newPost}
                     onChange={(e) => setNewPost(e.target.value)}
                     placeholder="שתף את החוויה שלך מהלמידה..."
-                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                    className="w-full resize-none rounded-lg border border-gray-300 p-3 focus:border-transparent focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                     rows={3}
                   />
-                  <div className="flex items-center justify-between mt-3">
-                    <div className="flex items-center space-x-2 rtl:space-x-reverse">
-                      <button className="p-2 text-gray-400 hover:text-blue-600 transition-colors">
-                        <Camera className="h-5 w-5" />
+                  <div className="mt-3 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        className="p-2 text-gray-400 transition-colors hover:text-blue-600 focus-visible:ring-2 focus-visible:ring-primary-500"
+                        aria-label="הוסף תמונה"
+                      >
+                        <Camera className="h-5 w-5" aria-hidden="true" />
                       </button>
-                      <button className="p-2 text-gray-400 hover:text-green-600 transition-colors">
-                        <Gift className="h-5 w-5" />
+                      <button
+                        type="button"
+                        className="p-2 text-gray-400 transition-colors hover:text-green-600 focus-visible:ring-2 focus-visible:ring-primary-500"
+                        aria-label="הוסף מתנה"
+                      >
+                        <Gift className="h-5 w-5" aria-hidden="true" />
                       </button>
                     </div>
                     <button
@@ -401,6 +433,11 @@ export function SocialFeatures({
 
             {/* Posts Feed */}
             <div className="space-y-4">
+              {posts.length === 0 ? (
+                <p className="rounded-xl bg-white p-6 text-center text-gray-600 shadow-lg dark:bg-gray-800 dark:text-gray-300" role="status">
+                  אין פוסטים עדיין — היה הראשון לשתף!
+                </p>
+              ) : null}
               {posts.map(post => (
                 <motion.div
                   key={post.id}
@@ -437,21 +474,32 @@ export function SocialFeatures({
                   <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
                     <div className="flex items-center space-x-6 rtl:space-x-reverse">
                       <button
+                        type="button"
                         onClick={() => toggleLike(post.id)}
-                        className={`flex items-center space-x-2 rtl:space-x-reverse transition-colors ${
+                        aria-pressed={post.isLiked}
+                        aria-label={post.isLiked ? `הסר לייק, ${post.likes} לייקים` : `לייק, ${post.likes} לייקים`}
+                        className={`flex items-center gap-2 transition-colors focus-visible:ring-2 focus-visible:ring-primary-500 ${
                           post.isLiked ? 'text-red-600' : 'text-gray-400 hover:text-red-600'
                         }`}
                       >
-                        <Heart className={`h-5 w-5 ${post.isLiked ? 'fill-current' : ''}`} />
-                        <span>{post.likes}</span>
+                        <Heart className={`h-5 w-5 ${post.isLiked ? 'fill-current' : ''}`} aria-hidden="true" />
+                        <span aria-hidden="true">{post.likes}</span>
                       </button>
-                      <button className="flex items-center space-x-2 rtl:space-x-reverse text-gray-400 hover:text-blue-600 transition-colors">
-                        <MessageCircle className="h-5 w-5" />
-                        <span>{post.commentsCount}</span>
+                      <button
+                        type="button"
+                        className="flex items-center gap-2 text-gray-400 transition-colors hover:text-blue-600 focus-visible:ring-2 focus-visible:ring-primary-500"
+                        aria-label={`${post.commentsCount} תגובות`}
+                      >
+                        <MessageCircle className="h-5 w-5" aria-hidden="true" />
+                        <span aria-hidden="true">{post.commentsCount}</span>
                       </button>
-                      <button className="flex items-center space-x-2 rtl:space-x-reverse text-gray-400 hover:text-green-600 transition-colors">
-                        <Share2 className="h-5 w-5" />
-                        <span>{post.shares}</span>
+                      <button
+                        type="button"
+                        className="flex items-center gap-2 text-gray-400 transition-colors hover:text-green-600 focus-visible:ring-2 focus-visible:ring-primary-500"
+                        aria-label={`${post.shares} שיתופים`}
+                      >
+                        <Share2 className="h-5 w-5" aria-hidden="true" />
+                        <span aria-hidden="true">{post.shares}</span>
                       </button>
                     </div>
                   </div>
@@ -469,18 +517,27 @@ export function SocialFeatures({
             exit={{ opacity: 0, x: -20 }}
             className="space-y-4"
           >
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                 קבוצות לימוד
               </h3>
               <button
-                onClick={() => setIsCreatingGroup(true)}
-                className="flex items-center space-x-2 rtl:space-x-reverse px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                type="button"
+                onClick={() => {
+                  setCreateGroupNotice(true)
+                  window.setTimeout(() => setCreateGroupNotice(false), 4000)
+                }}
+                className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 focus-visible:ring-2 focus-visible:ring-primary-500"
               >
-                <Plus className="h-4 w-4" />
+                <Plus className="h-4 w-4" aria-hidden="true" />
                 <span>צור קבוצה</span>
               </button>
             </div>
+            {createGroupNotice ? (
+              <p className="rounded-lg bg-blue-50 p-3 text-sm text-blue-800 dark:bg-blue-950/40 dark:text-blue-200" role="status" aria-live="polite">
+                יצירת קבוצה מותאמת אישית תגיע בגרסה הבאה — בינתיים הצטרף לקבוצה קיימת.
+              </p>
+            ) : null}
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredGroups.map(group => (

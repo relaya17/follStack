@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from 'mongoose'
+import mongoose, { Document, Model, Schema, Types } from 'mongoose'
 
 export interface ILesson extends Document {
   title: string
@@ -21,11 +21,12 @@ export interface ILesson extends Document {
 
 export interface IModule extends Document {
   title: string
+  slug: string
   description: string
   icon: string
   color: string
   duration: string
-  lessons: ILesson[]
+  lessons: Types.DocumentArray<ILesson>
   totalLessons: number
   difficulty: 'beginner' | 'intermediate' | 'advanced'
   prerequisites: string[]
@@ -40,6 +41,12 @@ export interface IModule extends Document {
   updatedBy: mongoose.Types.ObjectId
   createdAt: Date
   updatedAt: Date
+}
+
+interface IModuleModel extends Model<IModule> {
+  getPublished(): mongoose.Query<IModule[], IModule>
+  getFeatured(): mongoose.Query<IModule[], IModule>
+  search(query: string): mongoose.Query<IModule[], IModule>
 }
 
 const LessonSchema = new Schema<ILesson>({
@@ -126,6 +133,14 @@ const ModuleSchema = new Schema<IModule>({
     required: [true, 'כותרת המודול היא שדה חובה'],
     trim: true,
     maxlength: [100, 'כותרת המודול לא יכולה להיות יותר מ-100 תווים']
+  },
+  slug: {
+    type: String,
+    required: [true, 'slug הוא שדה חובה'],
+    unique: true,
+    lowercase: true,
+    trim: true,
+    match: [/^[a-z0-9-]+$/, 'slug יכול להכיל רק אותיות לועזיות קטנות, ספרות ומקפים']
   },
   description: {
     type: String,
@@ -255,4 +270,4 @@ ModuleSchema.statics.search = function(query: string) {
   }).sort({ createdAt: -1 })
 }
 
-export const Module = mongoose.model<IModule>('Module', ModuleSchema)
+export const Module = mongoose.model<IModule, IModuleModel>('Module', ModuleSchema)

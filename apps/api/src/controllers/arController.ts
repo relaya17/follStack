@@ -1,3 +1,4 @@
+import { AuthRequest } from '@/middleware/auth'
 import { Request, Response, NextFunction } from 'express'
 import { AppError } from '@/middleware/errorHandler'
 
@@ -8,7 +9,7 @@ import { AppError } from '@/middleware/errorHandler'
  *     summary: Get AR content for a lesson
  *     tags: [AR Learning]
  */
-export const getARContent = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const getARContent = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { lessonId } = req.params
 
@@ -92,7 +93,7 @@ console.log(greet('World'));`
  *     summary: Get all AR-enabled lessons
  *     tags: [AR Learning]
  */
-export const getARLessons = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const getARLessons = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         // This would typically fetch from database
         // const lessons = await Lesson.find({ arEnabled: true })
@@ -148,7 +149,7 @@ export const getARLessons = async (req: any, res: Response, next: NextFunction):
  *     summary: Create a new AR object
  *     tags: [AR Learning]
  */
-export const createARObject = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const createARObject = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { lessonId, type, content, position, rotation, scale, interactive } = req.body
 
@@ -173,7 +174,7 @@ export const createARObject = async (req: any, res: Response, next: NextFunction
             scale: scale || { x: 1, y: 1, z: 1 },
             interactive: interactive || false,
             createdAt: new Date(),
-            createdBy: req.user.id
+            createdBy: req.user!.id
         }
 
         // This would typically save to database
@@ -195,14 +196,14 @@ export const createARObject = async (req: any, res: Response, next: NextFunction
  *     summary: Update an AR object
  *     tags: [AR Learning]
  */
-export const updateARObject = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const updateARObject = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { id } = req.params
         const updates = req.body
 
         // This would typically update in database
         // const arObject = await ARObject.findOneAndUpdate(
-        //   { id, createdBy: req.user.id },
+        //   { id, createdBy: req.user!.id },
         //   updates,
         //   { new: true }
         // )
@@ -234,12 +235,12 @@ export const updateARObject = async (req: any, res: Response, next: NextFunction
  *     summary: Delete an AR object
  *     tags: [AR Learning]
  */
-export const deleteARObject = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const deleteARObject = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { id } = req.params
 
         // This would typically delete from database
-        // const arObject = await ARObject.findOneAndDelete({ id, createdBy: req.user.id })
+        // const arObject = await ARObject.findOneAndDelete({ id, createdBy: req.user!.id })
 
         // Mock response for development
         const arObject = { id }
@@ -264,7 +265,7 @@ export const deleteARObject = async (req: any, res: Response, next: NextFunction
  *     summary: Track AR learning progress
  *     tags: [AR Learning]
  */
-export const trackARProgress = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const trackARProgress = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { lessonId, objectId, action, duration, metadata } = req.body
 
@@ -281,7 +282,7 @@ export const trackARProgress = async (req: any, res: Response, next: NextFunctio
         // Create progress record
         const progress = {
             id: Date.now().toString(),
-            userId: req.user.id,
+            userId: req.user!.id,
             lessonId,
             objectId,
             action,
@@ -294,7 +295,7 @@ export const trackARProgress = async (req: any, res: Response, next: NextFunctio
         // await ARProgress.create(progress)
 
         // Update user's overall progress
-        await updateUserARProgress(req.user.id, lessonId, action)
+        await updateUserARProgress(req.user!.id, lessonId, action)
 
         res.status(200).json({
             success: true,

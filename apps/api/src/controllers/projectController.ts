@@ -1,3 +1,4 @@
+import { AuthRequest } from '@/middleware/auth'
 import { Request, Response, NextFunction } from 'express'
 import { AppError } from '@/middleware/errorHandler'
 
@@ -8,7 +9,7 @@ import { AppError } from '@/middleware/errorHandler'
  *     summary: Get all projects
  *     tags: [Project]
  */
-export const getProjects = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const getProjects = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { status, type } = req.query
 
@@ -25,9 +26,9 @@ export const getProjects = async (req: any, res: Response, next: NextFunction): 
         difficulty: 'beginner',
         estimatedTime: 20,
         createdBy: {
-          id: req.user.id,
-          name: req.user.name,
-          avatar: req.user.avatar
+          id: req.user!.id,
+          name: req.user!.name,
+          avatar: req.user!.avatar
         },
         members: [],
         createdAt: new Date().toISOString(),
@@ -49,9 +50,9 @@ export const getProjects = async (req: any, res: Response, next: NextFunction): 
         },
         members: [
           {
-            id: req.user.id,
-            name: req.user.name,
-            avatar: req.user.avatar,
+            id: req.user!.id,
+            name: req.user!.name,
+            avatar: req.user!.avatar,
             role: 'developer'
           }
         ],
@@ -87,7 +88,7 @@ export const getProjects = async (req: any, res: Response, next: NextFunction): 
  *     summary: Create a new project
  *     tags: [Project]
  */
-export const createProject = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const createProject = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { title, description, type, technologies, difficulty, estimatedTime } = req.body
 
@@ -107,14 +108,14 @@ export const createProject = async (req: any, res: Response, next: NextFunction)
       difficulty: difficulty || 'beginner',
       estimatedTime: estimatedTime || 10,
       createdBy: {
-        id: req.user.id,
-        name: req.user.name,
-        avatar: req.user.avatar
+        id: req.user!.id,
+        name: req.user!.name,
+        avatar: req.user!.avatar
       },
       members: type === 'group' ? [{
-        id: req.user.id,
-        name: req.user.name,
-        avatar: req.user.avatar,
+        id: req.user!.id,
+        name: req.user!.name,
+        avatar: req.user!.avatar,
         role: 'owner'
       }] : [],
       createdAt: new Date().toISOString(),
@@ -197,7 +198,7 @@ export const getProject = async (req: Request, res: Response, next: NextFunction
  *     summary: Update a project
  *     tags: [Project]
  */
-export const updateProject = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const updateProject = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params
     const updateData = req.body
@@ -226,7 +227,7 @@ export const updateProject = async (req: any, res: Response, next: NextFunction)
  *     summary: Delete a project
  *     tags: [Project]
  */
-export const deleteProject = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const deleteProject = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params
 
@@ -248,7 +249,7 @@ export const deleteProject = async (req: any, res: Response, next: NextFunction)
  *     summary: Join a group project
  *     tags: [Project]
  */
-export const joinProject = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const joinProject = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params
 
@@ -270,7 +271,7 @@ export const joinProject = async (req: any, res: Response, next: NextFunction): 
  *     summary: Leave a group project
  *     tags: [Project]
  */
-export const leaveProject = async (req: any, res: Response, next: NextFunction): Promise<void> => {
+export const leaveProject = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params
 
