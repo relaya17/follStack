@@ -34,6 +34,6 @@ jobs:
         run: pnpm lint
 
       - name: Build
-        run: pnpm build
+        run: pnpm build:all
         env:
           SKIP_DB: "true"

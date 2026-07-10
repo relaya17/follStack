@@ -55,13 +55,15 @@ Use root `render.yaml` (Blueprint) **or** create a **Web Service** with:
 |---------|--------|
 | **Runtime** | Node |
 | **Root Directory** | empty (repo root) |
-| **Build Command** | `pnpm install --frozen-lockfile && pnpm --filter @follstack/api build` |
+| **Build Command** | `pnpm install --frozen-lockfile && pnpm build` (API only) |
 | **Start Command** | `pnpm start` |
 | **Health Check Path** | `/health` |
 
-**Important:** Redeploy the **latest** `main` commit. If the log still shows `pnpm --parallel --filter @follstack/api --filter @follstack/web start`, you are on an old deploy — click **Manual Deploy → Deploy latest commit**.
+Root `pnpm build` / `pnpm start` are **API-only** so Render’s defaults work. Full monorepo build is `pnpm build:all` (CI / local). Do **not** build Next on Render — that OOMs (`SIGTERM` on `next build`).
 
-Also set env `NODE_VERSION=22.14.0` (or `engines.node` in package.json) so Render does not pick Node 26.
+**Important:** Redeploy the **latest** `main` commit. If the log still shows `@follstack/web` / `next build`, you are on an old Build Command or old commit — set Build to `pnpm install --frozen-lockfile && pnpm build` and **Deploy latest commit**.
+
+Also set env `NODE_VERSION=22.14.0` so Render does not pick Node 26.
 
 Root `pnpm start` now starts **API only** (so Render’s default Start Command works). Use `pnpm start:all` locally if you need web+api together.
 

@@ -31,7 +31,7 @@ cp apps/web/.env.example apps/web/.env.local
 pnpm dev          # web + api together
 pnpm dev:web      # Next only
 pnpm dev:api      # API only
-pnpm build
+pnpm build:all
 pnpm typecheck
 pnpm lint
 ```

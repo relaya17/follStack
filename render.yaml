@@ -1,9 +1,9 @@
 # follStack API on Render
 #
 # In the Render dashboard for this service, set:
-#   Build Command:  pnpm install --frozen-lockfile && pnpm --filter @follstack/api build
+#   Build Command:  pnpm install --frozen-lockfile && pnpm build
 #   Start Command:  pnpm start
-# (or leave blank after this Blueprint sync — root package.json start is API-only)
+# Root package.json build/start are API-only (do not build Next on Render).
 #
 # Do NOT hardcode PORT. Keep HOST=0.0.0.0.
 # Redeploy the LATEST commit on main (not an old SHA).
@@ -15,7 +15,7 @@ services:
     plan: starter
     region: oregon
     rootDir: .
-    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm --filter @follstack/api build
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm build
     startCommand: pnpm start
     healthCheckPath: /health
     envVars:
