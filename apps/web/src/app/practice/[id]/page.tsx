@@ -1,57 +1,97 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { notFound, useParams } from 'next/navigation'
-import { Code2, CheckCircle2 } from 'lucide-react'
+import { useParams } from 'next/navigation'
+import { Code2, CheckCircle2, Loader2 } from 'lucide-react'
 import { Card } from '@follstack/ui'
+import { apiJson, apiFetch } from '@/lib/api'
 
-const EXERCISES: Record<
-  string,
-  { title: string; prompt: string; starter: string; hint: string }
-> = {
-  'html-landing': {
-    title: 'דף נחיתה HTML',
-    prompt: 'בנה מבנה בסיסי של דף נחיתה עם כותרת, פסקה וכפתור.',
-    starter: '<header>\n  <h1>Welcome</h1>\n</header>',
-    hint: 'השתמש ב-header, main ו-button סמנטיים.',
-  },
-  'js-array': {
-    title: 'סינון מערך',
-    prompt: 'כתוב פונקציה שמסננת מספרים זוגיים ממערך.',
-    starter: 'function onlyEven(nums) {\n  // your code\n}',
-    hint: 'השתמש ב-filter ובדיקת n % 2 === 0.',
-  },
-  'react-counter': {
-    title: 'מונה React',
-    prompt: 'צור קומפוננטת מונה עם כפתורי + ו־איפוס.',
-    starter: "import { useState } from 'react'\n\nexport function Counter() {\n  const [n, setN] = useState(0)\n  return null\n}",
-    hint: 'שמור state ב-useState ועדכן עם setN.',
-  },
-  default: {
-    title: 'תרגיל Practice',
-    prompt: 'פתור את האתגר בקצב שלך — אפשר גם לבקש עזרה מהמנטור.',
-    starter: '// כתוב כאן את הפתרון שלך',
-    hint: 'פרק את הבעיה לשלבים קטנים.',
-  },
+interface ApiExercise {
+  id: string
+  slug: string
+  title: string
+  description: string
+  prompt: string
+  starterCode: string
+  hint: string
+  completedBy: number
+}
+
+interface ExerciseResponse {
+  success: boolean
+  data: ApiExercise
 }
 
 export default function PracticeExercisePage() {
   const params = useParams<{ id: string }>()
   const id = params?.id
-  if (!id) notFound()
 
-  const exercise = EXERCISES[id] ?? {
-    ...EXERCISES.default,
-    title: `תרגיל: ${id}`,
+  const [exercise, setExercise] = useState<ApiExercise | null>(null)
+  const [error, setError] = useState(false)
+  const [code, setCode] = useState('')
+  const [done, setDone] = useState(false)
+  const [marking, setMarking] = useState(false)
+
+  useEffect(() => {
+    if (!id) return
+    let cancelled = false
+    apiJson<ExerciseResponse>(`/api/practice/${id}`).then((res) => {
+      if (cancelled) return
+      if (res?.success) {
+        setExercise(res.data)
+        setCode(res.data.starterCode)
+      } else {
+        setError(true)
+      }
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [id])
+
+  const mentorQuestion = useMemo(
+    () =>
+      exercise
+        ? `תעזור לי לפתור את התרגיל "${exercise.title}": ${exercise.prompt}\n\nהקוד שלי:\n${code}`
+        : '',
+    [exercise, code],
+  )
+
+  const markComplete = async () => {
+    if (!id) return
+    setMarking(true)
+    try {
+      const res = await apiFetch(`/api/practice/${id}/complete`, { method: 'POST' })
+      if (res.status === 401) {
+        setDone(true) // still let them feel done locally; real credit needs login
+        return
+      }
+      if (res.ok) setDone(true)
+    } finally {
+      setMarking(false)
+    }
   }
 
-  const [code, setCode] = useState(exercise.starter)
-  const [done, setDone] = useState(false)
-  const mentorQuestion = useMemo(
-    () => `תעזור לי לפתור את התרגיל "${exercise.title}": ${exercise.prompt}\n\nהקוד שלי:\n${code}`,
-    [exercise.title, exercise.prompt, code],
-  )
+  if (error) {
+    return (
+      <div className="page-shell">
+        <p className="py-16 text-center text-slate-600 dark:text-slate-300">
+          התרגיל לא נמצא. <Link href="/practice" className="text-primary-600 hover:underline">חזרה לתרגולים</Link>
+        </p>
+      </div>
+    )
+  }
+
+  if (!exercise) {
+    return (
+      <div className="page-shell">
+        <div className="flex items-center justify-center py-20">
+          <Loader2 className="h-8 w-8 animate-spin text-primary-600" />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="page-shell">
@@ -89,11 +129,12 @@ export default function PracticeExercisePage() {
       <div className="flex flex-wrap items-center justify-center gap-3">
         <button
           type="button"
-          onClick={() => setDone(true)}
-          className="inline-flex items-center gap-2 rounded-2xl bg-primary-600 px-6 py-3 font-bold text-white hover:bg-primary-700"
+          onClick={markComplete}
+          disabled={marking || done}
+          className="inline-flex items-center gap-2 rounded-2xl bg-primary-600 px-6 py-3 font-bold text-white hover:bg-primary-700 disabled:opacity-60"
         >
           <CheckCircle2 className="h-5 w-5" />
-          סמן כהושלם
+          {done ? 'הושלם' : marking ? 'שומר…' : 'סמן כהושלם'}
         </button>
         <Link
           href={`/ai-mentor?q=${encodeURIComponent(mentorQuestion)}`}

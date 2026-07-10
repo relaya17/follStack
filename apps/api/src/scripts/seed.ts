@@ -11,6 +11,8 @@ import mongoose from 'mongoose'
 import { User } from '@/models/User'
 import { Module } from '@/models/Module'
 import { Quiz } from '@/models/Quiz'
+import { Project } from '@/models/Project'
+import { PracticeExercise } from '@/models/Practice'
 import { logger } from '@/utils/logger'
 
 const SEED_ADMIN_EMAIL = 'seed-admin@follstack.local'
@@ -751,6 +753,162 @@ const QUIZZES: SeedQuiz[] = [
   },
 ]
 
+type SeedProject = {
+  slug: string
+  title: string
+  description: string
+  category: 'Full Stack' | 'Frontend' | 'Backend' | 'Mobile'
+  technologies: string[]
+  difficulty: 'beginner' | 'intermediate' | 'advanced'
+  estimatedTime: string
+}
+
+const PROJECTS: SeedProject[] = [
+  {
+    slug: 'ecommerce-platform',
+    title: 'מערכת ניהול חנות אונליין',
+    description:
+      'פיתוח מערכת מלאה לניהול חנות אונליין עם React, Node.js ו-MongoDB. כולל מערכת תשלומים, ניהול מלאי ופאנל ניהול.',
+    category: 'Full Stack',
+    technologies: ['React', 'Node.js', 'MongoDB', 'Stripe', 'JWT'],
+    difficulty: 'advanced',
+    estimatedTime: '4-6 שבועות',
+  },
+  {
+    slug: 'weather-app',
+    title: 'אפליקציית מזג אוויר',
+    description: 'אפליקציית מזג אוויר אינטראקטיבית עם חיזוי 7 ימים, מפה עם מיקום המשתמש ועדכונים בזמן אמת.',
+    category: 'Frontend',
+    technologies: ['React', 'TypeScript', 'OpenWeather API', 'Leaflet'],
+    difficulty: 'intermediate',
+    estimatedTime: '2-3 שבועות',
+  },
+  {
+    slug: 'blog-platform',
+    title: 'פלטפורמת בלוגים',
+    description: 'פלטפורמה לכתיבת ופרסום בלוגים עם מערכת תגובות, חיפוש מתקדם ומערכת הרשאות.',
+    category: 'Full Stack',
+    technologies: ['Next.js', 'Prisma', 'PostgreSQL', 'Tailwind CSS'],
+    difficulty: 'intermediate',
+    estimatedTime: '3-4 שבועות',
+  },
+  {
+    slug: 'snake-game',
+    title: 'משחק Snake',
+    description: 'מימוש קלאסי של משחק הנחש עם JavaScript טהור. כולל מערכת ניקוד ורמות קושי.',
+    category: 'Frontend',
+    technologies: ['HTML5', 'CSS3', 'JavaScript', 'Canvas API'],
+    difficulty: 'beginner',
+    estimatedTime: '1-2 שבועות',
+  },
+  {
+    slug: 'task-manager',
+    title: 'מערכת ניהול משימות',
+    description: 'אפליקציית ניהול משימות מתקדמת עם דרגי עדיפות, תגיות, חיפוש וסנכרון בין מכשירים.',
+    category: 'Mobile',
+    technologies: ['React Native', 'Firebase', 'Redux Toolkit'],
+    difficulty: 'intermediate',
+    estimatedTime: '3-5 שבועות',
+  },
+  {
+    slug: 'user-management-api',
+    title: 'API לניהול משתמשים',
+    description: 'RESTful API מלא לניהול משתמשים עם אימות, הרשאות וגיבויים אוטומטיים ותיעוד Swagger.',
+    category: 'Backend',
+    technologies: ['Node.js', 'Express', 'MongoDB', 'JWT', 'Swagger'],
+    difficulty: 'intermediate',
+    estimatedTime: '2-3 שבועות',
+  },
+]
+
+type SeedExercise = {
+  slug: string
+  title: string
+  description: string
+  category: string
+  difficulty: 'easy' | 'medium' | 'hard'
+  estimatedTime: number
+  tags: string[]
+  prompt: string
+  starterCode: string
+  hint: string
+}
+
+const EXERCISES: SeedExercise[] = [
+  {
+    slug: 'html-landing',
+    title: 'דף נחיתה HTML',
+    description: 'בנה מבנה בסיסי של דף נחיתה עם כותרת, פסקה וכפתור.',
+    category: 'CSS',
+    difficulty: 'easy',
+    estimatedTime: 30,
+    tags: ['HTML', 'Semantic', 'Layout'],
+    prompt: 'בנה מבנה בסיסי של דף נחיתה עם כותרת, פסקה וכפתור, באמצעות תגיות HTML סמנטיות.',
+    starterCode: '<header>\n  <h1>Welcome</h1>\n</header>',
+    hint: 'השתמש ב-header, main ו-button סמנטיים.',
+  },
+  {
+    slug: 'js-array',
+    title: 'סינון מערך',
+    description: 'צור מחשבון בסיסי עם JavaScript — חיבור, חיסור, כפל וחילוק',
+    category: 'JavaScript',
+    difficulty: 'easy',
+    estimatedTime: 30,
+    tags: ['DOM', 'Events', 'Functions'],
+    prompt: 'כתוב פונקציה שמסננת מספרים זוגיים ממערך.',
+    starterCode: 'function onlyEven(nums) {\n  // your code\n}',
+    hint: 'השתמש ב-filter ובדיקת n % 2 === 0.',
+  },
+  {
+    slug: 'react-counter',
+    title: 'רשימת משימות (Todo List)',
+    description: 'בנה אפליקציית Todo List עם React — הוספה, מחיקה ועדכון משימות',
+    category: 'React',
+    difficulty: 'medium',
+    estimatedTime: 45,
+    tags: ['useState', 'useEffect', 'Props'],
+    prompt: 'צור קומפוננטת מונה עם כפתורי + ו-איפוס, כבסיס לניהול state לפני שעוברים לרשימת משימות מלאה.',
+    starterCode: "import { useState } from 'react'\n\nexport function Counter() {\n  const [n, setN] = useState(0)\n  return null\n}",
+    hint: 'שמור state ב-useState ועדכן עם setN.',
+  },
+  {
+    slug: 'express-api',
+    title: 'API עם Express',
+    description: 'צור REST API עם Node.js ו-Express — CRUD operations למשתמשים',
+    category: 'Backend',
+    difficulty: 'medium',
+    estimatedTime: 60,
+    tags: ['Express', 'REST', 'Middleware'],
+    prompt: 'כתוב route ב-Express שמחזיר רשימת משתמשים, ועוד route שמוסיף משתמש חדש למערך בזיכרון.',
+    starterCode: "const express = require('express')\nconst app = express()\napp.use(express.json())\n\nlet users = []\n\napp.get('/users', (req, res) => {\n  // your code\n})\n\napp.post('/users', (req, res) => {\n  // your code\n})",
+    hint: 'GET מחזיר res.json(users). POST דוחף לתוך users ומחזיר 201.',
+  },
+  {
+    slug: 'memory-game',
+    title: 'משחק זיכרון',
+    description: 'פיתוח משחק זיכרון אינטראקטיבי עם HTML, CSS ו-JavaScript',
+    category: 'Frontend',
+    difficulty: 'easy',
+    estimatedTime: 40,
+    tags: ['Game Logic', 'CSS Animations', 'Local Storage'],
+    prompt: 'כתוב פונקציה שבודקת אם שני קלפים שנבחרו תואמים, ומעדכנת את הניקוד בהתאם.',
+    starterCode: 'function checkMatch(card1, card2) {\n  // your code — return true אם הקלפים תואמים\n}',
+    hint: 'השווה בין card1.value ל-card2.value.',
+  },
+  {
+    slug: 'auth-jwt',
+    title: 'מערכת אימות',
+    description: 'בנה מערכת הרשמה והתחברות עם JWT ו-bcrypt',
+    category: 'Security',
+    difficulty: 'hard',
+    estimatedTime: 90,
+    tags: ['JWT', 'bcrypt', 'Validation'],
+    prompt: 'כתוב פונקציה שמצפינה סיסמה עם bcrypt לפני שמירה, ופונקציה שמייצרת JWT לאחר login מוצלח.',
+    starterCode: "const bcrypt = require('bcryptjs')\nconst jwt = require('jsonwebtoken')\n\nasync function hashPassword(plain) {\n  // your code\n}\n\nfunction generateToken(userId) {\n  // your code\n}",
+    hint: 'bcrypt.hash(plain, 12) ו-jwt.sign({ id: userId }, secret, { expiresIn: \'7d\' }).',
+  },
+];
+
 async function run() {
   const mongoUri = process.env.MONGODB_URI
   if (!mongoUri) {
@@ -854,6 +1012,77 @@ async function run() {
   }
 
   logger.info(`Seed: ${quizzesCreated} quiz(zes) created, ${quizzesUpdated} updated. Total questions seeded: ${QUIZZES.reduce((n, q) => n + q.questions.length, 0)}`)
+
+  // 4. Upsert project catalog by slug (idempotent — safe to re-run)
+  let projectsCreated = 0
+  let projectsUpdated = 0
+  for (const p of PROJECTS) {
+    const result = await Project.findOneAndUpdate(
+      { slug: p.slug },
+      {
+        $setOnInsert: {
+          members: [],
+          starredBy: [],
+          status: 'planned',
+        },
+        $set: {
+          title: p.title,
+          description: p.description,
+          category: p.category,
+          technologies: p.technologies,
+          difficulty: p.difficulty,
+          estimatedTime: p.estimatedTime,
+          isTemplate: true,
+          isPublished: true,
+          createdBy: admin._id,
+          updatedBy: admin._id,
+        },
+      },
+      { upsert: true, new: true, setDefaultsOnInsert: true, runValidators: true },
+    )
+
+    if (result.createdAt.getTime() === result.updatedAt.getTime()) {
+      projectsCreated += 1
+    } else {
+      projectsUpdated += 1
+    }
+  }
+
+  logger.info(`Seed: ${projectsCreated} project(s) created, ${projectsUpdated} updated.`)
+
+  // 5. Upsert practice exercises by slug (idempotent — safe to re-run)
+  let exercisesCreated = 0
+  let exercisesUpdated = 0
+  for (const ex of EXERCISES) {
+    const result = await PracticeExercise.findOneAndUpdate(
+      { slug: ex.slug },
+      {
+        $set: {
+          title: ex.title,
+          description: ex.description,
+          category: ex.category,
+          difficulty: ex.difficulty,
+          estimatedTime: ex.estimatedTime,
+          tags: ex.tags,
+          prompt: ex.prompt,
+          starterCode: ex.starterCode,
+          hint: ex.hint,
+          isPublished: true,
+          createdBy: admin._id,
+          updatedBy: admin._id,
+        },
+      },
+      { upsert: true, new: true, setDefaultsOnInsert: true, runValidators: true },
+    )
+
+    if (result.createdAt.getTime() === result.updatedAt.getTime()) {
+      exercisesCreated += 1
+    } else {
+      exercisesUpdated += 1
+    }
+  }
+
+  logger.info(`Seed: ${exercisesCreated} exercise(s) created, ${exercisesUpdated} updated.`)
 
   await mongoose.disconnect()
   process.exit(0)

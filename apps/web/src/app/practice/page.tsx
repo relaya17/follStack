@@ -1,91 +1,28 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { Code2, Play, Target, Trophy, Clock, Users } from 'lucide-react'
+import { Code2, Play, Target, Trophy, Clock, Loader2 } from 'lucide-react'
 import { Card } from '@follstack/ui'
+import { apiJson } from '@/lib/api'
 
-
-interface PracticeExercise {
+interface ApiExercise {
   id: string
+  slug: string
   title: string
   description: string
   category: string
   difficulty: 'easy' | 'medium' | 'hard'
   estimatedTime: number
-  completedBy: number
-  averageRating: number
   tags: string[]
+  completedBy: number
 }
 
-const practiceExercises: PracticeExercise[] = [
-  {
-    id: '1',
-    title: 'מחשבון פשוט',
-    description: 'צור מחשבון בסיסי עם JavaScript - חיבור, חיסור, כפל וחילוק',
-    category: 'JavaScript',
-    difficulty: 'easy',
-    estimatedTime: 30,
-    completedBy: 2100,
-    averageRating: 4.5,
-    tags: ['DOM', 'Events', 'Functions']
-  },
-  {
-    id: '2',
-    title: 'רשימת משימות (Todo List)',
-    description: 'בנה אפליקציית Todo List עם React - הוספה, מחיקה ועדכון משימות',
-    category: 'React',
-    difficulty: 'medium',
-    estimatedTime: 45,
-    completedBy: 1850,
-    averageRating: 4.7,
-    tags: ['useState', 'useEffect', 'Props']
-  },
-  {
-    id: '3',
-    title: 'API עם Express',
-    description: 'צור REST API עם Node.js ו-Express - CRUD operations למשתמשים',
-    category: 'Backend',
-    difficulty: 'medium',
-    estimatedTime: 60,
-    completedBy: 1200,
-    averageRating: 4.3,
-    tags: ['Express', 'REST', 'Middleware']
-  },
-  {
-    id: '4',
-    title: 'משחק זיכרון',
-    description: 'פיתוח משחק זיכרון אינטראקטיבי עם HTML, CSS ו-JavaScript',
-    category: 'Frontend',
-    difficulty: 'easy',
-    estimatedTime: 40,
-    completedBy: 1650,
-    averageRating: 4.6,
-    tags: ['Game Logic', 'CSS Animations', 'Local Storage']
-  },
-  {
-    id: '5',
-    title: 'מערכת אימות',
-    description: 'בנה מערכת הרשמה והתחברות עם JWT ו-bcrypt',
-    category: 'Security',
-    difficulty: 'hard',
-    estimatedTime: 90,
-    completedBy: 890,
-    averageRating: 4.8,
-    tags: ['JWT', 'bcrypt', 'Validation']
-  },
-  {
-    id: '6',
-    title: 'דף פרופיל רספונסיבי',
-    description: 'צור דף פרופיל משתמש עם עיצוב רספונסיבי ונגיש',
-    category: 'CSS',
-    difficulty: 'easy',
-    estimatedTime: 35,
-    completedBy: 1950,
-    averageRating: 4.4,
-    tags: ['Responsive', 'Flexbox', 'Grid']
-  }
-]
+interface ExercisesResponse {
+  success: boolean
+  count: number
+  data: ApiExercise[]
+}
 
 const difficultyColors = {
   easy: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
@@ -99,20 +36,42 @@ const difficultyLabels = {
   hard: 'קשה'
 }
 
+const categories = ['all', 'JavaScript', 'React', 'Backend', 'Frontend', 'CSS', 'Security']
+const difficulties = ['all', 'easy', 'medium', 'hard']
+
 export default function PracticePage() {
-  // const [selectedCategory, setSelectedCategory] = useState<string>('all')
-  // const [selectedDifficulty, setSelectedDifficulty] = useState<string>('all')
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('all')
+  const [exercises, setExercises] = useState<ApiExercise[] | null>(null)
+  const [error, setError] = useState(false)
 
-  const categories = ['all', 'JavaScript', 'React', 'Backend', 'Frontend', 'CSS', 'Security']
-  const difficulties = ['all', 'easy', 'medium', 'hard']
+  useEffect(() => {
+    let cancelled = false
+    apiJson<ExercisesResponse>('/api/practice').then((res) => {
+      if (cancelled) return
+      if (res?.success) {
+        setExercises(res.data)
+      } else {
+        setError(true)
+      }
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
-  const filteredExercises = practiceExercises.filter(exercise => {
+  const filteredExercises = (exercises ?? []).filter(exercise => {
     const categoryMatch = selectedCategory === 'all' || exercise.category === selectedCategory
     const difficultyMatch = selectedDifficulty === 'all' || exercise.difficulty === selectedDifficulty
     return categoryMatch && difficultyMatch
   })
+
+  const stats = useMemo(() => {
+    const list = exercises ?? []
+    const totalCompletions = list.reduce((sum, e) => sum + e.completedBy, 0)
+    const avgTime = list.length ? Math.round(list.reduce((sum, e) => sum + e.estimatedTime, 0) / list.length) : 0
+    return { count: list.length, totalCompletions, avgTime }
+  }, [exercises])
 
   return (
     <div className="page-shell">
@@ -125,31 +84,26 @@ export default function PracticePage() {
             </h1>
           </div>
           <p className="page-subtitle">
-            תרגל את המיומנויות שלך עם פרויקטים מעשיים ומאתגרים. 
+            תרגל את המיומנויות שלך עם פרויקטים מעשיים ומאתגרים.
             בנה פורטפוליו מרשים וצבור ניסיון אמיתי בפיתוח.
           </p>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        {/* Stats Cards — real numbers derived from actual completions */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card className="p-6 text-center">
             <Target className="h-8 w-8 text-primary-600 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-gray-900 dark:text-white">6</div>
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">{stats.count}</div>
             <div className="text-sm text-gray-600 dark:text-gray-300">תרגילים זמינים</div>
           </Card>
           <Card className="p-6 text-center">
-            <Users className="h-8 w-8 text-green-600 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-gray-900 dark:text-white">2.1K</div>
-            <div className="text-sm text-gray-600 dark:text-gray-300">מפתחים פעילים</div>
-          </Card>
-          <Card className="p-6 text-center">
             <Trophy className="h-8 w-8 text-yellow-600 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-gray-900 dark:text-white">4.5</div>
-            <div className="text-sm text-gray-600 dark:text-gray-300">דירוג ממוצע</div>
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">{stats.totalCompletions}</div>
+            <div className="text-sm text-gray-600 dark:text-gray-300">השלמות בפועל</div>
           </Card>
           <Card className="p-6 text-center">
             <Clock className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-gray-900 dark:text-white">45</div>
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">{stats.avgTime}</div>
             <div className="text-sm text-gray-600 dark:text-gray-300">דקות ממוצע</div>
           </Card>
         </div>
@@ -157,7 +111,6 @@ export default function PracticePage() {
         {/* Filters */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Category Filter */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                 קטגוריה
@@ -175,7 +128,6 @@ export default function PracticePage() {
               </select>
             </div>
 
-            {/* Difficulty Filter */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                 רמת קושי
@@ -195,7 +147,28 @@ export default function PracticePage() {
           </div>
         </div>
 
+        {/* Loading state */}
+        {exercises === null && !error && (
+          <div className="flex flex-col items-center justify-center gap-3 py-20 text-slate-500">
+            <Loader2 className="h-8 w-8 animate-spin" />
+            <p>טוען תרגילים מהשרת…</p>
+          </div>
+        )}
+
+        {/* Error state */}
+        {error && (
+          <div className="text-center py-16">
+            <Code2 className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-2">לא ניתן לטעון תרגילים כרגע</h3>
+            <p className="text-gray-600 dark:text-gray-300">
+              ודא שה-API רץ ושהורצה{' '}
+              <code className="rounded bg-gray-100 px-1.5 py-0.5 dark:bg-gray-800">pnpm --filter @follstack/api seed</code>.
+            </p>
+          </div>
+        )}
+
         {/* Exercises Grid */}
+        {exercises !== null && !error && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {filteredExercises.map((exercise) => (
             <Card key={exercise.id} className="p-6 hover:shadow-lg transition-shadow duration-300">
@@ -217,7 +190,6 @@ export default function PracticePage() {
                 {exercise.description}
               </p>
 
-              {/* Tags */}
               <div className="flex flex-wrap gap-2 mb-4">
                 {exercise.tags.map((tag, index) => (
                   <span
@@ -229,46 +201,33 @@ export default function PracticePage() {
                 ))}
               </div>
 
-              {/* Exercise Stats */}
               <div className="grid grid-cols-2 gap-4 mb-6 text-sm text-gray-600 dark:text-gray-300">
                 <div className="flex items-center">
                   <Clock className="h-4 w-4 ml-2" />
                   <span>{exercise.estimatedTime} דקות</span>
                 </div>
                 <div className="flex items-center">
-                  <Users className="h-4 w-4 ml-2" />
-                  <span>{exercise.completedBy.toLocaleString()}</span>
-                </div>
-                <div className="flex items-center">
                   <Trophy className="h-4 w-4 ml-2" />
-                  <span>{exercise.averageRating}/5</span>
-                </div>
-                <div className="flex items-center">
-                  <Play className="h-4 w-4 ml-2" />
-                  <span>התחל עכשיו</span>
+                  <span>{exercise.completedBy} השלימו</span>
                 </div>
               </div>
 
               <div className="flex gap-3">
                 <Link
-                  href={`/practice/${exercise.id}`}
+                  href={`/practice/${exercise.slug}`}
                   className="flex-1 rounded-lg bg-primary-600 py-3 px-4 text-center font-medium text-white transition-colors duration-200 hover:bg-primary-700 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
                 >
+                  <Play className="inline h-4 w-4 ml-1" />
                   התחל תרגיל
-                </Link>
-                <Link
-                  href={`/practice/${exercise.id}`}
-                  className="rounded-lg border border-gray-300 px-4 py-3 text-gray-700 transition-colors duration-200 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
-                >
-                  תצוגה מקדימה
                 </Link>
               </div>
             </Card>
           ))}
         </div>
+        )}
 
         {/* Empty State */}
-        {filteredExercises.length === 0 && (
+        {exercises !== null && !error && filteredExercises.length === 0 && (
           <div className="text-center py-12">
             <Code2 className="h-16 w-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-2">
@@ -279,20 +238,6 @@ export default function PracticePage() {
             </p>
           </div>
         )}
-
-        {/* Call to Action */}
-        <div className="mt-16 bg-gradient-to-r from-primary-600 to-primary-800 rounded-lg p-8 text-white text-center">
-          <h2 className="text-3xl font-bold mb-4">מוכן לאתגר?</h2>
-          <p className="text-xl mb-6 opacity-90">
-            בחר תרגיל והתחל לבנות את המיומנויות שלך. כל תרגיל כולל הנחיות מפורטות ופתרון מוכן.
-          </p>
-          <Link
-            href="/practice/1"
-            className="inline-block rounded-lg bg-white px-8 py-3 font-medium text-primary-600 transition-colors duration-200 hover:bg-gray-100"
-          >
-            התחל עכשיו
-          </Link>
-        </div>
       </div>
   )
 }

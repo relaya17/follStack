@@ -22,6 +22,7 @@ import authRoutes from '@/routes/auth'
 import userRoutes from '@/routes/user'
 import learningRoutes from '@/routes/learning'
 import quizRoutes from '@/routes/quiz'
+import practiceRoutes from '@/routes/practice'
 import projectRoutes from '@/routes/project'
 import communityRoutes from '@/routes/community'
 import aiRoutes from '@/routes/ai'
@@ -152,6 +153,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/user', userRoutes)
 app.use('/api/learning', learningRoutes)
 app.use('/api/quiz', quizRoutes)
+app.use('/api/practice', practiceRoutes)
 app.use('/api/project', projectRoutes)
 app.use('/api/community', communityRoutes)
 app.use('/api/ai', aiRoutes)

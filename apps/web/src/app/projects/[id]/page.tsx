@@ -2,31 +2,24 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { FolderOpen, Users } from 'lucide-react'
 import { Card } from '@follstack/ui'
+import { apiJson } from '@/lib/api'
 
-const PROJECTS: Record<
-  string,
-  { title: string; description: string; stack: string[]; repo?: string }
-> = {
-  portfolio: {
-    title: 'Portfolio Site',
-    description: 'בניית תיק עבודות אישי עם דפי פרויקטים וטופס יצירת קשר.',
-    stack: ['HTML', 'CSS', 'JavaScript'],
-  },
-  todo: {
-    title: 'Todo App',
-    description: 'אפליקציית משימות עם שמירה מקומית וסינון.',
-    stack: ['React', 'TypeScript'],
-  },
-  chat: {
-    title: 'Chat App',
-    description: 'צ׳אט בזמן אמת עם חדרים והודעות.',
-    stack: ['React', 'Node', 'Socket.IO'],
-  },
-  ecommerce: {
-    title: 'Mini Shop',
-    description: 'חנות קטנה עם עגלת קניות ו־API.',
-    stack: ['Next.js', 'Express', 'MongoDB'],
-  },
+interface ApiProjectDetail {
+  id: string
+  slug: string
+  title: string
+  description: string
+  technologies: string[]
+  estimatedTime: string
+  status: string
+  contributors: number
+  stars: number
+  repoUrl?: string
+}
+
+interface ProjectResponse {
+  success: boolean
+  data: ApiProjectDetail
 }
 
 export default async function ProjectPage({
@@ -35,15 +28,10 @@ export default async function ProjectPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const project =
-    PROJECTS[id] ??
-    ({
-      title: `פרויקט ${id}`,
-      description: 'פרטי הפרויקט — אפשר להתחיל לבנות או לבקש ליווי מהמנטור.',
-      stack: ['Full-Stack'],
-    } as const)
+  const res = await apiJson<ProjectResponse>(`/api/project/${id}`)
+  const project = res?.success ? res.data : null
 
-  if (!id) notFound()
+  if (!project) notFound()
 
   return (
     <div className="page-shell">
@@ -65,8 +53,8 @@ export default async function ProjectPage({
 
       <Card className="mb-8 p-6 text-right">
         <h2 className="section-title mb-3">טכנולוגיות</h2>
-        <div className="flex flex-wrap justify-start gap-2">
-          {project.stack.map((tech) => (
+        <div className="flex flex-wrap justify-start gap-2 mb-4">
+          {project.technologies.map((tech) => (
             <span
               key={tech}
               className="rounded-full bg-primary-50 px-3 py-1 text-sm font-semibold text-primary-700 dark:bg-primary-950 dark:text-primary-300"
@@ -74,6 +62,11 @@ export default async function ProjectPage({
               {tech}
             </span>
           ))}
+        </div>
+        <div className="flex flex-wrap gap-4 text-sm text-slate-500">
+          <span>⏱ {project.estimatedTime}</span>
+          <span>{project.contributors} משתתפים</span>
+          <span>{project.stars} כוכבים</span>
         </div>
       </Card>
 
