@@ -2,6 +2,12 @@ import { AuthRequest } from '@/middleware/auth'
 import { Request, Response, NextFunction } from 'express'
 import { Project } from '@/models/Project'
 import { AppError } from '@/middleware/errorHandler'
+import {
+  findCuratedProject,
+  isMongoReady,
+  listCuratedProjects,
+  type CuratedProject,
+} from '@/data/curatedContent'
 
 function catalogItem(p: any) {
   return {
@@ -20,6 +26,29 @@ function catalogItem(p: any) {
   }
 }
 
+function curatedCatalogItem(p: CuratedProject) {
+  return {
+    id: p.id,
+    slug: p.slug,
+    title: p.title,
+    description: p.description,
+    category: p.category,
+    technologies: p.technologies,
+    difficulty: p.difficulty,
+    estimatedTime: p.estimatedTime,
+    status: p.status,
+    contributors: 0,
+    stars: 0,
+    lastUpdated: new Date().toISOString(),
+  }
+}
+
+function requireDb() {
+  if (!isMongoReady()) {
+    throw new AppError('פעולה זו דורשת חיבור למסד נתונים. הגדר MONGODB_URI והסר SKIP_DB.', 503)
+  }
+}
+
 /**
  * @swagger
  * /api/project:
@@ -29,19 +58,34 @@ function catalogItem(p: any) {
  */
 export const getProjects = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const { status, category, difficulty } = req.query
-    const query: Record<string, unknown> = { isPublished: true }
-    if (status) query.status = status
-    if (category) query.category = category
-    if (difficulty) query.difficulty = difficulty
+    const status = typeof req.query.status === 'string' ? req.query.status : undefined
+    const category = typeof req.query.category === 'string' ? req.query.category : undefined
+    const difficulty = typeof req.query.difficulty === 'string' ? req.query.difficulty : undefined
 
-    const projects = await Project.find(query).sort({ createdAt: -1 })
+    if (isMongoReady()) {
+      try {
+        const query: Record<string, unknown> = { isPublished: true }
+        if (status) query.status = status
+        if (category) query.category = category
+        if (difficulty) query.difficulty = difficulty
 
-    res.status(200).json({
-      success: true,
-      count: projects.length,
-      data: projects.map(catalogItem),
-    })
+        const projects = await Project.find(query).sort({ createdAt: -1 })
+        if (projects.length > 0) {
+          res.status(200).json({
+            success: true,
+            count: projects.length,
+            source: 'database',
+            data: projects.map(catalogItem),
+          })
+          return
+        }
+      } catch {
+        // curated fallback
+      }
+    }
+
+    const data = listCuratedProjects({ status, category, difficulty }).map(curatedCatalogItem)
+    res.status(200).json({ success: true, count: data.length, source: 'curated', data })
   } catch (error) {
     next(error)
   }
@@ -56,6 +100,7 @@ export const getProjects = async (req: Request, res: Response, next: NextFunctio
  */
 export const createProject = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
+    requireDb()
     const { title, description, category, technologies, difficulty, estimatedTime, maxMembers, repoUrl } = req.body
 
     if (!title || !description || !category) {
@@ -104,22 +149,43 @@ export const getProject = async (req: Request, res: Response, next: NextFunction
   try {
     const { id } = req.params
 
-    const project = id.match(/^[0-9a-fA-F]{24}$/)
-      ? await Project.findById(id).populate('members.user', 'name avatar').populate('createdBy', 'name avatar')
-      : await Project.findOne({ slug: id }).populate('members.user', 'name avatar').populate('createdBy', 'name avatar')
+    if (isMongoReady()) {
+      try {
+        const project = id.match(/^[0-9a-fA-F]{24}$/)
+          ? await Project.findById(id).populate('members.user', 'name avatar').populate('createdBy', 'name avatar')
+          : await Project.findOne({ slug: id }).populate('members.user', 'name avatar').populate('createdBy', 'name avatar')
 
-    if (!project) {
-      throw new AppError('פרויקט לא נמצא', 404)
+        if (project) {
+          res.status(200).json({
+            success: true,
+            source: 'database',
+            data: {
+              ...catalogItem(project),
+              maxMembers: project.maxMembers,
+              repoUrl: project.repoUrl,
+              createdBy: project.createdBy,
+              members: project.members,
+            },
+          })
+          return
+        }
+      } catch {
+        // curated fallback
+      }
     }
+
+    const curated = findCuratedProject(id)
+    if (!curated) throw new AppError('פרויקט לא נמצא', 404)
 
     res.status(200).json({
       success: true,
+      source: 'curated',
       data: {
-        ...catalogItem(project),
-        maxMembers: project.maxMembers,
-        repoUrl: project.repoUrl,
-        createdBy: project.createdBy,
-        members: project.members,
+        ...curatedCatalogItem(curated),
+        maxMembers: undefined,
+        repoUrl: undefined,
+        createdBy: null,
+        members: [],
       },
     })
   } catch (error) {
@@ -136,6 +202,7 @@ export const getProject = async (req: Request, res: Response, next: NextFunction
  */
 export const updateProject = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
+    requireDb()
     const { id } = req.params
     const project = await Project.findById(id)
 
@@ -166,6 +233,7 @@ export const updateProject = async (req: AuthRequest, res: Response, next: NextF
  */
 export const deleteProject = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
+    requireDb()
     const { id } = req.params
     const project = await Project.findById(id)
 
@@ -190,6 +258,7 @@ export const deleteProject = async (req: AuthRequest, res: Response, next: NextF
  */
 export const joinProject = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
+    requireDb()
     const { id } = req.params
     const project = await Project.findById(id)
     if (!project) throw new AppError('פרויקט לא נמצא', 404)
@@ -222,6 +291,7 @@ export const joinProject = async (req: AuthRequest, res: Response, next: NextFun
  */
 export const leaveProject = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
+    requireDb()
     const { id } = req.params
     const project = await Project.findById(id)
     if (!project) throw new AppError('פרויקט לא נמצא', 404)
@@ -244,6 +314,7 @@ export const leaveProject = async (req: AuthRequest, res: Response, next: NextFu
  */
 export const toggleStarProject = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
+    requireDb()
     const { id } = req.params
     const project = await Project.findById(id)
     if (!project) throw new AppError('פרויקט לא נמצא', 404)

@@ -907,6 +907,88 @@ export const CURATED_QUIZZES: CuratedQuiz[] = [
   },
 ]
 
+export type CuratedProject = {
+  id: string
+  slug: string
+  title: string
+  description: string
+  category: 'Full Stack' | 'Frontend' | 'Backend' | 'Mobile'
+  technologies: string[]
+  difficulty: 'beginner' | 'intermediate' | 'advanced'
+  estimatedTime: string
+  status: 'planned' | 'in-progress' | 'completed'
+}
+
+export const CURATED_PROJECTS: CuratedProject[] = [
+  {
+    id: 'proj-ecommerce',
+    slug: 'ecommerce-platform',
+    title: 'מערכת ניהול חנות אונליין',
+    description:
+      'פיתוח מערכת מלאה לניהול חנות אונליין עם React, Node.js ו-MongoDB. כולל מערכת תשלומים, ניהול מלאי ופאנל ניהול.',
+    category: 'Full Stack',
+    technologies: ['React', 'Node.js', 'MongoDB', 'Stripe', 'JWT'],
+    difficulty: 'advanced',
+    estimatedTime: '4-6 שבועות',
+    status: 'planned',
+  },
+  {
+    id: 'proj-weather',
+    slug: 'weather-app',
+    title: 'אפליקציית מזג אוויר',
+    description: 'אפליקציית מזג אוויר אינטראקטיבית עם חיזוי 7 ימים, מפה עם מיקום המשתמש ועדכונים בזמן אמת.',
+    category: 'Frontend',
+    technologies: ['React', 'TypeScript', 'OpenWeather API', 'Leaflet'],
+    difficulty: 'intermediate',
+    estimatedTime: '2-3 שבועות',
+    status: 'in-progress',
+  },
+  {
+    id: 'proj-blog',
+    slug: 'blog-platform',
+    title: 'פלטפורמת בלוגים',
+    description: 'פלטפורמה לכתיבת ופרסום בלוגים עם מערכת תגובות, חיפוש מתקדם ומערכת הרשאות.',
+    category: 'Full Stack',
+    technologies: ['Next.js', 'Prisma', 'PostgreSQL', 'Tailwind CSS'],
+    difficulty: 'intermediate',
+    estimatedTime: '3-4 שבועות',
+    status: 'planned',
+  },
+  {
+    id: 'proj-snake',
+    slug: 'snake-game',
+    title: 'משחק Snake',
+    description: 'מימוש קלאסי של משחק הנחש עם JavaScript טהור. כולל מערכת ניקוד ורמות קושי.',
+    category: 'Frontend',
+    technologies: ['HTML5', 'CSS3', 'JavaScript', 'Canvas API'],
+    difficulty: 'beginner',
+    estimatedTime: '1-2 שבועות',
+    status: 'completed',
+  },
+  {
+    id: 'proj-tasks',
+    slug: 'task-manager',
+    title: 'מערכת ניהול משימות',
+    description: 'אפליקציית ניהול משימות מתקדמת עם דרגי עדיפות, תגיות, חיפוש וסנכרון בין מכשירים.',
+    category: 'Mobile',
+    technologies: ['React Native', 'Firebase', 'Redux Toolkit'],
+    difficulty: 'intermediate',
+    estimatedTime: '3-5 שבועות',
+    status: 'in-progress',
+  },
+  {
+    id: 'proj-users-api',
+    slug: 'user-management-api',
+    title: 'API לניהול משתמשים',
+    description: 'RESTful API מלא לניהול משתמשים עם אימות, הרשאות וגיבויים אוטומטיים ותיעוד Swagger.',
+    category: 'Backend',
+    technologies: ['Node.js', 'Express', 'MongoDB', 'JWT', 'Swagger'],
+    difficulty: 'intermediate',
+    estimatedTime: '2-3 שבועות',
+    status: 'planned',
+  },
+]
+
 export function listCuratedQuizzes(filters?: { category?: string; difficulty?: string }) {
   return CURATED_QUIZZES.filter((q) => {
     const catOk = !filters?.category || filters.category === 'all' || q.category === filters.category
@@ -916,12 +998,30 @@ export function listCuratedQuizzes(filters?: { category?: string; difficulty?: s
   })
 }
 
+export function listCuratedProjects(filters?: {
+  category?: string
+  difficulty?: string
+  status?: string
+}) {
+  return CURATED_PROJECTS.filter((p) => {
+    const catOk = !filters?.category || filters.category === 'all' || p.category === filters.category
+    const diffOk =
+      !filters?.difficulty || filters.difficulty === 'all' || p.difficulty === filters.difficulty
+    const statusOk = !filters?.status || filters.status === 'all' || p.status === filters.status
+    return catOk && diffOk && statusOk
+  })
+}
+
 export function findCuratedQuiz(idOrSlug: string) {
   return CURATED_QUIZZES.find((q) => q.id === idOrSlug || q.slug === idOrSlug) ?? null
 }
 
 export function findCuratedModule(idOrSlug: string) {
   return CURATED_MODULES.find((m) => m.id === idOrSlug || m.slug === idOrSlug) ?? null
+}
+
+export function findCuratedProject(idOrSlug: string) {
+  return CURATED_PROJECTS.find((p) => p.id === idOrSlug || p.slug === idOrSlug) ?? null
 }
 
 export function isMongoReady(): boolean {

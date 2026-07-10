@@ -19,6 +19,7 @@ import {
   Rocket
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { apiJson } from '@/lib/api'
 
 interface UserStats {
   level: number
@@ -121,6 +122,34 @@ export function GameSystem({
   const calculateXPToNext = (level: number): number => {
     return level * 100
   }
+
+  // Load the user's real progress (XP/level/streak/badge count) from actual quiz + practice
+  // activity instead of always starting from zero. Requires login — if the request fails
+  // (logged out, API unreachable) the panel simply stays at the safe zeroed defaults above.
+  useEffect(() => {
+    let cancelled = false
+    apiJson<{
+      success: boolean
+      xp: number
+      level: number
+      badges: string[]
+      metrics: { streak: number; totalLessonsCompleted: number }
+    }>('/api/analytics/progress').then((res) => {
+      if (cancelled || !res?.success) return
+      setStats((prev) => ({
+        ...prev,
+        xp: res.xp,
+        level: res.level,
+        xpToNext: calculateXPToNext(res.level) - res.xp,
+        streak: res.metrics.streak,
+        totalLessons: res.metrics.totalLessonsCompleted,
+      }))
+    })
+    return () => {
+      cancelled = true
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // Add XP and handle level ups
   const addXP = useCallback((amount: number, source: string = 'lesson') => {

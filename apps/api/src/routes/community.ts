@@ -10,7 +10,8 @@ import {
     deleteForumPost,
     getChatMessages,
     sendChatMessage,
-    getLeaderboard
+    getLeaderboard,
+    getCommunityStats
 } from '@/controllers/communityController'
 import { protect, optionalAuth } from '@/middleware/auth'
 
@@ -296,5 +297,17 @@ router.post('/chat/:roomId/messages', protect, sendChatMessage)
  *         description: Leaderboard retrieved successfully
  */
 router.get('/leaderboard', optionalAuth, getLeaderboard)
+
+/**
+ * @swagger
+ * /api/community/stats:
+ *   get:
+ *     summary: Get real community-wide stats
+ *     tags: [Community]
+ *     responses:
+ *       200:
+ *         description: Stats retrieved successfully
+ */
+router.get('/stats', getCommunityStats)
 
 export default router

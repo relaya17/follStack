@@ -1,9 +1,26 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Users, MessageCircle, Trophy, Calendar, TrendingUp } from 'lucide-react'
+import { Users, MessageCircle, Trophy, Calendar, TrendingUp, Target, Loader2 } from 'lucide-react'
 import { Card } from '@follstack/ui'
+import { apiJson } from '@/lib/api'
+
+interface CommunityStats {
+  totalUsers: number
+  quizAttemptsThisWeek: number
+  totalQuizAttempts: number
+  totalExerciseCompletions: number
+}
+
+interface LeaderboardEntry {
+  rank: number
+  user: { id: string; name: string; avatar: string }
+  xp: number
+  level: number
+  quizzesTaken: number
+  exercisesCompleted: number
+}
 
 
 interface CommunityEvent {
@@ -17,22 +34,13 @@ interface CommunityEvent {
   location: string
 }
 
-interface LeaderboardUser {
-  id: string
-  name: string
-  avatar: string
-  points: number
-  rank: number
-  badges: string[]
-  recentActivity: string
-}
-
+// TODO: no Event model exists yet — these are illustrative examples, not live registrations.
 const mockEvents: CommunityEvent[] = [
   {
     id: '1',
     title: 'React Workshop - Advanced Hooks',
     description: 'סדנה מעשית על React Hooks מתקדמים - useContext, useReducer, Custom Hooks',
-    date: '2024-01-20',
+    date: '2026-07-20',
     time: '18:00',
     type: 'workshop',
     participants: 45,
@@ -42,7 +50,7 @@ const mockEvents: CommunityEvent[] = [
     id: '2',
     title: 'Node.js Meetup - Tel Aviv',
     description: 'מפגש קהילת Node.js בתל אביב עם הרצאות על Performance ו-Security',
-    date: '2024-01-25',
+    date: '2026-07-28',
     time: '19:30',
     type: 'meetup',
     participants: 120,
@@ -52,7 +60,7 @@ const mockEvents: CommunityEvent[] = [
     id: '3',
     title: 'Hackathon - AI & Web Development',
     description: 'האקאתון של 48 שעות לפיתוח פתרונות AI עם טכנולוגיות Web',
-    date: '2024-02-10',
+    date: '2026-08-14',
     time: '09:00',
     type: 'hackathon',
     participants: 200,
@@ -62,59 +70,11 @@ const mockEvents: CommunityEvent[] = [
     id: '4',
     title: 'Webinar - TypeScript Best Practices',
     description: 'וובינר על שיטות עבודה מומלצות ב-TypeScript עם דוגמאות מעשיות',
-    date: '2024-01-30',
+    date: '2026-08-02',
     time: '20:00',
     type: 'webinar',
     participants: 89,
     location: 'אונליין'
-  }
-]
-
-const mockLeaderboard: LeaderboardUser[] = [
-  {
-    id: '1',
-    name: 'דני כהן',
-    avatar: '/avatars/user1.jpg',
-    points: 2450,
-    rank: 1,
-    badges: ['Expert', 'Contributor', 'Mentor'],
-    recentActivity: 'סיים מבחן React Advanced'
-  },
-  {
-    id: '2',
-    name: 'שרה לוי',
-    avatar: '/avatars/user2.jpg',
-    points: 2180,
-    rank: 2,
-    badges: ['Expert', 'Contributor'],
-    recentActivity: 'השלים פרויקט Node.js'
-  },
-  {
-    id: '3',
-    name: 'מיכאל אברהם',
-    avatar: '/avatars/user3.jpg',
-    points: 1950,
-    rank: 3,
-    badges: ['Advanced', 'Contributor'],
-    recentActivity: 'עזר למתחיל בקהילה'
-  },
-  {
-    id: '4',
-    name: 'רחל דוד',
-    avatar: '/avatars/user4.jpg',
-    points: 1720,
-    rank: 4,
-    badges: ['Advanced'],
-    recentActivity: 'השתתף בהאקאתון'
-  },
-  {
-    id: '5',
-    name: 'יוסי שמואל',
-    avatar: '/avatars/user5.jpg',
-    points: 1580,
-    rank: 5,
-    badges: ['Intermediate'],
-    recentActivity: 'סיים קורס JavaScript'
   }
 ]
 
@@ -134,6 +94,26 @@ const eventTypeLabels = {
 
 export default function CommunityPage() {
   const [activeTab, setActiveTab] = useState<'events' | 'leaderboard' | 'forum'>('events')
+  const [stats, setStats] = useState<CommunityStats | null>(null)
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[] | null>(null)
+  const [leaderboardError, setLeaderboardError] = useState(false)
+
+  useEffect(() => {
+    apiJson<{ success: boolean; data: CommunityStats }>('/api/community/stats').then((res) => {
+      if (res?.success) setStats(res.data)
+    })
+  }, [])
+
+  useEffect(() => {
+    if (activeTab !== 'leaderboard' || leaderboard !== null) return
+    apiJson<{ success: boolean; data: LeaderboardEntry[] }>('/api/community/leaderboard').then((res) => {
+      if (res?.success) {
+        setLeaderboard(res.data)
+      } else {
+        setLeaderboardError(true)
+      }
+    })
+  }, [activeTab, leaderboard])
 
   return (
     <div className="page-shell">
@@ -150,27 +130,27 @@ export default function CommunityPage() {
           </p>
         </div>
 
-        {/* Community Stats */}
+        {/* Community Stats — real numbers from the database */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card className="p-6 text-center">
             <Users className="h-8 w-8 text-primary-600 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-gray-900 dark:text-white">2,847</div>
-            <div className="text-sm text-gray-600 dark:text-gray-300">מפתחים פעילים</div>
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">{stats?.totalUsers ?? '—'}</div>
+            <div className="text-sm text-gray-600 dark:text-gray-300">משתמשים רשומים</div>
           </Card>
           <Card className="p-6 text-center">
             <MessageCircle className="h-8 w-8 text-green-600 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-gray-900 dark:text-white">1,234</div>
-            <div className="text-sm text-gray-600 dark:text-gray-300">הודעות השבוע</div>
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">{stats?.quizAttemptsThisWeek ?? '—'}</div>
+            <div className="text-sm text-gray-600 dark:text-gray-300">מבחנים השבוע</div>
           </Card>
           <Card className="p-6 text-center">
-            <Calendar className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-gray-900 dark:text-white">12</div>
-            <div className="text-sm text-gray-600 dark:text-gray-300">אירועים החודש</div>
+            <Target className="h-8 w-8 text-blue-600 mx-auto mb-2" />
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">{stats?.totalExerciseCompletions ?? '—'}</div>
+            <div className="text-sm text-gray-600 dark:text-gray-300">תרגילים הושלמו</div>
           </Card>
           <Card className="p-6 text-center">
             <Trophy className="h-8 w-8 text-yellow-600 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-gray-900 dark:text-white">456</div>
-            <div className="text-sm text-gray-600 dark:text-gray-300">פתרונות עזרה</div>
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">{stats?.totalQuizAttempts ?? '—'}</div>
+            <div className="text-sm text-gray-600 dark:text-gray-300">מבחנים הושלמו סה&quot;כ</div>
           </Card>
         </div>
 
@@ -267,46 +247,61 @@ export default function CommunityPage() {
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white">לוח מובילים</h2>
                   <div className="flex items-center text-sm text-gray-600 dark:text-gray-300">
                     <TrendingUp className="h-4 w-4 ml-2" />
-                    <span>עדכון שבועי</span>
+                    <span>מבוסס על ציוני מבחנים ותרגילים אמיתיים</span>
                   </div>
                 </div>
 
-                <div className="space-y-4">
-                  {mockLeaderboard.map((user) => (
-                    <Card key={user.id} className="p-4 hover:shadow-lg transition-shadow duration-300">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4 rtl:space-x-reverse">
-                          <div className="flex items-center justify-center w-12 h-12 bg-primary-100 dark:bg-primary-900 rounded-full">
-                            <span className="text-lg font-bold text-primary-600 dark:text-primary-400">
-                              {user.rank}
-                            </span>
-                          </div>
-                          <div>
-                            <h3 className="font-semibold text-gray-900 dark:text-white">{user.name}</h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-300">{user.recentActivity}</p>
-                          </div>
-                        </div>
+                {leaderboard === null && !leaderboardError && (
+                  <div className="flex flex-col items-center justify-center gap-3 py-16 text-slate-500">
+                    <Loader2 className="h-8 w-8 animate-spin" />
+                    <p>טוען לוח מובילים…</p>
+                  </div>
+                )}
 
-                        <div className="text-right">
-                          <div className="flex items-center mb-2">
-                            <Trophy className="h-4 w-4 text-yellow-500 ml-2" />
-                            <span className="font-bold text-gray-900 dark:text-white">{user.points} נקודות</span>
-                          </div>
-                          <div className="flex flex-wrap gap-1">
-                            {user.badges.map((badge, badgeIndex) => (
-                              <span
-                                key={badgeIndex}
-                                className="bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 px-2 py-1 rounded text-xs"
-                              >
-                                {badge}
+                {leaderboardError && (
+                  <p className="py-8 text-center text-gray-600 dark:text-gray-300">לא ניתן לטעון את לוח המובילים כרגע.</p>
+                )}
+
+                {leaderboard !== null && leaderboard.length === 0 && (
+                  <div className="py-12 text-center">
+                    <Trophy className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-2">אין עדיין נתונים</h3>
+                    <p className="text-gray-600 dark:text-gray-300">
+                      ברגע שמשתמשים ישלימו מבחנים ותרגילים, הם יופיעו כאן.
+                    </p>
+                  </div>
+                )}
+
+                {leaderboard !== null && leaderboard.length > 0 && (
+                  <div className="space-y-4">
+                    {leaderboard.map((entry) => (
+                      <Card key={entry.user.id} className="p-4 hover:shadow-lg transition-shadow duration-300">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-4 rtl:space-x-reverse">
+                            <div className="flex items-center justify-center w-12 h-12 bg-primary-100 dark:bg-primary-900 rounded-full">
+                              <span className="text-lg font-bold text-primary-600 dark:text-primary-400">
+                                {entry.rank}
                               </span>
-                            ))}
+                            </div>
+                            <div>
+                              <h3 className="font-semibold text-gray-900 dark:text-white">{entry.user.name}</h3>
+                              <p className="text-sm text-gray-600 dark:text-gray-300">
+                                רמה {entry.level} · {entry.quizzesTaken} מבחנים · {entry.exercisesCompleted} תרגילים
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="text-right">
+                            <div className="flex items-center mb-2">
+                              <Trophy className="h-4 w-4 text-yellow-500 ml-2" />
+                              <span className="font-bold text-gray-900 dark:text-white">{entry.xp} XP</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
+                      </Card>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 

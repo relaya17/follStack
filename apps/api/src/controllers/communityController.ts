@@ -1,6 +1,10 @@
 import { AuthRequest } from '@/middleware/auth'
 import { Request, Response, NextFunction } from 'express'
 import { AppError } from '@/middleware/errorHandler'
+import { computeLeaderboard } from '@/services/progressService'
+import { User } from '@/models/User'
+import { QuizAttempt } from '@/models/Quiz'
+import { PracticeCompletion } from '@/models/Practice'
 
 /**
  * @swagger
@@ -454,56 +458,45 @@ export const sendChatMessage = async (req: AuthRequest, res: Response, next: Nex
  */
 export const getLeaderboard = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const { period = 'month', limit = 10 } = req.query
-
-    // This would typically come from a UserStats model
-    // For now, we'll return a mock response
-    const leaderboard = [
-      {
-        rank: 1,
-        user: {
-          id: '1',
-          name: 'שרה כהן',
-          avatar: ''
-        },
-        score: 1250,
-        level: 5,
-        badges: 8,
-        completedModules: 3,
-        completedProjects: 2
-      },
-      {
-        rank: 2,
-        user: {
-          id: '2',
-          name: 'דוד לוי',
-          avatar: ''
-        },
-        score: 1100,
-        level: 4,
-        badges: 6,
-        completedModules: 2,
-        completedProjects: 3
-      },
-      {
-        rank: 3,
-        user: {
-          id: '3',
-          name: 'מיכל אברהם',
-          avatar: ''
-        },
-        score: 950,
-        level: 4,
-        badges: 5,
-        completedModules: 2,
-        completedProjects: 1
-      }
-    ]
+    const limit = Math.min(Number(req.query.limit) || 10, 50)
+    const leaderboard = await computeLeaderboard(limit)
 
     res.status(200).json({
       success: true,
       count: leaderboard.length,
-      data: leaderboard
+      data: leaderboard,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+/**
+ * @swagger
+ * /api/community/stats:
+ *   get:
+ *     summary: Get real community-wide stats
+ *     tags: [Community]
+ */
+export const getCommunityStats = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+
+    const [totalUsers, quizAttemptsThisWeek, totalQuizAttempts, totalExerciseCompletions] = await Promise.all([
+      User.countDocuments({}),
+      QuizAttempt.countDocuments({ submittedAt: { $gte: oneWeekAgo } }),
+      QuizAttempt.countDocuments({}),
+      PracticeCompletion.countDocuments({}),
+    ])
+
+    res.status(200).json({
+      success: true,
+      data: {
+        totalUsers,
+        quizAttemptsThisWeek,
+        totalQuizAttempts,
+        totalExerciseCompletions,
+      },
     })
   } catch (error) {
     next(error)
