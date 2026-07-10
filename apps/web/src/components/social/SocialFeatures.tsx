@@ -29,7 +29,7 @@ import {
   Settings
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { apiUrl } from '@/lib/api'
+import { apiFetchWithRetry } from '@/lib/api'
 
 interface User {
   id: string
@@ -73,7 +73,7 @@ interface Challenge {
     badge?: string
   }
   participants: number
-  endDate: Date
+  endDate: string | Date
   isActive: boolean
   leaderboard: Array<{
     user: User
@@ -90,14 +90,14 @@ interface Post {
   likes: number
   commentsCount: number
   shares: number
-  createdAt: Date
+  createdAt: string | Date
   tags: string[]
   isLiked: boolean
   comments?: Array<{
     id: string
     author: User
     content: string
-    createdAt: Date
+    createdAt: string | Date
     likes: number
   }>
 }
@@ -130,21 +130,53 @@ export function SocialFeatures({
   // Load social data
   const loadSocialData = useCallback(async () => {
     try {
-      const response = await fetch(apiUrl('/api/social/feed'), {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      })
+      const response = await apiFetchWithRetry('/api/social/feed')
       
-      if (!response.ok) return
+      if (!response || !response.ok) return
       const contentType = response.headers.get('content-type') || ''
       if (!contentType.includes('application/json')) return
       const data = await response.json()
-      setPosts(data.posts || [])
+
+      const normalizeUser = (u: Partial<User> & { name?: string; id?: string } | undefined): User => ({
+        id: u?.id || 'unknown',
+        name: u?.name || 'משתמש',
+        avatar: u?.avatar || '',
+        level: u?.level ?? 1,
+        xp: u?.xp ?? 0,
+        streak: u?.streak ?? 0,
+        isOnline: u?.isOnline ?? false,
+        achievements: u?.achievements ?? 0,
+        rank: u?.rank || 'Bronze',
+      })
+
+      const normalizePost = (p: Record<string, unknown>): Post => {
+        const authorRaw = (p.author || p.user) as Partial<User> | undefined
+        return {
+          id: String(p.id || crypto.randomUUID()),
+          author: normalizeUser(authorRaw),
+          content: String(p.content || ''),
+          likes: Number(p.likes || 0),
+          commentsCount: Number(p.commentsCount ?? p.comments ?? 0),
+          shares: Number(p.shares || 0),
+          createdAt: (p.createdAt as string | Date) || new Date().toISOString(),
+          tags: Array.isArray(p.tags) ? (p.tags as string[]) : [],
+          isLiked: Boolean(p.isLiked),
+        }
+      }
+
+      setPosts(Array.isArray(data.posts) ? data.posts.map(normalizePost) : [])
       setGroups(data.groups || [])
       setChallenges(data.challenges || [])
-      setLeaderboard(data.leaderboard || [])
-      setFriends(data.friends || [])
+      setLeaderboard(
+        Array.isArray(data.leaderboard)
+          ? data.leaderboard.map((u: Partial<User>) => normalizeUser(u))
+          : [],
+      )
+      setFriends(
+        Array.isArray(data.friends)
+          ? data.friends.map((u: Partial<User>) => normalizeUser(u))
+          : [],
+      )
     } catch (error) {
       console.error('Error loading social data:', error)
     }
@@ -155,19 +187,15 @@ export function SocialFeatures({
     if (!newPost.trim()) return
 
     try {
-      const response = await fetch(apiUrl('/api/social/posts'), {
+      const response = await apiFetchWithRetry('/api/social/posts', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
         body: JSON.stringify({
           content: newPost,
           userId
         })
       })
 
-      if (!response.ok) return
+      if (!response || !response.ok) return
       const contentType = response.headers.get('content-type') || ''
       if (!contentType.includes('application/json')) return
       const post = await response.json()
@@ -181,13 +209,11 @@ export function SocialFeatures({
   // Like/Unlike post
   const toggleLike = useCallback(async (postId: string) => {
     try {
-      const response = await fetch(apiUrl(`/api/social/posts/${postId}/like`), {
+      const response = await apiFetchWithRetry(`/api/social/posts/${postId}/like`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
       })
 
+      if (!response || !response.ok) return
       const { isLiked, likes } = await response.json()
       
       setPosts(prev => prev.map(post => 
@@ -203,14 +229,11 @@ export function SocialFeatures({
   // Join study group
   const joinGroup = useCallback(async (groupId: string) => {
     try {
-      const response = await fetch(apiUrl(`/api/social/groups/${groupId}/join`), {
+      const response = await apiFetchWithRetry(`/api/social/groups/${groupId}/join`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
       })
 
-      if (response.ok) {
+      if (response?.ok) {
         loadSocialData() // Refresh data
         onJoinGroup?.(groupId)
       }
@@ -224,14 +247,11 @@ export function SocialFeatures({
     setIsJoiningChallenge(challengeId)
     
     try {
-      const response = await fetch(apiUrl(`/api/social/challenges/${challengeId}/join`), {
+      const response = await apiFetchWithRetry(`/api/social/challenges/${challengeId}/join`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
       })
 
-      if (response.ok) {
+      if (response?.ok) {
         loadSocialData() // Refresh data
         onJoinChallenge?.(challengeId)
       }
@@ -245,19 +265,15 @@ export function SocialFeatures({
   // Create study group
   const createGroup = useCallback(async (groupData: Partial<StudyGroup>) => {
     try {
-      const response = await fetch(apiUrl('/api/social/groups'), {
+      const response = await apiFetchWithRetry('/api/social/groups', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
         body: JSON.stringify({
           ...groupData,
           createdBy: userId
         })
       })
 
-      if (response.ok) {
+      if (response?.ok) {
         loadSocialData() // Refresh data
         onCreateGroup?.(groupData)
         setIsCreatingGroup(false)
@@ -273,8 +289,8 @@ export function SocialFeatures({
 
   const filteredGroups = groups.filter(group => 
     group.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    group.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    group.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+    (group.description || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (group.tags ?? []).some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
   )
 
   const filteredChallenges = challenges.filter(challenge =>
@@ -394,22 +410,22 @@ export function SocialFeatures({
                 >
                   <div className="flex items-start space-x-4 rtl:space-x-reverse mb-4">
                     <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold">
-                      {post.author.name.charAt(0).toUpperCase()}
+                      {(post.author?.name || '?').charAt(0).toUpperCase()}
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center space-x-2 rtl:space-x-reverse mb-1">
                         <h4 className="font-medium text-gray-900 dark:text-white">
-                          {post.author.name}
+                          {post.author?.name || 'משתמש'}
                         </h4>
                         <span className="text-sm text-gray-500 dark:text-gray-400">
-                          רמה {post.author.level}
+                          רמה {post.author?.level ?? 1}
                         </span>
                         <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
-                          {post.author.rank}
+                          {post.author?.rank || 'Bronze'}
                         </span>
                       </div>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {post.createdAt.toLocaleDateString()}
+                        {new Date(post.createdAt).toLocaleDateString('he-IL')}
                       </p>
                     </div>
                   </div>
@@ -492,7 +508,7 @@ export function SocialFeatures({
                   </p>
                   
                   <div className="flex flex-wrap gap-2 mb-4">
-                    {group.tags.map(tag => (
+                    {(group.tags ?? []).map(tag => (
                       <span
                         key={tag}
                         className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
@@ -506,13 +522,13 @@ export function SocialFeatures({
                     <div className="flex items-center space-x-2 rtl:space-x-reverse">
                       <Users className="h-4 w-4 text-gray-400" />
                       <span className="text-sm text-gray-600 dark:text-gray-400">
-                        {group.members.length}/{group.maxMembers}
+                        {Array.isArray(group.members) ? group.members.length : 0}/{group.maxMembers ?? 0}
                       </span>
                     </div>
                     <div className="flex items-center space-x-2 rtl:space-x-reverse">
                       <MessageCircle className="h-4 w-4 text-gray-400" />
                       <span className="text-sm text-gray-600 dark:text-gray-400">
-                        {group.activity.posts}
+                        {group.activity?.posts ?? 0}
                       </span>
                     </div>
                   </div>
@@ -590,7 +606,7 @@ export function SocialFeatures({
                       </span>
                     </div>
                     <div className="text-sm text-gray-600 dark:text-gray-400">
-                      {challenge.endDate.toLocaleDateString()}
+                      {new Date(challenge.endDate).toLocaleDateString('he-IL')}
                     </div>
                   </div>
                   

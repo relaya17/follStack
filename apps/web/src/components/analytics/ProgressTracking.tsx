@@ -29,12 +29,12 @@ import {
   RefreshCw
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { apiUrl } from '@/lib/api'
+import { apiFetchWithRetry } from '@/lib/api'
 
 interface LearningSession {
   id: string
-  startTime: Date
-  endTime: Date
+  startTime: string | Date
+  endTime: string | Date
   duration: number // minutes
   lessonId: string
   lessonTitle: string
@@ -118,13 +118,9 @@ export function ProgressTracking({
     setIsLoading(true)
     
     try {
-      const response = await fetch(apiUrl(`/api/analytics/progress?userId=${userId}&period=${selectedPeriod}`), {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      })
+      const response = await apiFetchWithRetry(`/api/analytics/progress?userId=${userId}&period=${selectedPeriod}`)
       
-      if (!response.ok) return
+      if (!response || !response.ok) return
       const contentType = response.headers.get('content-type') || ''
       if (!contentType.includes('application/json')) return
       const data = await response.json()
@@ -590,7 +586,7 @@ export function ProgressTracking({
                     {session.lessonTitle}
                   </h4>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {session.startTime.toLocaleDateString()} • {formatDuration(session.duration)}
+                    {new Date(session.startTime as string | Date).toLocaleDateString('he-IL')} • {formatDuration(session.duration)}
                   </p>
                 </div>
               </div>
@@ -648,7 +644,7 @@ export function ProgressTracking({
                   onClick={() => {
                     // Export CSV
                     const csvData = sessions.map(session => ({
-                      date: session.startTime.toISOString().split('T')[0],
+                      date: new Date(session.startTime).toISOString().split('T')[0],
                       lesson: session.lessonTitle,
                       duration: session.duration,
                       score: Math.round(session.score * 100),

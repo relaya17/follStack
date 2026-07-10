@@ -65,7 +65,7 @@ export const optionalAuth = async (req: AuthRequest, res: Response, next: NextFu
             token = req.headers.authorization.split(' ')[1]
         }
 
-        if (token) {
+        if (token && token !== 'null' && token !== 'undefined') {
             try {
                 const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any
                 const user = await User.findById(decoded.id).select('-password')

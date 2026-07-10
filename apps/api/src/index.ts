@@ -95,8 +95,16 @@ app.use(cors({
     origin: corsOrigins.length === 1 ? corsOrigins[0] : corsOrigins,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Access-Control-Request-Private-Network'],
 }))
+
+// Chrome Private Network Access (Cursor Simple Browser / localhost previews)
+app.use((req, res, next) => {
+    if (req.headers['access-control-request-private-network'] === 'true') {
+        res.setHeader('Access-Control-Allow-Private-Network', 'true')
+    }
+    next()
+})
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }))

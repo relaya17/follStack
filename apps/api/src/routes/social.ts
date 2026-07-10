@@ -8,6 +8,10 @@ const demoUser = {
   avatar: '',
   level: 12,
   xp: 2450,
+  streak: 5,
+  isOnline: true,
+  achievements: 8,
+  rank: 'Gold',
 }
 
 router.get('/feed', (_req: Request, res: Response) => {
@@ -15,18 +19,24 @@ router.get('/feed', (_req: Request, res: Response) => {
     posts: [
       {
         id: 'p1',
-        user: demoUser,
+        author: demoUser,
         content: 'סיימתי היום מודול React Hooks — ממליצה לתרגל useEffect עם cleanup!',
         likes: 18,
-        comments: 4,
+        commentsCount: 4,
+        shares: 2,
+        isLiked: false,
+        tags: ['react', 'hooks'],
         createdAt: new Date(Date.now() - 1000 * 60 * 90).toISOString(),
       },
       {
         id: 'p2',
-        user: { ...demoUser, id: 'u2', name: 'יואב לוי' },
+        author: { ...demoUser, id: 'u2', name: 'יואב לוי', level: 10, rank: 'Silver' },
         content: 'מי רוצה להצטרף לקבוצת תרגול Node.js בערב?',
         likes: 11,
-        comments: 7,
+        commentsCount: 7,
+        shares: 1,
+        isLiked: true,
+        tags: ['nodejs'],
         createdAt: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString(),
       },
     ],
@@ -34,35 +44,64 @@ router.get('/feed', (_req: Request, res: Response) => {
       {
         id: 'g1',
         name: 'React Intermediate',
-        members: 128,
-        topic: 'React',
         description: 'תרגול שבועי של קומפוננטות ו-Hooks',
+        members: [
+          demoUser,
+          { ...demoUser, id: 'u2', name: 'יואב לוי' },
+        ],
+        maxMembers: 50,
+        isPublic: true,
+        tags: ['React', 'Hooks'],
+        createdBy: 'u1',
+        createdAt: new Date().toISOString(),
+        activity: {
+          posts: 24,
+          discussions: 12,
+          lastActivity: new Date().toISOString(),
+        },
       },
       {
         id: 'g2',
         name: 'Full-Stack Builders',
-        members: 86,
-        topic: 'Projects',
         description: 'בניית פרויקטים מקצה לקצה',
+        members: [demoUser],
+        maxMembers: 40,
+        isPublic: true,
+        tags: ['Projects', 'Full-Stack'],
+        createdBy: 'u1',
+        createdAt: new Date().toISOString(),
+        activity: {
+          posts: 18,
+          discussions: 9,
+          lastActivity: new Date().toISOString(),
+        },
       },
     ],
     challenges: [
       {
         id: 'c1',
         title: '7 ימי JavaScript',
+        description: 'אתגר יומי קצר ב-JS למשך שבוע',
+        type: 'streak',
+        difficulty: 'medium',
+        reward: { xp: 500, gems: 20, badge: 'Streak' },
         participants: 240,
-        endsInDays: 4,
-        reward: 'תג Streak',
+        endDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 4).toISOString(),
+        isActive: true,
+        leaderboard: [
+          { user: { ...demoUser, id: 'u3', name: 'דניאל' }, score: 920, rank: 1 },
+          { user: demoUser, score: 810, rank: 2 },
+        ],
       },
     ],
     leaderboard: [
-      { id: 'u3', name: 'דניאל', xp: 5200, rank: 1 },
-      { id: 'u1', name: 'נועה כהן', xp: 2450, rank: 2 },
-      { id: 'u2', name: 'יואב לוי', xp: 2100, rank: 3 },
+      { ...demoUser, id: 'u3', name: 'דניאל', xp: 5200, rank: 'Diamond', level: 20 },
+      demoUser,
+      { ...demoUser, id: 'u2', name: 'יואב לוי', xp: 2100, rank: 'Silver', level: 10 },
     ],
     friends: [
-      { id: 'u2', name: 'יואב לוי', status: 'online' },
-      { id: 'u4', name: 'מאיה', status: 'offline' },
+      { ...demoUser, id: 'u2', name: 'יואב לוי', isOnline: true },
+      { ...demoUser, id: 'u4', name: 'מאיה', isOnline: false },
     ],
   })
 })
@@ -71,16 +110,19 @@ router.post('/posts', (req: Request, res: Response) => {
   const content = String(req.body?.content || '').trim()
   res.status(201).json({
     id: `p-${Date.now()}`,
-    user: demoUser,
+    author: demoUser,
     content: content || 'פוסט חדש',
     likes: 0,
-    comments: 0,
+    commentsCount: 0,
+    shares: 0,
+    isLiked: false,
+    tags: [],
     createdAt: new Date().toISOString(),
   })
 })
 
 router.post('/posts/:postId/like', (req: Request, res: Response) => {
-  res.json({ success: true, postId: req.params.postId, liked: true })
+  res.json({ isLiked: true, likes: 1, postId: req.params.postId })
 })
 
 router.post('/groups/:groupId/join', (req: Request, res: Response) => {
@@ -95,9 +137,14 @@ router.post('/groups', (req: Request, res: Response) => {
   res.status(201).json({
     id: `g-${Date.now()}`,
     name: req.body?.name || 'קבוצה חדשה',
-    members: 1,
-    topic: req.body?.topic || 'General',
     description: req.body?.description || '',
+    members: [demoUser],
+    maxMembers: 30,
+    isPublic: true,
+    tags: Array.isArray(req.body?.tags) ? req.body.tags : ['General'],
+    createdBy: req.body?.createdBy || 'demo-user',
+    createdAt: new Date().toISOString(),
+    activity: { posts: 0, discussions: 0, lastActivity: new Date().toISOString() },
   })
 })
 

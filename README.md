@@ -43,7 +43,7 @@ pnpm lint
 
 ## Production
 
-See **[DEPLOY.md](./DEPLOY.md)** for MongoDB Atlas, Vercel (web), Railway/Render (API), Docker Compose, and env templates:
+See **[DEPLOY.md](./DEPLOY.md)** for MongoDB Atlas, Netlify (web), Render (API), Docker Compose, and env templates:
 
 - `apps/api/.env.production.example`
 - `apps/web/.env.production.example`

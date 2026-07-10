@@ -2,17 +2,19 @@
 
 ## Architecture
 
+This project deploys to exactly two platforms. Do not reintroduce others (Vercel/Railway configs were removed to stop conflicting build settings from breaking deploys).
+
 | Service | Platform | Port / URL |
 |---------|----------|------------|
-| Web (Next.js) | **Netlify** (or Vercel) | e.g. `https://follstack.netlify.app` |
-| API (Express) | **Railway** or **Render** | HTTPS domain |
+| Web (Next.js) | **Netlify** | `https://follstack.netlify.app` |
+| API (Express) | **Render** | HTTPS domain |
 | Database | **MongoDB Atlas** | `mongodb+srv://…` |
 
 ```
-Browser → Netlify/Vercel (apps/web)
+Browser → Netlify (apps/web)
               │  NEXT_PUBLIC_API_URL
               ▼
-         Railway/Render (apps/api) → MongoDB Atlas
+         Render (apps/api) → MongoDB Atlas
 ```
 
 ---
@@ -21,35 +23,12 @@ Browser → Netlify/Vercel (apps/web)
 
 1. Create a free cluster at [cloud.mongodb.com](https://cloud.mongodb.com).
 2. Database Access → create a user + password.
-3. Network Access → allow `0.0.0.0/0` (or lock to Railway/Render IPs later).
+3. Network Access → allow `0.0.0.0/0` (or lock to Render's IPs later).
 4. Connect → Drivers → copy the URI into `MONGODB_URI`.
 
 ---
 
-## 2. API — Railway (recommended)
-
-1. New Project → Deploy from GitHub → select `relaya17/follStack`.
-2. Root / Dockerfile: `apps/api/Dockerfile` (see `apps/api/railway.json`).
-3. Set environment variables (from `apps/api/.env.production.example`):
-
-| Variable | Notes |
-|----------|--------|
-| `NODE_ENV` | `production` |
-| `PORT` | `3001` |
-| `HOST` | `0.0.0.0` |
-| `SKIP_DB` | `false` |
-| `MONGODB_URI` | Atlas connection string |
-| `JWT_SECRET` | `openssl rand -hex 32` |
-| `JWT_REFRESH_SECRET` | another random hex |
-| `CORS_ORIGIN` | your web URL, e.g. `https://follstack.netlify.app` |
-| `OPENAI_API_KEY` | optional |
-
-4. Generate a public HTTPS domain in Railway.
-5. Check: `https://YOUR_API/health` and `/api-docs`.
-
-### Alternative: Render
-
-Use root `render.yaml` (Blueprint) **or** create a **Web Service** with:
+## 2. API — Render
 
 | Setting | Value |
 |---------|--------|
@@ -71,9 +50,20 @@ Root `pnpm start` now starts **API only** (so Render’s default Start Command w
 
 **Do not** set `PORT` yourself — Render injects it (often `10000`). Keep `HOST=0.0.0.0`.
 
-Env vars: same as Railway table above. For a first boot without Atlas, set `SKIP_DB=true` (or `ALLOW_START_WITHOUT_DB=true`), then switch to a real `MONGODB_URI` and `SKIP_DB=false`.
+Environment variables (from `apps/api/.env.production.example`):
 
-Set `CORS_ORIGIN=https://follstack.netlify.app`.
+| Variable | Notes |
+|----------|--------|
+| `NODE_ENV` | `production` |
+| `HOST` | `0.0.0.0` |
+| `SKIP_DB` | `false` (use `true`/`ALLOW_START_WITHOUT_DB=true` only for a first boot without Atlas) |
+| `MONGODB_URI` | Atlas connection string |
+| `JWT_SECRET` | `openssl rand -hex 32` |
+| `JWT_REFRESH_SECRET` | another random hex |
+| `CORS_ORIGIN` | `https://follstack.netlify.app` |
+| `OPENAI_API_KEY` | optional — enables real AI Mentor answers instead of the fallback |
+
+Check after deploy: `https://YOUR_API/health` and `/api-docs`.
 
 ### Local Docker (API + Mongo)
 
@@ -108,7 +98,7 @@ If Base/Package are wrong, Netlify may mark the deploy “Published” but serve
 
 | Variable | Value |
 |----------|--------|
-| `NEXT_PUBLIC_API_URL` | your live API URL (Railway/Render), **no** trailing slash |
+| `NEXT_PUBLIC_API_URL` | your live Render API URL, **no** trailing slash |
 | `NEXT_PUBLIC_APP_NAME` | `follStack` |
 
 Without `NEXT_PUBLIC_API_URL`, the site still loads; AI/API calls will fail until you set it.
@@ -121,25 +111,9 @@ Without `NEXT_PUBLIC_API_URL`, the site still loads; AI/API calls will fail unti
 
 ---
 
-## 3b. Web — Vercel (alternative)
-
-1. Import the same GitHub repo.
-2. In Project Settings → **Root Directory** leave empty (repo root) **or** set to `apps/web`.
-3. If Root Directory is repo root, Vercel uses root `vercel.json`.
-4. Environment variables:
-
-| Variable | Value |
-|----------|--------|
-| `NEXT_PUBLIC_API_URL` | `https://YOUR_API_DOMAIN` (no trailing slash) |
-| `NEXT_PUBLIC_APP_NAME` | `follStack` |
-
-5. Deploy. Then set `CORS_ORIGIN` on the API to the web URL and redeploy the API.
-
----
-
 ## 4. HTTPS & domain
 
-- Vercel / Railway / Render provide HTTPS by default.
+- Netlify and Render provide HTTPS by default.
 - Optional: attach a custom domain in each dashboard and update `CORS_ORIGIN` + `NEXT_PUBLIC_API_URL`.
 
 ---

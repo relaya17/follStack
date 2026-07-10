@@ -16,7 +16,7 @@ import {
   RefreshCw
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { apiUrl } from '@/lib/api'
+import { apiFetchWithRetry } from '@/lib/api'
 
 interface LearningProfile {
   userId: string
@@ -109,12 +109,8 @@ export function AdaptiveLearning({
     setIsAnalyzing(true)
     
     try {
-      const response = await fetch(apiUrl('/api/ai/learning-analysis'), {
+      const response = await apiFetchWithRetry('/api/ai/learning-analysis', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
         body: JSON.stringify({
           userId,
           lessonHistory: [], // Will be populated from backend
@@ -122,7 +118,7 @@ export function AdaptiveLearning({
         })
       })
 
-      if (!response.ok) return
+      if (!response || !response.ok) return
       const contentType = response.headers.get('content-type') || ''
       if (!contentType.includes('application/json')) return
       const analysis = await response.json()
@@ -153,12 +149,8 @@ export function AdaptiveLearning({
   // Generate adaptive content
   const generateAdaptiveContent = useCallback(async () => {
     try {
-      const response = await fetch(apiUrl('/api/ai/adaptive-content'), {
+      const response = await apiFetchWithRetry('/api/ai/adaptive-content', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
         body: JSON.stringify({
           profile,
           currentLesson,
@@ -167,7 +159,7 @@ export function AdaptiveLearning({
         })
       })
 
-      if (!response.ok) return
+      if (!response || !response.ok) return
       const contentType = response.headers.get('content-type') || ''
       if (!contentType.includes('application/json')) return
       const content = await response.json()

@@ -17,7 +17,7 @@ export const logger = winston.createLogger({
   format: logFormat,
   defaultMeta: { service: 'follstack-api' },
   transports: [
-    // Always log to stdout — required on Render/Railway (no file tail)
+    // Always log to stdout — required on Render (no file tail)
     new winston.transports.Console({
       format: winston.format.combine(
         process.env.NODE_ENV === 'production'

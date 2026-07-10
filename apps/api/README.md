@@ -391,7 +391,7 @@ EXPOSE 3001
 CMD ["npm", "start"]
 ```
 
-### Railway/Render
+### Render
 ```bash
 # Build command
 npm run build
