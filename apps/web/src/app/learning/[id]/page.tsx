@@ -48,8 +48,8 @@ export default async function LearningModulePage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const module = MODULES[id]
-  if (!module) notFound()
+  const learningModule = MODULES[id]
+  if (!learningModule) notFound()
 
   return (
     <div className="page-shell">
@@ -65,14 +65,14 @@ export default async function LearningModulePage({
             <BookOpen className="h-7 w-7" />
           </span>
         </div>
-        <h1 className="page-title">{module.title}</h1>
-        <p className="page-subtitle">{module.description}</p>
+        <h1 className="page-title">{learningModule.title}</h1>
+        <p className="page-subtitle">{learningModule.description}</p>
       </header>
 
       <Card className="mb-8 p-6">
         <h2 className="section-title mb-4">שיעורים במודול</h2>
         <ol className="space-y-3 text-right">
-          {module.lessons.map((lesson, index) => (
+          {learningModule.lessons.map((lesson, index) => (
             <li
               key={lesson}
               className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-900"
@@ -93,9 +93,9 @@ export default async function LearningModulePage({
         >
           שאל את AI Mentor על המודול
         </Link>
-        {module.nextPractice ? (
+        {learningModule.nextPractice ? (
           <Link
-            href={`/practice/${module.nextPractice}`}
+            href={`/practice/${learningModule.nextPractice}`}
             className="inline-flex items-center gap-2 rounded-2xl border border-slate-300 bg-white px-6 py-3 font-bold text-slate-800 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
           >
             עבור לתרגול

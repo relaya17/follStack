@@ -13,6 +13,42 @@ interface ChatMessage {
   timestamp: Date
 }
 
+interface SpeechRecognitionResultLike {
+  readonly transcript: string
+}
+
+interface SpeechRecognitionEventLike {
+  readonly results: ArrayLike<ArrayLike<SpeechRecognitionResultLike>>
+}
+
+interface SpeechRecognitionLike {
+  lang: string
+  interimResults: boolean
+  maxAlternatives: number
+  onstart: (() => void) | null
+  onend: (() => void) | null
+  onerror: (() => void) | null
+  onresult: ((event: SpeechRecognitionEventLike) => void) | null
+  start: () => void
+}
+
+type SpeechRecognitionConstructor = new () => SpeechRecognitionLike
+
+let messageSeq = 0
+function createMessageId(prefix: string): string {
+  messageSeq += 1
+  return `${prefix}-${messageSeq}`
+}
+
+function getSpeechRecognitionCtor(): SpeechRecognitionConstructor | null {
+  if (typeof window === 'undefined') return null
+  const speechWindow = window as Window & {
+    SpeechRecognition?: SpeechRecognitionConstructor
+    webkitSpeechRecognition?: SpeechRecognitionConstructor
+  }
+  return speechWindow.SpeechRecognition ?? speechWindow.webkitSpeechRecognition ?? null
+}
+
 const quickPrompts = [
   'איך מתחילים עם React Hooks?',
   'תסביר לי מה זה API בפשטות',
@@ -89,7 +125,7 @@ function AIMentorChat() {
     setInputMessage('')
 
     const userMessage: ChatMessage = {
-      id: `u-${Date.now()}`,
+      id: createMessageId('u'),
       type: 'user',
       content: trimmed,
       timestamp: new Date(),
@@ -117,7 +153,7 @@ function AIMentorChat() {
       setMessages((prev) => [
         ...prev,
         {
-          id: `a-${Date.now()}`,
+          id: createMessageId('a'),
           type: 'ai',
           content: answer,
           timestamp: new Date(),
@@ -129,7 +165,7 @@ function AIMentorChat() {
       setMessages((prev) => [
         ...prev,
         {
-          id: `e-${Date.now()}`,
+          id: createMessageId('e'),
           type: 'ai',
           content: `לא הצלחתי להתחבר ל־AI כרגע.\n${message}\n\nטיפ: הרץ pnpm dev ובדוק ש־OPENAI_API_KEY מוגדר ב־apps/api/.env`,
           timestamp: new Date(),
@@ -141,10 +177,7 @@ function AIMentorChat() {
   }
 
   const handleVoiceToggle = () => {
-    const SpeechRecognition =
-      typeof window !== 'undefined'
-        ? (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
-        : null
+    const SpeechRecognition = getSpeechRecognitionCtor()
 
     if (!SpeechRecognition) {
       setError('זיהוי קול לא נתמך בדפדפן הזה. אפשר להקליד במקום.')
@@ -167,7 +200,7 @@ function AIMentorChat() {
       setIsListening(false)
       setError('זיהוי הקול נכשל. נסה שוב או הקלד.')
     }
-    recognition.onresult = (event: any) => {
+    recognition.onresult = (event: SpeechRecognitionEventLike) => {
       const transcript = event.results?.[0]?.[0]?.transcript
       if (transcript) setInputMessage(transcript)
     }
