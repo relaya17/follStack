@@ -59,7 +59,9 @@ Use root `render.yaml` (Blueprint) **or** create a **Web Service** with:
 | **Start Command** | `pnpm --filter @follstack/api start` |
 | **Health Check Path** | `/health` |
 
-**Do not** use root `pnpm start` — that also starts Next.js and opens port 3000 (Render then fails).
+Root `pnpm start` now starts **API only** (so Render’s default Start Command works). Use `pnpm start:all` locally if you need web+api together.
+
+**Do not** leave an old Start Command that runs both apps — if the UI still shows a custom command, set it to `pnpm --filter @follstack/api start` or clear it so the default `pnpm start` is used.
 
 **Do not** set `PORT` yourself — Render injects it (often `10000`). Keep `HOST=0.0.0.0`.
 

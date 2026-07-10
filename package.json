@@ -8,7 +8,10 @@
     "dev:web": "pnpm --filter @follstack/web dev",
     "dev:api": "pnpm --filter @follstack/api dev",
     "build": "pnpm --filter @follstack/shared --filter @follstack/ui --filter @follstack/api --filter @follstack/web run build",
-    "start": "pnpm --parallel --filter @follstack/api --filter @follstack/web start",
+    "build:api": "pnpm --filter @follstack/api build",
+    "start": "pnpm --filter @follstack/api start",
+    "start:web": "pnpm --filter @follstack/web start",
+    "start:all": "pnpm --parallel --filter @follstack/api --filter @follstack/web start",
     "lint": "pnpm --filter @follstack/web lint",
     "typecheck": "pnpm -r run typecheck"
   },
