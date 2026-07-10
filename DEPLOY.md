@@ -55,9 +55,13 @@ Use root `render.yaml` (Blueprint) **or** create a **Web Service** with:
 |---------|--------|
 | **Runtime** | Node |
 | **Root Directory** | empty (repo root) |
-| **Build Command** | `corepack enable && pnpm install --frozen-lockfile && pnpm --filter @follstack/api build` |
-| **Start Command** | `pnpm --filter @follstack/api start` |
+| **Build Command** | `pnpm install --frozen-lockfile && pnpm --filter @follstack/api build` |
+| **Start Command** | `pnpm start` |
 | **Health Check Path** | `/health` |
+
+**Important:** Redeploy the **latest** `main` commit. If the log still shows `pnpm --parallel --filter @follstack/api --filter @follstack/web start`, you are on an old deploy — click **Manual Deploy → Deploy latest commit**.
+
+Also set env `NODE_VERSION=22.14.0` (or `engines.node` in package.json) so Render does not pick Node 26.
 
 Root `pnpm start` now starts **API only** (so Render’s default Start Command works). Use `pnpm start:all` locally if you need web+api together.
 

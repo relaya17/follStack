@@ -1,8 +1,12 @@
 # follStack API on Render
-# Create via Blueprint, or mirror these settings in a Web Service.
 #
-# Do NOT use root `pnpm start` (that also starts Next on :3000).
-# Do NOT hardcode PORT — Render injects it (often 10000).
+# In the Render dashboard for this service, set:
+#   Build Command:  pnpm install --frozen-lockfile && pnpm --filter @follstack/api build
+#   Start Command:  pnpm start
+# (or leave blank after this Blueprint sync — root package.json start is API-only)
+#
+# Do NOT hardcode PORT. Keep HOST=0.0.0.0.
+# Redeploy the LATEST commit on main (not an old SHA).
 
 services:
   - type: web
@@ -12,14 +16,15 @@ services:
     region: oregon
     rootDir: .
     buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm --filter @follstack/api build
-    startCommand: pnpm --filter @follstack/api start
+    startCommand: pnpm start
     healthCheckPath: /health
     envVars:
       - key: NODE_ENV
         value: production
+      - key: NODE_VERSION
+        value: '22.14.0'
       - key: HOST
         value: 0.0.0.0
-      # Temporary: set false + real MONGODB_URI once Atlas is ready
       - key: SKIP_DB
         value: 'true'
       - key: ALLOW_START_WITHOUT_DB

@@ -227,6 +227,11 @@ const HOST = process.env.HOST || '0.0.0.0'
 async function start() {
     await connectDB()
 
+    server.on('error', (err: NodeJS.ErrnoException) => {
+        logger.error(`HTTP server error: ${err.message}`, { code: err.code })
+        process.exit(1)
+    })
+
     server.listen(PORT, HOST, () => {
         logger.info(`🚀 follStack API running on http://${HOST}:${PORT}`)
         logger.info(`📚 Environment: ${process.env.NODE_ENV}`)

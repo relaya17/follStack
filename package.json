@@ -16,8 +16,11 @@
     "typecheck": "pnpm -r run typecheck"
   },
   "engines": {
-    "node": ">=20.9.0",
+    "node": "22.x",
     "pnpm": ">=10"
+  },
+  "volta": {
+    "node": "22.14.0"
   },
   "devDependencies": {
     "typescript": "^5.9.3"
