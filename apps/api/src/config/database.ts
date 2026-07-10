@@ -43,10 +43,16 @@ export const connectDB = async (): Promise<void> => {
 
   } catch (error) {
     logger.error('Database connection failed:', error)
-    if (process.env.NODE_ENV === 'development') {
-      logger.warn('Continuing without DB in development mode')
+    // Allow boot without Mongo when explicitly opted in (local / first Render deploy)
+    if (
+      process.env.NODE_ENV === 'development' ||
+      process.env.SKIP_DB === 'true' ||
+      process.env.ALLOW_START_WITHOUT_DB === 'true'
+    ) {
+      logger.warn('Continuing without MongoDB — set a valid MONGODB_URI for full API features')
       return
     }
+    logger.error('Set MONGODB_URI (Atlas) or SKIP_DB=true / ALLOW_START_WITHOUT_DB=true to boot without DB')
     process.exit(1)
   }
 }

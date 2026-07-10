@@ -49,7 +49,23 @@ Browser → Netlify/Vercel (apps/web)
 
 ### Alternative: Render
 
-Use root `render.yaml` → Blueprint, or create a Web Service with the same Dockerfile and env vars.
+Use root `render.yaml` (Blueprint) **or** create a **Web Service** with:
+
+| Setting | Value |
+|---------|--------|
+| **Runtime** | Node |
+| **Root Directory** | empty (repo root) |
+| **Build Command** | `corepack enable && pnpm install --frozen-lockfile && pnpm --filter @follstack/api build` |
+| **Start Command** | `pnpm --filter @follstack/api start` |
+| **Health Check Path** | `/health` |
+
+**Do not** use root `pnpm start` — that also starts Next.js and opens port 3000 (Render then fails).
+
+**Do not** set `PORT` yourself — Render injects it (often `10000`). Keep `HOST=0.0.0.0`.
+
+Env vars: same as Railway table above. For a first boot without Atlas, set `SKIP_DB=true` (or `ALLOW_START_WITHOUT_DB=true`), then switch to a real `MONGODB_URI` and `SKIP_DB=false`.
+
+Set `CORS_ORIGIN=https://follstack.netlify.app`.
 
 ### Local Docker (API + Mongo)
 

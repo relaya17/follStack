@@ -1,27 +1,36 @@
+# follStack API on Render
+# Create via Blueprint, or mirror these settings in a Web Service.
+#
+# Do NOT use root `pnpm start` (that also starts Next on :3000).
+# Do NOT hardcode PORT — Render injects it (often 10000).
+
 services:
   - type: web
     name: follstack-api
-    runtime: docker
-    dockerfilePath: ./apps/api/Dockerfile
-    dockerContext: .
+    runtime: node
     plan: starter
+    region: oregon
+    rootDir: .
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm --filter @follstack/api build
+    startCommand: pnpm --filter @follstack/api start
     healthCheckPath: /health
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 3001
       - key: HOST
         value: 0.0.0.0
+      # Temporary: set false + real MONGODB_URI once Atlas is ready
       - key: SKIP_DB
-        value: 'false'
+        value: 'true'
+      - key: ALLOW_START_WITHOUT_DB
+        value: 'true'
       - key: MONGODB_URI
         sync: false
       - key: JWT_SECRET
-        sync: false
+        generateValue: true
       - key: JWT_REFRESH_SECRET
-        sync: false
+        generateValue: true
       - key: CORS_ORIGIN
-        sync: false
+        value: https://follstack.netlify.app
       - key: OPENAI_API_KEY
         sync: false

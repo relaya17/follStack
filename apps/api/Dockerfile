@@ -21,8 +21,9 @@ RUN pnpm --filter @follstack/api build
 FROM node:22-bookworm-slim AS runner
 WORKDIR /app
 ENV NODE_ENV=production
-ENV PORT=3001
 ENV HOST=0.0.0.0
+# Do not hardcode PORT — platforms (Render/Railway) inject it at runtime
+ENV PORT=3001
 RUN corepack enable && corepack prepare pnpm@10.33.2 --activate
 COPY --from=build /app/package.json /app/pnpm-lock.yaml /app/pnpm-workspace.yaml /app/.npmrc ./
 COPY --from=build /app/apps/api/package.json ./apps/api/

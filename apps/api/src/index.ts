@@ -61,9 +61,6 @@ const io = new SocketIOServer(server, {
     }
 })
 
-// Connect to database
-connectDB()
-
 // Security middleware
 app.use(helmet({
     contentSecurityPolicy: {
@@ -225,12 +222,21 @@ app.use(errorHandler)
 app.set('io', io)
 
 const PORT = parseInt(process.env.PORT || '3001', 10)
-const HOST = process.env.HOST || 'localhost'
+const HOST = process.env.HOST || '0.0.0.0'
 
-server.listen(PORT, () => {
-    logger.info(`🚀 follStack API running on http://${HOST}:${PORT}`)
-    logger.info(`📚 Environment: ${process.env.NODE_ENV}`)
-    logger.info(`🔗 CORS Origin: ${process.env.CORS_ORIGIN || 'http://localhost:3000'}`)
+async function start() {
+    await connectDB()
+
+    server.listen(PORT, HOST, () => {
+        logger.info(`🚀 follStack API running on http://${HOST}:${PORT}`)
+        logger.info(`📚 Environment: ${process.env.NODE_ENV}`)
+        logger.info(`🔗 CORS Origin: ${process.env.CORS_ORIGIN || 'http://localhost:3000'}`)
+    })
+}
+
+start().catch((err) => {
+    logger.error('Failed to start API:', err)
+    process.exit(1)
 })
 
 // Graceful shutdown
