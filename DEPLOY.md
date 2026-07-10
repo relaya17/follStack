@@ -70,13 +70,15 @@ Site configuration → Build & deploy → Continuous deployment → Build settin
 
 | Setting | Value |
 |---------|--------|
-| **Base directory** | leave empty (`/`) |
-| **Package directory** | `apps/web` |
-| **Build command** | `pnpm --filter @follstack/web build` |
+| **Base directory** | **empty** — do **not** set `apps/web` |
+| **Package directory** | `apps/web` (recommended) |
+| **Build command** | leave empty (uses root `netlify.toml`) |
 | **Publish directory** | `apps/web/.next` |
-| **Node version** | `22` (env `NODE_VERSION=22`) |
+| **Node version** | `22` |
 
-Repo already includes `netlify.toml` + `apps/web/netlify.toml` with `@netlify/plugin-nextjs`.
+Root `netlify.toml` installs `@netlify/plugin-nextjs` and builds shared + ui + web.
+
+If Base/Package are wrong, Netlify may mark the deploy “Published” but serve the default **Page not found** with no build error — because `.next` is not a static `index.html` site without the Next runtime.
 
 ### Environment variables (Netlify → Environment variables)
 
@@ -89,11 +91,9 @@ Without `NEXT_PUBLIC_API_URL`, the site still loads; AI/API calls will fail unti
 
 ### After changing settings
 
-Trigger **Clear cache and deploy site** (Deploys → Trigger deploy).
-
-### Why you saw “Page not found”
-
-Netlify was likely publishing the wrong folder (or a failed build) without the Next.js plugin, so `/` returned the default Netlify 404.
+1. Save Build settings.
+2. Deploys → Trigger deploy → **Clear cache and deploy site**.
+3. In the deploy log, confirm you see **@netlify/plugin-nextjs** / Next.js runtime — not only “Uploading static files”.
 
 ---
 
