@@ -4,12 +4,12 @@
 
 | Service | Platform | Port / URL |
 |---------|----------|------------|
-| Web (Next.js) | **Vercel** | HTTPS domain |
+| Web (Next.js) | **Netlify** (or Vercel) | e.g. `https://follstack.netlify.app` |
 | API (Express) | **Railway** or **Render** | HTTPS domain |
 | Database | **MongoDB Atlas** | `mongodb+srv://…` |
 
 ```
-Browser → Vercel (apps/web)
+Browser → Netlify/Vercel (apps/web)
               │  NEXT_PUBLIC_API_URL
               ▼
          Railway/Render (apps/api) → MongoDB Atlas
@@ -41,7 +41,7 @@ Browser → Vercel (apps/web)
 | `MONGODB_URI` | Atlas connection string |
 | `JWT_SECRET` | `openssl rand -hex 32` |
 | `JWT_REFRESH_SECRET` | another random hex |
-| `CORS_ORIGIN` | your Vercel URL, e.g. `https://follstack.vercel.app` |
+| `CORS_ORIGIN` | your web URL, e.g. `https://follstack.netlify.app` |
 | `OPENAI_API_KEY` | optional |
 
 4. Generate a public HTTPS domain in Railway.
@@ -60,7 +60,44 @@ docker compose up --build
 
 ---
 
-## 3. Web — Vercel
+## 3. Web — Netlify (current: https://follstack.netlify.app)
+
+This monorepo needs **Next.js Runtime** (plugin), not a static-only publish.
+
+### Build settings in Netlify UI
+
+Site configuration → Build & deploy → Continuous deployment → Build settings:
+
+| Setting | Value |
+|---------|--------|
+| **Base directory** | leave empty (`/`) |
+| **Package directory** | `apps/web` |
+| **Build command** | `pnpm --filter @follstack/web build` |
+| **Publish directory** | `apps/web/.next` |
+| **Node version** | `22` (env `NODE_VERSION=22`) |
+
+Repo already includes `netlify.toml` + `apps/web/netlify.toml` with `@netlify/plugin-nextjs`.
+
+### Environment variables (Netlify → Environment variables)
+
+| Variable | Value |
+|----------|--------|
+| `NEXT_PUBLIC_API_URL` | your live API URL (Railway/Render), **no** trailing slash |
+| `NEXT_PUBLIC_APP_NAME` | `follStack` |
+
+Without `NEXT_PUBLIC_API_URL`, the site still loads; AI/API calls will fail until you set it.
+
+### After changing settings
+
+Trigger **Clear cache and deploy site** (Deploys → Trigger deploy).
+
+### Why you saw “Page not found”
+
+Netlify was likely publishing the wrong folder (or a failed build) without the Next.js plugin, so `/` returned the default Netlify 404.
+
+---
+
+## 3b. Web — Vercel (alternative)
 
 1. Import the same GitHub repo.
 2. In Project Settings → **Root Directory** leave empty (repo root) **or** set to `apps/web`.
@@ -72,7 +109,7 @@ docker compose up --build
 | `NEXT_PUBLIC_API_URL` | `https://YOUR_API_DOMAIN` (no trailing slash) |
 | `NEXT_PUBLIC_APP_NAME` | `follStack` |
 
-5. Deploy. Then set `CORS_ORIGIN` on the API to the Vercel URL and redeploy the API.
+5. Deploy. Then set `CORS_ORIGIN` on the API to the web URL and redeploy the API.
 
 ---
 

@@ -1,0 +1,22 @@
+# Netlify config for follStack (pnpm monorepo + Next.js App Router)
+#
+# In Netlify UI (Site configuration → Build & deploy → Build settings):
+# - Base directory:   (leave empty / repository root)
+# - Package directory: apps/web
+# - Build command:     leave empty to use this file, OR set:
+#                      pnpm --filter @follstack/web build
+# - Publish directory: apps/web/.next
+#
+# Required plugin for App Router SSR: @netlify/plugin-nextjs
+
+[build]
+  command = "pnpm --filter @follstack/web build"
+  publish = "apps/web/.next"
+
+[build.environment]
+  NODE_VERSION = "22"
+  NPM_FLAGS = "--version"
+  NEXT_TELEMETRY_DISABLED = "1"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
