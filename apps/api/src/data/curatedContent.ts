@@ -320,6 +320,73 @@ export const CURATED_MODULES: CuratedModule[] = [
     ],
   },
   {
+    id: 'mod-mongodb',
+    slug: 'mongodb',
+    title: 'MongoDB',
+    description: 'מסד נתונים NoSQL — Documents, Mongoose, אינדקסים ו-Aggregation.',
+    duration: '6 שעות',
+    difficulty: 'intermediate',
+    category: 'database',
+    prerequisites: ['javascript'],
+    learningObjectives: [
+      'להבין את מודל המסמכים (documents) של MongoDB',
+      'לבצע CRUD מלא עם Mongoose',
+      'לכתוב שאילתות וצבירות (aggregation) בסיסיות',
+    ],
+    lessons: [
+      {
+        id: 'mongo-1',
+        title: 'Documents ו-Collections',
+        description: 'איך MongoDB מאחסן נתונים כ-JSON גמיש',
+        content:
+          'MongoDB שומר נתונים כמסמכי BSON (דומה ל-JSON) בתוך collections — במקום טבלאות ושורות כמו ב-SQL. הגמישות הזו מאפשרת סכימה משתנה בין מסמכים, אבל בפרויקט אמיתי עדיין כדאי להגדיר Schema קבוע (עם Mongoose) כדי לשמור על עקביות נתונים.',
+        type: 'text',
+        duration: 20,
+        order: 1,
+      },
+      {
+        id: 'mongo-2',
+        title: 'CRUD עם Mongoose',
+        description: 'create, find, updateOne, deleteOne',
+        content:
+          'Mongoose הוא ODM (Object Document Mapper) ל-Node.js שמוסיף Schemas, ולידציה וטיפוסים ל-MongoDB. הפעולות הבסיסיות: Model.create() ליצירה, Model.find()/findById() לקריאה, Model.findByIdAndUpdate() לעדכון, ו-Model.findByIdAndDelete() למחיקה.',
+        type: 'interactive',
+        duration: 35,
+        order: 2,
+      },
+      {
+        id: 'mongo-3',
+        title: 'Indexes וביצועים',
+        description: 'למה שאילתה איטית הופכת למהירה עם אינדקס אחד',
+        content:
+          'ללא אינדקס, MongoDB סורק את כל המסמכים בקולקציה (collection scan) כדי למצוא תוצאה — איטי מאוד בקנה מידה. אינדקס על שדה שמחפשים בו הרבה (למשל email או slug) הופך את החיפוש למהיר בסדרי גודל. Schema.index() מגדיר אינדקס ב-Mongoose.',
+        type: 'text',
+        duration: 25,
+        order: 3,
+      },
+      {
+        id: 'mongo-4',
+        title: 'Schema Validation',
+        description: 'required, enum, min/max — ולידציה ברמת מסד הנתונים',
+        content:
+          'Mongoose Schema מגדיר טיפוסים, שדות חובה (required), ערכים מותרים (enum), וגבולות (min/max/maxlength) — כך שנתונים לא תקינים נדחים לפני שהם נשמרים. זו שכבת הגנה נוספת מעבר לוולידציה בצד השרת/לקוח.',
+        type: 'text',
+        duration: 20,
+        order: 4,
+      },
+      {
+        id: 'mongo-5',
+        title: 'Aggregation בסיסי',
+        description: '$match, $group, $sort — צבירת נתונים לדוחות',
+        content:
+          'Aggregation Pipeline מעבד מסמכים דרך שלבים עוקבים: $match מסנן, $group מקבץ ומחשב (סכום, ממוצע, ספירה), $sort ממיין. זה הכלי ליצירת דוחות וסטטיסטיקות ישירות במסד הנתונים במקום לעבד הכל בקוד השרת.',
+        type: 'text',
+        duration: 30,
+        order: 5,
+      },
+    ],
+  },
+  {
     id: 'mod-typescript',
     slug: 'typescript',
     title: 'TypeScript',
@@ -515,6 +582,111 @@ export const CURATED_QUIZZES: CuratedQuiz[] = [
           'rem ("root em") תמיד יחסית לגודל הגופן של אלמנט השורש (html) — קבוע לכל הדף, בלי קשר לקינון. זו em (בלי ה-r) שיחסית לגודל הגופן של ההורה הישיר, ולכן יכולה "להצטבר" בקינון עמוק.\n\nדוגמה:\n```css\nhtml { font-size: 16px; }\n.card { font-size: 1.5rem; } /* תמיד 24px, לא משנה כמה קינון */\n```',
         points: 10,
       },
+      {
+        id: 'q-html-11',
+        type: 'multiple-choice',
+        question: 'איזו תכונת CSS קובעת את הסדר בו אלמנטים ממוקמים בציר הראשי של Flexbox?',
+        options: ['flex-order', 'order', 'position', 'z-index'],
+        correctAnswerIndex: 1,
+        explanation:
+          'התכונה order (מספר שלם, ברירת מחדל 0) קובעת את סדר התצוגה של flex items — בלי לשנות את סדר ה-HTML במקור, מה שחשוב לשמור על סדר לוגי לקוראי מסך.\n\nדוגמה:\n```css\n.first { order: -1; } /* יוצג ראשון למרות שהוא לא הראשון ב-HTML */\n```',
+        points: 10,
+      },
+      {
+        id: 'q-html-12',
+        type: 'multiple-choice',
+        question: 'מה עושה position: sticky?',
+        options: [
+          'ממקם את האלמנט תמיד ביחס לחלון הדפדפן',
+          'האלמנט זז יחד עם הגלילה עד לנקודת סף, ואז "נדבק"',
+          'זהה ל-position: fixed',
+          'מבטל את כל המיקום',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'sticky מתנהג כמו relative עד שהגלילה מגיעה לסף שהוגדר (למשל top: 0), ואז הוא מתנהג כמו fixed בתוך גבולות ההורה שלו — שימושי לכותרות טבלה או ניווט שנדבק בגלילה.\n\nדוגמה:\n```css\n.header { position: sticky; top: 0; }\n```',
+        points: 10,
+      },
+      {
+        id: 'q-html-13',
+        type: 'multiple-choice',
+        question: 'איזו תגית HTML מתאימה לניווט ראשי באתר?',
+        options: ['<nav>', '<menu>', '<links>', '<div class="nav">'],
+        correctAnswerIndex: 0,
+        explanation:
+          '<nav> היא תגית סמנטית שמסמנת בלוק ניווט — קוראי מסך יכולים לדלג ישירות אליה, ומנועי חיפוש מבינים שזה אזור ניווט ולא תוכן מרכזי.',
+        points: 10,
+      },
+      {
+        id: 'q-html-14',
+        type: 'multiple-choice',
+        question: 'מה ההבדל בין margin: auto לבין margin: 0?',
+        options: [
+          'אין הבדל',
+          'auto מחשב את המרווח אוטומטית (למשל למרכוז אלמנט עם רוחב קבוע)',
+          'auto תמיד שווה ל-0',
+          'auto עובד רק ב-Grid',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'margin: auto בציר האופקי (עם width מוגדר) מחלק את השטח הפנוי שווה בשווה בין שני הצדדים — טכניקה קלאסית למרכוז בלוק.\n\nדוגמה:\n```css\n.container { width: 600px; margin: 0 auto; } /* ממורכז אופקית */\n```',
+        points: 10,
+      },
+      {
+        id: 'q-html-15',
+        type: 'multiple-choice',
+        question: 'איזו יחידת CSS יחסית לגודל ה-viewport (חלון הדפדפן)?',
+        options: ['px', 'vw / vh', 'pt', 'in'],
+        correctAnswerIndex: 1,
+        explanation:
+          'vw (1% מרוחב ה-viewport) ו-vh (1% מגובה ה-viewport) משתנות דינמית עם גודל החלון — שימושיות לעיצוב רספונסיבי, למשל טקסט כותרת שגדל עם המסך.\n\nדוגמה:\n```css\nh1 { font-size: 5vw; }\n```',
+        points: 10,
+      },
+      {
+        id: 'q-html-16',
+        type: 'multiple-choice',
+        question: 'מה תפקידה של תגית <label> בטופס?',
+        options: [
+          'רק לעיצוב ויזואלי',
+          'לקשר תווית טקסטואלית לשדה קלט — משפר נגישות ומגדיל את אזור הלחיצה',
+          'להחליף את ה-placeholder',
+          'לבצע ולידציה אוטומטית',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          '<label for="id"> מקושר ל-input עם אותו id — קורא מסך מקריא את התווית כשמתמקדים בשדה, ולחיצה על הטקסט עצמו ממקדת את השדה (חשוב במיוחד לתיבות סימון קטנות).\n\nדוגמה:\n```html\n<label for="email">אימייל</label>\n<input id="email" type="email">\n```',
+        points: 10,
+      },
+      {
+        id: 'q-html-17',
+        type: 'multiple-choice',
+        question: 'מה ההבדל בין CSS Specificity גבוה לנמוך כשיש התנגשות כללים?',
+        options: [
+          'הכלל האחרון בקובץ תמיד מנצח בלי קשר לסלקטור',
+          'סלקטור עם specificity גבוה יותר (למשל #id לעומת .class) מנצח',
+          'Specificity לא משפיע על CSS',
+          'inline style תמיד המנצח החלש ביותר',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'לכל סלקטור יש "משקל" — id (גבוה) > class/attribute/pseudo-class > תגית (נמוך). כשיש התנגשות, הסלקטור עם ה-specificity הגבוה יותר מנצח, בלי קשר לסדר בקובץ. inline style (style="...") מנצח כמעט הכל.',
+        points: 10,
+      },
+      {
+        id: 'q-html-18',
+        type: 'multiple-choice',
+        question: 'למה כדאי להשתמש ב-<button type="submit"> בתוך <form> ולא ב-<div onclick>?',
+        options: [
+          'אין הבדל בפועל',
+          'button נגיש (ניתן להפעלה במקלדת), ומפעיל אוטומטית את שליחת הטופס',
+          'div מהיר יותר',
+          'button לא נתמך בדפדפנים ישנים',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          '<button> ניתן לניווט ולהפעלה עם Tab+Enter/Space מהמקלדת, מקבל focus אוטומטית, ומשולב עם התנהגות native של טפסים (submit/reset) — <div onclick> דורש קוד נוסף כדי לספק את כל זה, ולרוב מפספס נגישות.',
+        points: 10,
+      },
     ],
   },
   {
@@ -641,6 +813,117 @@ export const CURATED_QUIZZES: CuratedQuiz[] = [
         correctAnswerIndex: 0,
         explanation:
           'JSON.stringify מסריאלז (הופך למחרוזת) אובייקט JavaScript לפורמט JSON — שימושי לשמירה ב-localStorage או שליחה ברשת. JSON.parse עושה את הפעולה ההפוכה — הופך מחרוזת JSON בחזרה לאובייקט.\n\nדוגמה:\n```js\nconst user = { name: \'Dana\', age: 28 }\nconst json = JSON.stringify(user) // \'{"name":"Dana","age":28}\'\nconst back = JSON.parse(json)     // { name: \'Dana\', age: 28 }\n```',
+        points: 10,
+      },
+      {
+        id: 'q-js-11',
+        type: 'multiple-choice',
+        question: 'מה עושה Array.prototype.reduce?',
+        options: [
+          'מסנן איברים',
+          'מצמצם מערך לערך יחיד לפי פונקציית צבירה',
+          'הופך מערך לאובייקט תמיד',
+          'ממיין את המערך',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'reduce מריץ פונקציית "מצבר" על כל איבר, ומצטבר לערך יחיד (מספר, אובייקט, מערך — מה שרוצים). מקבל גם ערך התחלתי כפרמטר שני.\n\nדוגמה:\n```js\nconst total = [10, 20, 30].reduce((sum, n) => sum + n, 0) // 60\n```',
+        points: 10,
+      },
+      {
+        id: 'q-js-12',
+        type: 'multiple-choice',
+        question: "מה מדפיס console.log(1 + '1') ?",
+        options: ['2', "'11'", 'NaN', 'שגיאה'],
+        correctAnswerIndex: 1,
+        explanation:
+          'האופרטור + עם מחרוזת מבצע string concatenation ולא חיבור מספרי — JavaScript ממיר את המספר 1 למחרוזת "1" ומדביק. לעומת זאת 1 - \'1\' כן יבצע המרה מספרית ויחזיר 0.',
+        points: 10,
+      },
+      {
+        id: 'q-js-13',
+        type: 'multiple-choice',
+        question: 'מה מטרת ה-spread operator (...) על מערך?',
+        options: [
+          'למחוק איברים',
+          'לפרוס את איברי המערך למקום חדש — למשל שכפול או שילוב מערכים',
+          'להמיר מערך למחרוזת',
+          'לשנות סדר בלבד',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'spread "פורס" את איברי המערך/אובייקט החוצה — שימושי לשכפול immutable, שילוב מערכים, או העברת ארגומנטים.\n\nדוגמה:\n```js\nconst a = [1, 2]\nconst b = [...a, 3] // [1, 2, 3] — a לא השתנה\nconst merged = { ...obj1, ...obj2 }\n```',
+        points: 10,
+      },
+      {
+        id: 'q-js-14',
+        type: 'multiple-choice',
+        question: 'מהי Destructuring (פירוק) באובייקט?',
+        options: [
+          'מחיקת שדות מאובייקט',
+          'חילוץ ערכים מאובייקט/מערך ישירות למשתנים בשורה אחת',
+          'המרת אובייקט למחרוזת JSON',
+          'שכפול עמוק (deep clone) של אובייקט',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'Destructuring מאפשר לחלץ שדות ספציפיים מאובייקט (או איברים ממערך) ישירות לתוך משתנים, בלי לגשת ל-obj.field שוב ושוב.\n\nדוגמה:\n```js\nconst { name, age } = user\nconst [first, second] = [10, 20]\n```',
+        points: 10,
+      },
+      {
+        id: 'q-js-15',
+        type: 'multiple-choice',
+        question: 'מה עושה Optional Chaining (?.) ?',
+        options: [
+          'זורק שגיאה אם שדה חסר',
+          'מחזיר undefined בבטחה במקום לזרוק שגיאה אם שדה-ביניים הוא null/undefined',
+          'ממיר null ל-0',
+          'עובד רק על מערכים',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'בלי ?., גישה ל-obj.a.b כש-a הוא undefined תזרוק TypeError. עם ?. הביטוי "נעצר בבטחה" ומחזיר undefined במקום לקרוס.\n\nדוגמה:\n```js\nconst city = user?.address?.city // undefined אם address חסר, בלי שגיאה\n```',
+        points: 10,
+      },
+      {
+        id: 'q-js-16',
+        type: 'multiple-choice',
+        question: 'מה ההבדל בין Promise.all לבין הרצת await ברצף על כמה Promises?',
+        options: [
+          'אין הבדל בזמן ריצה',
+          'Promise.all מריץ את כולם במקביל ומחכה לכולם; await ברצף מחכה אחד-אחד (איטי יותר)',
+          'Promise.all תמיד נכשל אם promise אחד נכשל בלי אפשרות לתפוס',
+          'await ברצף תמיד מהיר יותר',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'Promise.all([p1, p2, p3]) מפעיל את כל הבקשות בו-זמנית ומחכה שכולן יסתיימו — משמעותית מהיר יותר מ-await p1; await p2; await p3 שממתין לכל אחת לפני שמתחילה הבאה.\n\nדוגמה:\n```js\nconst [users, posts] = await Promise.all([fetchUsers(), fetchPosts()])\n```',
+        points: 10,
+      },
+      {
+        id: 'q-js-17',
+        type: 'multiple-choice',
+        question: 'מה זה Closure ב-JavaScript?',
+        options: [
+          'פונקציה שסוגרת (מסיימת) תוכנית',
+          'פונקציה ש"זוכרת" משתנים מהסקופ החיצוני שלה גם אחרי שהוא הסתיים',
+          'שגיאת syntax נפוצה',
+          'מתודה של אובייקט Array',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'Closure נוצר כשפונקציה פנימית "לוקחת" גישה למשתנים מהפונקציה החיצונית שהגדירה אותה, גם אחרי שהחיצונית כבר סיימה לרוץ — הבסיס לתבניות כמו state פרטי ו-hooks ב-React.\n\nדוגמה:\n```js\nfunction makeCounter() {\n  let count = 0\n  return () => ++count // "זוכר" את count\n}\nconst counter = makeCounter()\ncounter() // 1\ncounter() // 2\n```',
+        points: 10,
+      },
+      {
+        id: 'q-js-18',
+        type: 'multiple-choice',
+        question:
+          "מה ידפיס: for (var i = 0; i < 3; i++) { setTimeout(() => console.log(i), 0) } ?",
+        options: ['0 1 2', '3 3 3', '0 0 0', 'שגיאה'],
+        correctAnswerIndex: 1,
+        explanation:
+          'var הוא function-scoped, לא block-scoped — יש רק משתנה i אחד משותף לכל האיטרציות, וכשה-callbacks של setTimeout סוף סוף רצים (אחרי שהלולאה הסתיימה), i כבר שווה 3. עם let (block-scoped) כל איטרציה מקבלת עותק משלה, והתוצאה הייתה 0 1 2.',
         points: 10,
       },
     ],
@@ -791,6 +1074,111 @@ export const CURATED_QUIZZES: CuratedQuiz[] = [
           'Fragment עוטף אלמנטים מרובים כדי לעמוד בדרישה שקומפוננטה מחזירה שורש יחיד, בלי ליצור <div> נוסף ב-DOM — שימושי במיוחד כשהוספת div שוברת CSS (כמו בתוך <table> או flex layout).\n\nדוגמה:\n```jsx\nfunction Row() {\n  return (\n    <>\n      <td>שם</td>\n      <td>גיל</td>\n    </>\n  )\n}\n```',
         points: 10,
       },
+      {
+        id: 'q-react-11',
+        type: 'multiple-choice',
+        question: 'מה מטרת useMemo?',
+        options: [
+          'לשמור state בין רינדורים כמו useState',
+          'לזכור (memoize) תוצאת חישוב יקר ולחשב מחדש רק כשתלויות משתנות',
+          'להריץ side effect אחרי רינדור',
+          'להחליף לגמרי את useEffect',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'useMemo מונע חישוב מחדש של ערך יקר (למשל סינון/מיון של מערך גדול) בכל רינדור — הוא מחשב מחדש רק כשאחת התלויות במערך משתנה.\n\nדוגמה:\n```jsx\nconst sorted = useMemo(() => items.slice().sort(), [items])\n```',
+        points: 10,
+      },
+      {
+        id: 'q-react-12',
+        type: 'multiple-choice',
+        question: 'מתי כדאי להשתמש ב-useCallback?',
+        options: [
+          'תמיד, על כל פונקציה',
+          'כשמעבירים פונקציה כ-prop לקומפוננטת ילד ממוזערת (memoized) כדי למנוע רינדורים מיותרים',
+          'רק בתוך useEffect',
+          'במקום useState',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'useCallback "זוכר" את אותו reference לפונקציה בין רינדורים (כל עוד התלויות לא השתנו) — שימושי בעיקר כשהפונקציה מועברת ל-React.memo child, כדי שהילד לא ירונדר מחדש בגלל reference חדש בכל פעם.',
+        points: 10,
+      },
+      {
+        id: 'q-react-13',
+        type: 'multiple-choice',
+        question: 'מה עושה React.memo?',
+        options: [
+          'שומר state גלובלי',
+          'עוטף קומפוננטה כך שתתרנדר מחדש רק אם ה-props שלה השתנו',
+          'מחליף את useState',
+          'מבצע fetch אוטומטי',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'React.memo משווה את ה-props הקודמים לחדשים (shallow comparison) — אם הם זהים, React מדלג על re-render של הקומפוננטה. שימושי לאופטימיזציה של קומפוננטות "יקרות" שמקבלות אותם props שוב ושוב.\n\nדוגמה:\n```jsx\nconst Row = React.memo(function Row({ item }) {\n  return <li>{item.name}</li>\n})\n```',
+        points: 10,
+      },
+      {
+        id: 'q-react-14',
+        type: 'multiple-choice',
+        question: 'מהו custom hook ב-React?',
+        options: [
+          'רכיב class מיוחד',
+          'פונקציה שהשם שלה מתחיל ב-use ומאפשרת לשתף לוגיקה עם state/effects בין קומפוננטות',
+          'CSS module',
+          'API פנימי של React בלבד, אסור ליצור custom hooks',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'Custom hook הוא בסך הכל פונקציה רגילה שמשתמשת ב-hooks אחרים (useState/useEffect) ומתחילה ב-use — מאפשר לחלץ לוגיקה חוזרת (למשל fetch עם loading/error) לפונקציה אחת לשימוש חוזר בין קומפוננטות.\n\nדוגמה:\n```jsx\nfunction useFetch(url) {\n  const [data, setData] = useState(null)\n  useEffect(() => { fetch(url).then(r => r.json()).then(setData) }, [url])\n  return data\n}\n```',
+        points: 10,
+      },
+      {
+        id: 'q-react-15',
+        type: 'multiple-choice',
+        question: 'מה קורה אם קוראים ל-hook (כמו useState) בתוך תנאי if?',
+        options: [
+          'זה תקין ומומלץ',
+          'אסור — hooks חייבים לרוץ באותו סדר בכל רינדור, אחרת React מתבלבל',
+          'React מתעלם מהקריאה',
+          'זה עובד רק ב-class components',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'React מזהה hooks לפי סדר הקריאה שלהם ברינדור, לא לפי שם — אם hook מדלג לפעמים (כי הוא בתוך if), הסדר משתנה בין רינדורים וה-state "מתחלף" בין hooks בטעות. זו הסיבה ל"Rules of Hooks": תמיד לקרוא hooks ברמה העליונה של הקומפוננטה, בלי תנאים.',
+        points: 10,
+      },
+      {
+        id: 'q-react-16',
+        type: 'multiple-choice',
+        question: 'מהו Lifting State Up?',
+        options: [
+          'העברת state לספרייה חיצונית תמיד',
+          'העברת state משותף לקומפוננטת ההורה הקרובה ביותר ששתי קומפוננטות ילד צריכות',
+          'מחיקת state שלא בשימוש',
+          'שינוי סדר קומפוננטות ב-DOM',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'כששתי קומפוננטות אחיות צריכות לשתף/לסנכרן state, הפתרון הוא "להעלות" את ה-state להורה המשותף שלהן, ולהעביר אותו למטה כ-props (יחד עם setter כדי לאפשר עדכון) — כך יש מקור אמת יחיד.',
+        points: 10,
+      },
+      {
+        id: 'q-react-17',
+        type: 'multiple-choice',
+        question: 'מה ההבדל בין useEffect לבין useLayoutEffect?',
+        options: [
+          'אין הבדל בפועל',
+          'useLayoutEffect רץ סינכרונית לפני שהדפדפן מצייר את המסך; useEffect רץ אסינכרונית אחרי הציור',
+          'useLayoutEffect עובד רק ב-Node.js',
+          'useEffect רץ לפני mount, useLayoutEffect אחרי',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'useLayoutEffect חוסם את הדפדפן עד שהוא מסיים — משמש למדידות DOM (למשל גובה אלמנט) שצריך לפני שהמשתמש רואה "קפיצה" ויזואלית. useEffect (הנפוץ יותר) רץ אחרי שהדפדפן כבר צייר, ולכן לא חוסם ולא פוגע בביצועים.',
+        points: 10,
+      },
     ],
   },
   {
@@ -916,6 +1304,111 @@ export const CURATED_QUIZZES: CuratedQuiz[] = [
         correctAnswerIndex: 0,
         explanation:
           'process.env הוא אובייקט גלובלי שמכיל את משתני הסביבה שהוגדרו לתהליך (למשל דרך קובץ .env באמצעות dotenv) — משמש לאחסון secrets וקונפיגורציה בלי לשמור אותם בקוד עצמו.\n\nדוגמה:\n```js\nrequire(\'dotenv\').config()\nconst port = process.env.PORT || 3000\n```',
+        points: 10,
+      },
+      {
+        id: 'q-node-11',
+        type: 'multiple-choice',
+        question: 'מה מטרת קובץ package.json?',
+        options: [
+          'רק לשמירת קוד המקור',
+          'מתעד מטא-דאטה, תלויות (dependencies) וסקריפטים של הפרויקט',
+          'קובץ קונפיגורציה של MongoDB בלבד',
+          'מוחלף אוטומטית ב-node_modules',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'package.json מתעד שם/גרסת הפרויקט, את כל התלויות שנדרשות (dependencies/devDependencies) עם הגרסאות שלהן, וסקריפטים מותאמים אישית (כמו "start"/"build"/"test") שמריצים עם npm run.',
+        points: 10,
+      },
+      {
+        id: 'q-node-12',
+        type: 'multiple-choice',
+        question: 'מה ההבדל בין dependencies ל-devDependencies ב-package.json?',
+        options: [
+          'אין הבדל בפועל',
+          'dependencies נחוצות בזמן ריצה בפרודקשן; devDependencies רק לפיתוח (בדיקות, build tools)',
+          'devDependencies תמיד גדולות יותר',
+          'dependencies מותקנות רק ב-CI',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'dependencies (כמו express, mongoose) נדרשות כדי שהאפליקציה תרוץ בפרודקשן. devDependencies (כמו typescript, nodemon, eslint) נחוצות רק בזמן פיתוח/build — לרוב לא מותקנות בסביבת production עם npm install --production.',
+        points: 10,
+      },
+      {
+        id: 'q-node-13',
+        type: 'multiple-choice',
+        question: 'איזו שיטה נכונה לטיפול בשגיאות א-סינכרוניות ב-Express route?',
+        options: [
+          'להתעלם משגיאות — Express מטפל בהן אוטומטית תמיד',
+          'לעטוף ב-try/catch ולקרוא ל-next(error) כדי שה-error middleware יטפל',
+          'לזרוק throw בלי catch',
+          'להשתמש רק ב-console.log',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'ב-Express, שגיאה שנזרקת בתוך async handler לא נתפסת אוטומטית (בגרסאות ישנות) — לכן עוטפים ב-try/catch וקוראים ל-next(error), שמעביר את הבקרה ל-error-handling middleware המרכזי (arity 4: err, req, res, next).\n\nדוגמה:\n```js\napp.get(\'/users/:id\', async (req, res, next) => {\n  try {\n    const user = await User.findById(req.params.id)\n    res.json(user)\n  } catch (err) {\n    next(err)\n  }\n})\n```',
+        points: 10,
+      },
+      {
+        id: 'q-node-14',
+        type: 'multiple-choice',
+        question: 'למה משתמשים ב-cors middleware בשרת Express?',
+        options: [
+          'להצפין סיסמאות',
+          'לאפשר לדפדפן לגשת ל-API ממקור (origin) שונה מזה של הדף',
+          'לחבר ל-MongoDB',
+          'לדחוס תגובות HTTP',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'דפדפנים חוסמים כברירת מחדל בקשות בין מקורות שונים (Same-Origin Policy). cors() מוסיף את כותרות ה-HTTP הנדרשות (Access-Control-Allow-Origin וכו\') כדי לאפשר בפירוש לפרונט (למשל localhost:3000) לגשת ל-API (למשל localhost:3001).',
+        points: 10,
+      },
+      {
+        id: 'q-node-15',
+        type: 'multiple-choice',
+        question: 'מה תפקיד req.params לעומת req.query ב-Express?',
+        options: [
+          'זהים לגמרי',
+          'params מגיעים מחלקי הנתיב (למשל /users/:id), query מגיע מפרמטרי ה-URL אחרי ?',
+          'query מגיע מגוף הבקשה',
+          'params זמינים רק ב-POST',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'req.params מכיל ערכים דינמיים מתוך תבנית הנתיב עצמה (route /users/:id → req.params.id), בעוד req.query מכיל את פרמטרי ה-URL אחרי סימן השאלה (/users?sort=asc → req.query.sort).',
+        points: 10,
+      },
+      {
+        id: 'q-node-16',
+        type: 'multiple-choice',
+        question: 'מה קורה אם לא מגדירים error-handling middleware בסוף שרשרת ה-middleware ב-Express?',
+        options: [
+          'האפליקציה לא תרוץ בכלל',
+          'Express ישתמש ב-default error handler שמחזיר stack trace/הודעה גנרית ללקוח',
+          'כל בקשה תיכשל תמיד',
+          'זה חובה מבחינת תחביר, אחרת שגיאת קומפילציה',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'Express מגיע עם error handler בררת מחדל שיתפוס שגיאות לא-מטופלות ויחזיר תגובה (בפיתוח כולל stack trace, בפרודקשן פחות מידע) — אבל מומלץ תמיד להגדיר error middleware מותאם אישית לתגובות עקביות ומאובטחות יותר.',
+        points: 10,
+      },
+      {
+        id: 'q-node-17',
+        type: 'multiple-choice',
+        question: 'מה ההבדל בין app.use() לבין app.get() ב-Express?',
+        options: [
+          'אין הבדל',
+          'app.use() מפעיל middleware על כל סוגי הבקשות (או תת-נתיב), app.get() מגיב רק ל-GET בנתיב מדויק',
+          'app.use() עובד רק על POST',
+          'app.get() תמיד רץ לפני app.use()',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'app.use(path?, middleware) רץ על כל method (GET/POST/...) שמתאים לנתיב (או על הכל אם לא צוין נתיב) — משמש ל-middleware גלובלי. app.get(path, handler) מגיב ספציפית לבקשות GET לנתיב המדויק שהוגדר.',
         points: 10,
       },
     ],
@@ -1056,6 +1549,81 @@ export const CURATED_QUIZZES: CuratedQuiz[] = [
           'readonly הוא בדיקת קומפילציה בלבד (לא הגנה אמיתית ב-runtime) שמונעת הצבה מחדש לשדה אחרי יצירת האובייקט — שימושי למניעת mutation בטעות.\n\nדוגמה:\n```ts\ninterface Config {\n  readonly apiUrl: string\n}\nconst cfg: Config = { apiUrl: \'https://api.example.com\' }\ncfg.apiUrl = \'other\' // שגיאת קומפילציה\n```',
         points: 10,
       },
+      {
+        id: 'q-ts-11',
+        type: 'multiple-choice',
+        question: 'מה ההבדל בין type ל-interface ב-TypeScript?',
+        options: [
+          'type ו-interface זהים לחלוטין תמיד',
+          'שניהם דומים מאוד; type גמיש יותר (יכול לתאר union/primitive), interface תומך ב-declaration merging',
+          'interface לא נתמך בגרסאות חדשות',
+          'type עובד רק עם מספרים',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'לרוב אפשר להשתמש בכל אחד מהם לתיאור צורת אובייקט. type יכול לתאר גם union types ("a" | "b") וטיפוסים פרימיטיביים בשם, מה ש-interface לא יכול. interface תומך ב-declaration merging — אפשר להצהיר עליו שוב והוא "יתמזג" אוטומטית.\n\nדוגמה:\n```ts\ntype ID = string | number // type יכול; interface לא\ninterface User { name: string }\ninterface User { age: number } // מתמזג אוטומטית ל-{ name, age }\n```',
+        points: 10,
+      },
+      {
+        id: 'q-ts-12',
+        type: 'multiple-choice',
+        question: 'מה עושה Partial<T> ב-TypeScript?',
+        options: [
+          'מוחק שדות מהטיפוס',
+          'יוצר טיפוס חדש שבו כל השדות של T הופכים לאופציונליים',
+          'הופך את כל השדות ל-readonly',
+          'יוצר מערך מהטיפוס',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'Partial<T> הוא Utility Type מובנה שממיר כל שדה חובה ב-T לאופציונלי — שימושי מאוד לפונקציות עדכון חלקי (update) שמקבלות רק חלק מהשדות.\n\nדוגמה:\n```ts\ninterface User { id: string; name: string; age: number }\nfunction updateUser(id: string, changes: Partial<User>) { /* ... */ }\nupdateUser(\'1\', { name: \'דנה\' }) // תקין — לא חייבים את כל השדות\n```',
+        points: 10,
+      },
+      {
+        id: 'q-ts-13',
+        type: 'multiple-choice',
+        question: 'מה עושה Pick<T, K> ?',
+        options: [
+          'בוחר טיפוס אקראי',
+          'יוצר טיפוס חדש עם רק תת-קבוצת שדות נבחרת מ-T',
+          'מוחק שדה מ-T',
+          'הופך שדות ל-required',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'Pick<T, K> בונה טיפוס חדש שמכיל רק את השדות שצוינו ב-K מתוך T — שימושי כשרוצים תת-סט מצומצם, למשל להצגה בטופס בלי כל השדות הפנימיים.\n\nדוגמה:\n```ts\ninterface User { id: string; name: string; passwordHash: string }\ntype PublicUser = Pick<User, \'id\' | \'name\'> // בלי passwordHash\n```',
+        points: 10,
+      },
+      {
+        id: 'q-ts-14',
+        type: 'multiple-choice',
+        question: 'מהו Type Narrowing?',
+        options: [
+          'הקטנת קובץ הקוד המקומפל',
+          'תהליך שבו TypeScript מצמצם טיפוס רחב (כמו union) לטיפוס ספציפי יותר לפי בדיקות בקוד',
+          'מחיקת טיפוסים לא בשימוש',
+          'שם אחר ל-any',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'Narrowing קורה כשהקומפיילר "לומד" מבדיקות כמו typeof, instanceof, או Array.isArray שהערך הוא בהכרח מטיפוס ספציפי יותר בתוך אותו בלוק קוד — כך שאפשר להשתמש בשיטות הספציפיות שלו בבטחה.\n\nדוגמה:\n```ts\nfunction printLength(x: string | string[]) {\n  if (Array.isArray(x)) {\n    console.log(x.length) // TS יודע ש-x הוא string[] כאן\n  } else {\n    console.log(x.length) // TS יודע ש-x הוא string כאן\n  }\n}\n```',
+        points: 10,
+      },
+      {
+        id: 'q-ts-15',
+        type: 'multiple-choice',
+        question: 'מה ההבדל בין enum ל-union type של מחרוזות ב-TypeScript?',
+        options: [
+          'אין שום הבדל',
+          'enum יוצר אובייקט קיים גם ב-JavaScript המקומפל; union type נעלם לגמרי בזמן ריצה',
+          'union type תמיד איטי יותר',
+          'enum לא נתמך בכלל',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'enum מייצר קוד JavaScript ממשי (אובייקט) שקיים ב-runtime, בעוד union type ("a" | "b" | "c") הוא קונסטרוקט של קומפילציה בלבד שנעלם לגמרי — לרוב מומלץ union type של string literals לפשטות, אלא אם צריך את התכונות המיוחדות של enum.',
+        points: 10,
+      },
     ],
   },
   {
@@ -1167,6 +1735,66 @@ export const CURATED_QUIZZES: CuratedQuiz[] = [
         correctAnswerIndex: 0,
         explanation:
           'required חוסם שמירת מסמך שחסר בו שדה חובה — שכבת ולידציה ברמת ה-Schema שרצה לפני שהנתונים בכלל מגיעים ל-DB, ומגנה מפני נתונים חסרים גם אם השכבה שמעל (controller) פספסה בדיקה.\n\nדוגמה:\n```js\nconst UserSchema = new Schema({\n  email: { type: String, required: [true, \'אימייל הוא שדה חובה\'] },\n})\n```',
+        points: 10,
+      },
+      {
+        id: 'q-mongo-9',
+        type: 'multiple-choice',
+        question: 'מה עושה populate() ב-Mongoose?',
+        options: [
+          'ממלא שדה עם נתונים אקראיים',
+          'מחליף reference (ObjectId) במסמך המלא שהוא מצביע אליו, במקום להריץ שאילתה נפרדת ידנית',
+          'יוצר אינדקס אוטומטית',
+          'מוחק שדות ריקים',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'populate() "מרים" מסמך שמכיל reference (ObjectId) לאובייקט אחר, ומחליף אותו במסמך המלא — דומה מבחינה קונספטואלית ל-JOIN ב-SQL, אבל מבוצע כשאילתה נוספת מאחורי הקלעים.\n\nדוגמה:\n```js\nconst project = await Project.findById(id).populate(\'createdBy\', \'name email\')\n// project.createdBy הוא עכשיו אובייקט משתמש מלא, לא רק ObjectId\n```',
+        points: 10,
+      },
+      {
+        id: 'q-mongo-10',
+        type: 'multiple-choice',
+        question: 'מה ההבדל בין embedding (הטמעת מסמכים) לבין referencing (הפניה עם ObjectId) בעיצוב סכימה?',
+        options: [
+          'אין הבדל מעשי',
+          'embedding שומר נתונים קשורים בתוך אותו מסמך; referencing שומר קישור למסמך נפרד בקולקציה אחרת',
+          'referencing תמיד מהיר יותר',
+          'embedding לא נתמך ב-Mongoose',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'embedding מתאים לנתונים שתמיד נקראים יחד ולא גדולים מדי (למשל שאלות בתוך מבחן). referencing מתאים לנתונים שמשתנים בתדירות שונה או משותפים בין הרבה מסמכים (למשל משתמש שמקושר להרבה פרויקטים) — הבחירה משפיעה על ביצועים וקלות עדכון.',
+        points: 10,
+      },
+      {
+        id: 'q-mongo-11',
+        type: 'multiple-choice',
+        question: 'מה עושה lean() בשאילתת Mongoose?',
+        options: [
+          'מוחק שדות רגישים אוטומטית',
+          'מחזיר plain JavaScript objects במקום Mongoose Documents — מהיר יותר לקריאה בלבד',
+          'מבצע ולידציה נוספת',
+          'הופך את השאילתה לאסינכרונית',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'ברירת המחדל של Mongoose מחזירה Document מלא (עם מתודות כמו save(), virtuals וכו\') שיש לו overhead. lean() מדלג על כל זה ומחזיר אובייקט JS רגיל — מהיר יותר משמעותית כשרק קוראים נתונים ולא מתכוונים לשמור אותם בחזרה.\n\nדוגמה:\n```js\nconst users = await User.find().lean() // מהיר יותר לקריאה בלבד\n```',
+        points: 10,
+      },
+      {
+        id: 'q-mongo-12',
+        type: 'multiple-choice',
+        question: 'מה עושה השלב $group באגריגציה כשמשתמשים ב-_id: null?',
+        options: [
+          'זורק שגיאה תמיד',
+          'מקבץ את כל המסמכים לקבוצה אחת גלובלית (למשל לחישוב סכום/ממוצע כולל)',
+          'מוחק את כל המסמכים',
+          'מפצל למספר קבוצות אקראי',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          '_id: null אומר "אל תקבץ לפי שום שדה — תן לי קבוצה אחת שמכילה את כל המסמכים" — שימושי לחישוב סטטיסטיקה גלובלית כמו ממוצע כללי או סכום כולל על כל הקולקציה.\n\nדוגמה:\n```js\nQuizAttempt.aggregate([\n  { $group: { _id: null, avgScore: { $avg: \'$score\' } } },\n])\n```',
         points: 10,
       },
     ],
