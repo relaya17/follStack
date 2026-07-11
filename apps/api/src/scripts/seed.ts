@@ -131,6 +131,36 @@ const MODULE_META: Record<
     category: 'devops',
     prerequisites: ['JavaScript', 'Node.js'],
   },
+  git: {
+    icon: 'GitBranch',
+    color: '#F43F5E',
+    tags: ['git', 'version-control', 'github'],
+    estimatedTime: 6,
+    level: 1,
+    isFeatured: true,
+    category: 'other',
+    prerequisites: [],
+  },
+  algorithms: {
+    icon: 'Binary',
+    color: '#8B5CF6',
+    tags: ['algorithms', 'data-structures', 'big-o'],
+    estimatedTime: 10,
+    level: 5,
+    isFeatured: false,
+    category: 'other',
+    prerequisites: ['JavaScript'],
+  },
+  security: {
+    icon: 'Shield',
+    color: '#DC2626',
+    tags: ['security', 'xss', 'owasp', 'authentication'],
+    estimatedTime: 8,
+    level: 6,
+    isFeatured: false,
+    category: 'other',
+    prerequisites: ['JavaScript', 'Node.js'],
+  },
 }
 
 const MODULES: SeedModule[] = CURATED_MODULES.map((m) => {

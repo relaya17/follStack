@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { BookOpen, Code, Database, Globe, Zap, Layers, Workflow, Loader2 } from 'lucide-react'
+import { BookOpen, Code, Database, Globe, Zap, Layers, Workflow, GitBranch, Binary, Shield, Loader2 } from 'lucide-react'
 import { Card } from '@follstack/ui'
 import { apiJson } from '@/lib/api'
 
@@ -14,6 +14,9 @@ const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   Database,
   BookOpen,
   Workflow,
+  GitBranch,
+  Binary,
+  Shield,
 }
 
 interface ApiLesson {
@@ -89,8 +92,8 @@ export default function LearningPage() {
           <h1 className="page-title">מודולי למידה</h1>
         </div>
         <p className="page-subtitle">
-          למידה מובנית בכל תחומי הפיתוח — HTML, CSS, JavaScript, React, Node.js, MongoDB, TypeScript ואוטומציה. כל
-          השיעורים נטענים ישירות מהשרת.
+          למידה מובנית בכל תחומי הפיתוח — HTML, CSS, JavaScript, React, Node.js, MongoDB, TypeScript, אוטומציה,
+          Git, מבני נתונים ואלגוריתמים, ואבטחת אפליקציות. כל השיעורים נטענים ישירות מהשרת.
         </p>
       </div>
 
@@ -198,9 +201,14 @@ export default function LearningPage() {
         <div className="text-center">
           <h2 className="text-3xl font-bold mb-4">מסלול למידה מומלץ</h2>
           <p className="text-xl mb-6 opacity-90">
-            מתחיל? התחל עם HTML & CSS, עבור ל-JavaScript, ואז ל-React, Node.js, MongoDB, TypeScript ואוטומציה
+            מתחיל? התחל עם Git, עבור ל-HTML & CSS ו-JavaScript, ואז React, Node.js, MongoDB, TypeScript, מבני
+            נתונים, אוטומציה ואבטחה
           </p>
           <div className="flex flex-wrap justify-center gap-4 text-sm">
+            <Link href="/learning/git" className="rounded-full bg-white/20 px-4 py-2 hover:bg-white/30">
+              Git
+            </Link>
+            <span className="text-2xl">→</span>
             <Link href="/learning/html-css" className="rounded-full bg-white/20 px-4 py-2 hover:bg-white/30">
               HTML & CSS
             </Link>
@@ -225,8 +233,16 @@ export default function LearningPage() {
               TypeScript
             </Link>
             <span className="text-2xl">→</span>
+            <Link href="/learning/algorithms" className="rounded-full bg-white/20 px-4 py-2 hover:bg-white/30">
+              אלגוריתמים
+            </Link>
+            <span className="text-2xl">→</span>
             <Link href="/learning/automation" className="rounded-full bg-white/20 px-4 py-2 hover:bg-white/30">
               אוטומציה
+            </Link>
+            <span className="text-2xl">→</span>
+            <Link href="/learning/security" className="rounded-full bg-white/20 px-4 py-2 hover:bg-white/30">
+              אבטחה
             </Link>
           </div>
         </div>

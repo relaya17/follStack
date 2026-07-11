@@ -41,6 +41,9 @@ const NEXT_PRACTICE: Record<string, string> = {
   mongodb: 'mongodb-query',
   typescript: 'typescript-types',
   automation: 'cicd-github-actions',
+  git: 'git-gitignore',
+  algorithms: 'binary-search',
+  security: 'prevent-xss',
 }
 
 const TYPE_LABELS: Record<ApiLesson['type'], string> = {
