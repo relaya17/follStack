@@ -11,6 +11,7 @@ export interface IPracticeExercise extends Document {
   prompt: string
   starterCode: string
   hint: string
+  solution: string
   isPublished: boolean
   createdBy: mongoose.Types.ObjectId
   updatedBy: mongoose.Types.ObjectId
@@ -39,6 +40,7 @@ const PracticeExerciseSchema = new Schema<IPracticeExercise>(
     prompt: { type: String, required: true },
     starterCode: { type: String, default: '' },
     hint: { type: String, default: '' },
+    solution: { type: String, default: '' },
     isPublished: { type: Boolean, default: true },
     createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     updatedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },

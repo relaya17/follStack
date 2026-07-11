@@ -1,8 +1,9 @@
 import { Router, Response, NextFunction } from 'express'
-import { AuthRequest, protect } from '@/middleware/auth'
+import { AuthRequest, optionalAuth } from '@/middleware/auth'
 import { QuizAttempt } from '@/models/Quiz'
 import { PracticeCompletion } from '@/models/Practice'
 import { computeUserProgress } from '@/services/progressService'
+import { isMongoReady } from '@/data/curatedContent'
 
 const router = Router()
 
@@ -12,23 +13,74 @@ function sameDay(a: Date, b: Date): boolean {
   return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate()
 }
 
+function emptyGuestProgress() {
+  const weeklyProgress = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date()
+    d.setHours(0, 0, 0, 0)
+    d.setDate(d.getDate() - (6 - i))
+    return {
+      date: DAY_LABELS[d.getDay()],
+      lessonsCompleted: 0,
+      timeSpent: 0,
+      score: 0,
+    }
+  })
+
+  return {
+    success: true,
+    source: 'guest',
+    sessions: [],
+    metrics: {
+      totalTimeSpent: 0,
+      totalLessonsCompleted: 0,
+      averageScore: 0,
+      streak: 0,
+      weeklyProgress,
+      skillProgress: [],
+      learningVelocity: {
+        lessonsPerWeek: 0,
+        timePerLesson: 0,
+        improvementRate: 0,
+      },
+    },
+    analytics: {
+      focusTime: 0,
+      distractionEvents: 0,
+      keystrokes: 0,
+      mouseClicks: 0,
+      codeCompilations: 0,
+      errorRate: 0,
+      helpRequests: 0,
+      peerInteractions: 0,
+      resourceAccess: [],
+    },
+    xp: 0,
+    level: 1,
+    badges: [],
+  }
+}
+
 /**
  * @swagger
  * /api/analytics/progress:
  *   get:
- *     summary: Learning progress for the logged-in user
+ *     summary: Learning progress for the logged-in user (guest-safe empty payload when unauthenticated)
  *     description: >
  *       Every number here is derived from real quiz attempts and practice completions
- *       for the authenticated user. Fields the platform does not actually instrument
- *       (session timing, keystrokes, mouse clicks, etc.) are returned as 0 / empty
- *       rather than fabricated, and are candidates to remove from the UI entirely.
+ *       for the authenticated user. Guests receive an empty progress payload instead of 401
+ *       so dashboard widgets can render without login.
  *     tags: [Analytics]
  *     security:
  *       - bearerAuth: []
  */
-router.get('/progress', protect, async (req: AuthRequest, res: Response, next: NextFunction) => {
+router.get('/progress', optionalAuth, async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
-    const userId = req.user!.id
+    const userId = req.user?.id
+    if (!userId || !isMongoReady()) {
+      res.json(emptyGuestProgress())
+      return
+    }
+
     const progress = await computeUserProgress(userId)
 
     const [allAttempts, allCompletions] = await Promise.all([

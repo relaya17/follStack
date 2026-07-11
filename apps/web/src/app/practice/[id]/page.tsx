@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import { Code2, CheckCircle2, Loader2 } from 'lucide-react'
+import { Code2, CheckCircle2, Loader2, Eye, EyeOff } from 'lucide-react'
 import { Card } from '@follstack/ui'
 import { apiJson, apiFetch } from '@/lib/api'
 
@@ -15,6 +15,7 @@ interface ApiExercise {
   prompt: string
   starterCode: string
   hint: string
+  solution: string
   completedBy: number
 }
 
@@ -32,6 +33,7 @@ export default function PracticeExercisePage() {
   const [code, setCode] = useState('')
   const [done, setDone] = useState(false)
   const [marking, setMarking] = useState(false)
+  const [showSolution, setShowSolution] = useState(false)
 
   useEffect(() => {
     if (!id) return
@@ -126,7 +128,7 @@ export default function PracticeExercisePage() {
         />
       </Card>
 
-      <div className="flex flex-wrap items-center justify-center gap-3">
+      <div className="mb-6 flex flex-wrap items-center justify-center gap-3">
         <button
           type="button"
           onClick={markComplete}
@@ -142,7 +144,29 @@ export default function PracticeExercisePage() {
         >
           בקש עזרה מ־AI Mentor
         </Link>
+        {exercise.solution ? (
+          <button
+            type="button"
+            onClick={() => setShowSolution((v) => !v)}
+            aria-expanded={showSolution}
+            className="inline-flex items-center gap-2 rounded-2xl border border-slate-300 bg-white px-6 py-3 font-bold text-slate-800 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+          >
+            {showSolution ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+            {showSolution ? 'הסתר פתרון' : 'הצג פתרון'}
+          </button>
+        ) : null}
       </div>
+
+      {showSolution && exercise.solution ? (
+        <Card className="mb-6 overflow-hidden p-0" role="region" aria-label="פתרון מוצע">
+          <p className="border-b border-slate-200 bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">
+            פתרון מוצע — נסה לפתור בעצמך קודם, זה רק אחד מכמה פתרונות תקינים
+          </p>
+          <pre className="overflow-x-auto bg-slate-950 p-4 font-mono text-sm leading-relaxed text-slate-100">
+            <code>{exercise.solution}</code>
+          </pre>
+        </Card>
+      ) : null}
 
       {done && (
         <p className="mt-6 text-center font-semibold text-emerald-600">

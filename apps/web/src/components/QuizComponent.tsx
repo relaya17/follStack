@@ -1,7 +1,37 @@
 'use client'
 
-import { useCallback, useEffect, useId, useState } from 'react'
+import { Fragment, useCallback, useEffect, useId, useState, type ReactNode } from 'react'
 import { apiFetchWithRetry } from '@/lib/api'
+
+// Explanations may contain fenced code blocks (```lang\ncode\n```) — render
+// those as monospace blocks instead of flattening everything into one <p>.
+function renderExplanation(text: string): ReactNode {
+  const parts = text.split(/```(\w*)\n?([\s\S]*?)```/g)
+  const nodes: ReactNode[] = []
+  for (let i = 0; i < parts.length; i += 3) {
+    const textPart = parts[i]?.trim()
+    if (textPart) {
+      nodes.push(
+        <p key={`t-${i}`} className="whitespace-pre-wrap">
+          {textPart}
+        </p>,
+      )
+    }
+    const code = parts[i + 2]
+    if (code !== undefined) {
+      nodes.push(
+        <pre
+          key={`c-${i}`}
+          dir="ltr"
+          className="my-2 overflow-x-auto rounded-lg bg-slate-950 p-3 text-left font-mono text-xs leading-relaxed text-slate-100"
+        >
+          <code>{code.trim()}</code>
+        </pre>,
+      )
+    }
+  }
+  return <Fragment>{nodes}</Fragment>
+}
 
 interface QuizQuestion {
   id: string
@@ -212,7 +242,9 @@ export function QuizComponent({ quizId, onComplete, onClose }: QuizComponentProp
                     <p className={item.isCorrect ? 'text-green-700 dark:text-green-300' : 'text-red-700 dark:text-red-300'}>
                       {item.isCorrect ? '✓ נכון' : '✗ לא נכון'}
                     </p>
-                    <p className="mt-1 text-slate-600 dark:text-slate-300">{item.explanation}</p>
+                    <div className="mt-1 space-y-1 text-slate-600 dark:text-slate-300">
+                      {renderExplanation(item.explanation)}
+                    </div>
                   </div>
                 ))}
               </div>

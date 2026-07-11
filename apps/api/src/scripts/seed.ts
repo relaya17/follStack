@@ -14,6 +14,7 @@ import { Quiz } from '@/models/Quiz'
 import { Project } from '@/models/Project'
 import { PracticeExercise } from '@/models/Practice'
 import { logger } from '@/utils/logger'
+import { CURATED_MODULES, CURATED_QUIZZES, CURATED_PROJECTS, CURATED_EXERCISES } from '@/data/curatedContent'
 
 const SEED_ADMIN_EMAIL = 'seed-admin@follstack.local'
 
@@ -44,410 +45,114 @@ type SeedModule = {
   lessons: SeedLesson[]
 }
 
-const MODULES: SeedModule[] = [
+// Extra DB-only metadata not present in the curated (fallback) module shape,
+// keyed by module slug. Lesson/objective/description content itself comes
+// directly from CURATED_MODULES below — one source of truth, no drift.
+const MODULE_META: Record<
+  string,
   {
-    slug: 'html-css',
-    title: 'HTML & CSS',
-    description: 'למד את יסודות פיתוח Frontend — מבנה סמנטי, עיצוב, Flexbox ו-Grid.',
+    icon: string
+    color: string
+    tags: string[]
+    estimatedTime: number
+    level: number
+    isFeatured: boolean
+    category: SeedModule['category']
+    prerequisites: string[]
+  }
+> = {
+  'html-css': {
     icon: 'Globe',
     color: '#3B82F6',
-    duration: '8 שעות',
-    difficulty: 'beginner',
-    category: 'frontend',
     tags: ['html', 'css', 'frontend', 'responsive'],
     estimatedTime: 8,
     level: 2,
     isFeatured: true,
+    category: 'frontend',
     prerequisites: [],
-    learningObjectives: [
-      'לבנות דף אינטרנט עם מבנה HTML סמנטי ונגיש',
-      'לעצב עמודים עם CSS כולל Flexbox ו-Grid',
-      'לבנות פריסות רספונסיביות שעובדות בכל מסך',
-    ],
-    lessons: [
-      {
-        title: 'HTML5 סמנטי',
-        description: 'תגיות משמעותיות במקום div בלתי נגמרים',
-        content:
-          'HTML סמנטי משתמש בתגיות שמתארות את תפקיד התוכן — header, nav, main, article, section, footer — במקום div גנרי. זה משפר נגישות (screen readers), SEO, ותחזוקתיות קוד. כלל אצבע: אם יש תגית שמתארת בדיוק את מה שאתה בונה, השתמש בה במקום div.',
-        type: 'text',
-        duration: 25,
-        order: 1,
-      },
-      {
-        title: 'CSS Box Model',
-        description: 'איך דפדפן מחשב גודל ומרווחים של כל אלמנט',
-        content:
-          'כל אלמנט ב-CSS הוא קופסה: content, padding, border, margin — מבפנים החוצה. הבנת box-sizing: border-box (שכולל padding ו-border בתוך הרוחב המוצהר) חוסכת המון כאבי ראש בחישובי פריסה. מומלץ להגדיר את זה גלובלית בתחילת כל פרויקט.',
-        type: 'text',
-        duration: 20,
-        order: 2,
-      },
-      {
-        title: 'Flexbox',
-        description: 'סידור אלמנטים בשורה או בעמודה בקלות',
-        content:
-          'Flexbox פותר בעיית יישור וחלוקת מקום בין אלמנטים בציר אחד (שורה או עמודה). display: flex על ההורה, ואז justify-content ליישור אופקי ו-align-items ליישור אנכי. הכלי הכי שימושי לתפריטים, כרטיסיות, וסרגלי כלים.',
-        type: 'interactive',
-        duration: 35,
-        order: 3,
-      },
-      {
-        title: 'CSS Grid',
-        description: 'פריסות דו-ממדיות מורכבות בשורות ועמודות',
-        content:
-          'CSS Grid מיועד לפריסות שלמות של עמוד — שורות ועמודות בו-זמנית. grid-template-columns מגדיר את מבנה העמודות, ו-gap שולט על המרווחים. שילוב נכון: Grid לפריסה הכללית של העמוד, Flexbox ליישור בתוך רכיבים בודדים.',
-        type: 'interactive',
-        duration: 40,
-        order: 4,
-      },
-      {
-        title: 'Responsive Design',
-        description: 'עיצוב שמתאים את עצמו לכל גודל מסך',
-        content:
-          'Media queries מאפשרות להחיל כללי CSS שונים לפי רוחב המסך. הגישה המומלצת היא Mobile First — לעצב קודם למובייל ואז להוסיף כללים לגדלים גדולים יותר עם min-width. יחידות יחסיות (rem, %, vw) עדיפות על פיקסלים קבועים.',
-        type: 'text',
-        duration: 30,
-        order: 5,
-      },
-    ],
   },
-  {
-    slug: 'javascript',
-    title: 'JavaScript',
-    description: 'השפה הפופולרית ביותר בעולם — ES6+, Async/Await, Modules ופונקציות מודרניות.',
+  javascript: {
     icon: 'Code',
     color: '#EAB308',
-    duration: '12 שעות',
-    difficulty: 'beginner',
-    category: 'frontend',
     tags: ['javascript', 'es6', 'async', 'frontend'],
     estimatedTime: 12,
     level: 3,
     isFeatured: true,
+    category: 'frontend',
     prerequisites: ['HTML & CSS'],
-    learningObjectives: [
-      'לכתוב קוד JavaScript מודרני עם ES6+',
-      'להבין Async/Await ולעבוד עם API',
-      'לתפעל את ה-DOM בצורה יעילה',
-    ],
-    lessons: [
-      {
-        title: 'משתנים וטיפוסים',
-        description: 'let, const, ומערכת הטיפוסים הדינמית של JS',
-        content:
-          'const לערכים שלא משתנים, let למשתנים שכן — ו-var כמעט אף פעם. JavaScript היא שפה בעלת טיפוסים דינמיים: מספר, מחרוזת, בוליאני, null, undefined, אובייקט. חשוב להכיר את ההבדל בין == (עם המרת טיפוס) ל-=== (השוואה מדויקת) — תמיד עדיף להשתמש ב-===.',
-        type: 'text',
-        duration: 25,
-        order: 1,
-      },
-      {
-        title: 'פונקציות ו-Arrow Functions',
-        description: 'הצהרת פונקציות, ביטויי פונקציה, וה-this של arrow functions',
-        content:
-          'פונקציות הן אזרח מדרגה ראשונה ב-JS — אפשר להעביר אותן כפרמטרים ולהחזיר אותן מפונקציות אחרות. Arrow functions (()=>{}) מקצרות תחביר ולא מגדירות this משלהן — הן "יורשות" אותו מהסביבה החיצונית, מה שפותר בעיות נפוצות ב-callbacks.',
-        type: 'text',
-        duration: 30,
-        order: 2,
-      },
-      {
-        title: 'מערכים ואובייקטים',
-        description: 'map, filter, reduce, ופירוק (destructuring)',
-        content:
-          'map, filter ו-reduce הן שלוש הפונקציות החשובות ביותר לעבודה עם מערכים בצורה פונקציונלית, בלי לוואים (side effects). Destructuring מאפשר לחלץ ערכים ממערכים ואובייקטים בשורה אחת: const { name, age } = user. Spread operator (...) משכפל ומשלב מבנים בקלות.',
-        type: 'interactive',
-        duration: 40,
-        order: 3,
-      },
-      {
-        title: 'Promises ו-Async/Await',
-        description: 'טיפול בפעולות אסינכרוניות בלי callback hell',
-        content:
-          'Promise מייצג ערך שיהיה זמין בעתיד — pending, fulfilled או rejected. async/await הוא תחביר נוח מעל Promises שגורם לקוד אסינכרוני להיראות סינכרוני וקריא. תמיד לעטוף await ב-try/catch כדי לטפל בשגיאות רשת או API.',
-        type: 'interactive',
-        duration: 45,
-        order: 4,
-      },
-      {
-        title: 'עבודה עם ה-DOM',
-        description: 'querySelector, event listeners, ועדכון תוכן דינמי',
-        content:
-          'document.querySelector ו-querySelectorAll מוצאים אלמנטים לפי סלקטור CSS. addEventListener מחבר התנהגות לאירועים (click, submit, input) בלי לערבב HTML ו-JS. עדכון תוכן דינמי דרך textContent/innerHTML הוא הבסיס לכל אתר אינטראקטיבי לפני שמכירים React.',
-        type: 'text',
-        duration: 30,
-        order: 5,
-      },
-    ],
   },
-  {
-    slug: 'react',
-    title: 'React',
-    description: 'ספריית ה-UI המובילה בעולם — Components, Hooks, State Management.',
+  react: {
     icon: 'Zap',
     color: '#06B6D4',
-    duration: '10 שעות',
-    difficulty: 'intermediate',
-    category: 'frontend',
     tags: ['react', 'hooks', 'components', 'frontend'],
     estimatedTime: 10,
     level: 5,
     isFeatured: true,
+    category: 'frontend',
     prerequisites: ['JavaScript'],
-    learningObjectives: [
-      'לבנות ממשקי משתמש עם קומפוננטות לשימוש חוזר',
-      'לנהל state עם useState ו-useEffect',
-      'להעביר מידע בין קומפוננטות בעזרת props',
-    ],
-    lessons: [
-      {
-        title: 'JSX וקומפוננטות',
-        description: 'איך React הופך פונקציות ל-HTML חי',
-        content:
-          'JSX הוא תוסף תחביר ל-JavaScript שמאפשר לכתוב מבנה שנראה כמו HTML בתוך קוד. כל קומפוננטת React היא פונקציה שמחזירה JSX. קומפוננטות מתחילות תמיד באות גדולה כדי שReact יבדיל אותן מתגיות HTML רגילות.',
-        type: 'text',
-        duration: 25,
-        order: 1,
-      },
-      {
-        title: 'useState',
-        description: 'ה-Hook הבסיסי לניהול מצב בתוך קומפוננטה',
-        content:
-          'useState מחזיר זוג: הערך הנוכחי ופונקציה לעדכונו. כשקוראים לפונקציית העדכון, React מרנדר מחדש את הקומפוננטה עם הערך החדש. חשוב לזכור: state הוא immutable — תמיד יוצרים ערך חדש (למשל עותק של מערך) במקום לשנות את הקיים ישירות.',
-        type: 'interactive',
-        duration: 35,
-        order: 2,
-      },
-      {
-        title: 'useEffect',
-        description: 'הרצת קוד בתגובה לשינויים — fetching, subscriptions וניקוי',
-        content:
-          'useEffect מריץ קוד "צדדי" (side effects) אחרי רינדור — כמו קריאות API, טיימרים או האזנה לאירועים. מערך התלויות (dependency array) קובע מתי ה-effect ירוץ מחדש. פונקציית ה-cleanup שמוחזרת מה-effect חשובה למניעת memory leaks.',
-        type: 'interactive',
-        duration: 40,
-        order: 3,
-      },
-      {
-        title: 'Props',
-        description: 'העברת נתונים מקומפוננטת הורה לילד',
-        content:
-          'Props הם הדרך שבה קומפוננטה מקבלת נתונים מבחוץ — read-only, בדיוק כמו פרמטרים של פונקציה. תבנית נפוצה היא Composition: העברת children כ-prop כדי לבנות קומפוננטות גנריות שניתן לעטוף בתוכן שונה.',
-        type: 'text',
-        duration: 25,
-        order: 4,
-      },
-      {
-        title: 'רשימות ומפתחות (keys)',
-        description: 'רינדור מערכים בצורה יעילה ובלי שגיאות',
-        content:
-          'כשמרנדרים מערך של אלמנטים עם map, React דורש prop key ייחודי על כל פריט כדי לזהות אילו פריטים השתנו, נוספו או הוסרו. שימוש באינדקס כ-key בעייתי כשהרשימה משתנה — עדיף מזהה יציב מהנתונים עצמם (למשל id).',
-        type: 'text',
-        duration: 20,
-        order: 5,
-      },
-    ],
   },
-  {
-    slug: 'nodejs',
-    title: 'Node.js',
-    description: 'פיתוח Backend עם JavaScript — Express, REST API, Authentication.',
+  nodejs: {
     icon: 'Layers',
     color: '#22C55E',
-    duration: '9 שעות',
-    difficulty: 'intermediate',
-    category: 'backend',
     tags: ['nodejs', 'express', 'backend', 'api'],
     estimatedTime: 9,
     level: 5,
     isFeatured: false,
+    category: 'backend',
     prerequisites: ['JavaScript'],
-    learningObjectives: [
-      'לבנות שרת HTTP עם Express',
-      'לתכנן REST API עם routes, controllers ו-middleware',
-      'להוסיף אימות משתמשים עם JWT',
-    ],
-    lessons: [
-      {
-        title: 'מודולים ב-Node.js',
-        description: 'require/import, npm, ומבנה פרויקט Node',
-        content:
-          'Node.js מריץ JavaScript מחוץ לדפדפן, עם גישה למערכת קבצים, רשת ותהליכים. npm הוא מנהל החבילות שמאפשר להשתמש בספריות של אחרים ולשתף קוד. package.json מתעד תלויות וסקריפטים — הקובץ הראשון שכל פרויקט Node צריך.',
-        type: 'text',
-        duration: 25,
-        order: 1,
-      },
-      {
-        title: 'Express בסיסי',
-        description: 'הקמת שרת HTTP ראשון עם routes',
-        content:
-          'Express הוא ה-framework הפופולרי ביותר לבניית שרתים ב-Node.js. app.get/post/put/delete מגדירים routes שמגיבים לבקשות HTTP. app.listen(PORT) מפעיל את השרת. Middleware כמו express.json() מאפשר לקרוא גוף בקשה בפורמט JSON.',
-        type: 'interactive',
-        duration: 35,
-        order: 2,
-      },
-      {
-        title: 'תכנון REST API',
-        description: 'משאבים, verbs נכונים, וקודי סטטוס',
-        content:
-          'REST API מתכנן routes סביב משאבים (resources) — למשל /api/users — ומשתמש ב-HTTP verbs (GET/POST/PUT/DELETE) כדי לתאר את הפעולה. קודי סטטוס נכונים (200, 201, 400, 401, 404, 500) עוזרים לצד הלקוח להבין מה קרה בלי לפרסר טקסט.',
-        type: 'text',
-        duration: 30,
-        order: 3,
-      },
-      {
-        title: 'Middleware',
-        description: 'לוגיקה משותפת שרצה על כל בקשה — לוגים, אימות, טיפול בשגיאות',
-        content:
-          'Middleware הן פונקציות שרצות בין קבלת הבקשה למענה — לצורך לוגים, אימות הרשאות, ולידציה, או טיפול בשגיאות מרוכז. כל middleware מקבלת (req, res, next) וקוראת ל-next() כדי להעביר את הבקשה הלאה בשרשרת.',
-        type: 'text',
-        duration: 30,
-        order: 4,
-      },
-      {
-        title: 'JWT — הקדמה לאימות',
-        description: 'איך שרת "זוכר" משתמש מחובר בלי session בזיכרון',
-        content:
-          'JSON Web Token הוא אסימון חתום שמכיל מידע על המשתמש (למשל ה-id שלו). לאחר login, השרת מייצר JWT והלקוח שולח אותו בכל בקשה (בדרך כלל ב-header Authorization). זה מאפשר אימות stateless בלי לשמור session בזיכרון השרת.',
-        type: 'text',
-        duration: 25,
-        order: 5,
-      },
-    ],
   },
-  {
-    slug: 'mongodb',
-    title: 'MongoDB',
-    description: 'מסד נתונים NoSQL — Schemas, Queries, Aggregation.',
+  mongodb: {
     icon: 'Database',
     color: '#10B981',
-    duration: '6 שעות',
-    difficulty: 'intermediate',
-    category: 'database',
     tags: ['mongodb', 'mongoose', 'database', 'nosql'],
     estimatedTime: 6,
     level: 4,
     isFeatured: false,
+    category: 'database',
     prerequisites: ['JavaScript'],
-    learningObjectives: [
-      'להבין את מודל המסמכים (documents) של MongoDB',
-      'לבצע CRUD מלא עם Mongoose',
-      'לכתוב שאילתות וצבירות (aggregation) בסיסיות',
-    ],
-    lessons: [
-      {
-        title: 'Documents ו-Collections',
-        description: 'איך MongoDB מאחסן נתונים כ-JSON גמיש',
-        content:
-          'MongoDB שומר נתונים כמסמכי BSON (דומה ל-JSON) בתוך collections — במקום טבלאות ושורות כמו ב-SQL. הגמישות הזו מאפשרת סכימה משתנה בין מסמכים, אבל בפרויקט אמיתי עדיין כדאי להגדיר Schema קבוע (עם Mongoose) כדי לשמור על עקביות נתונים.',
-        type: 'text',
-        duration: 20,
-        order: 1,
-      },
-      {
-        title: 'CRUD עם Mongoose',
-        description: 'create, find, updateOne, deleteOne',
-        content:
-          'Mongoose הוא ODM (Object Document Mapper) ל-Node.js שמוסיף Schemas, ולידציה וטיפוסים ל-MongoDB. הפעולות הבסיסיות: Model.create() ליצירה, Model.find()/findById() לקריאה, Model.findByIdAndUpdate() לעדכון, ו-Model.findByIdAndDelete() למחיקה.',
-        type: 'interactive',
-        duration: 35,
-        order: 2,
-      },
-      {
-        title: 'Indexes וביצועים',
-        description: 'למה שאילתה איטית הופכת למהירה עם אינדקס אחד',
-        content:
-          'ללא אינדקס, MongoDB סורק את כל המסמכים בקולקציה (collection scan) כדי למצוא תוצאה — איטי מאוד בקנה מידה. אינדקס על שדה שמחפשים בו הרבה (למשל email או slug) הופך את החיפוש למהיר בסדרי גודל. Schema.index() מגדיר אינדקס ב-Mongoose.',
-        type: 'text',
-        duration: 25,
-        order: 3,
-      },
-      {
-        title: 'Schema Validation',
-        description: 'required, enum, min/max — ולידציה ברמת מסד הנתונים',
-        content:
-          'Mongoose Schema מגדיר טיפוסים, שדות חובה (required), ערכים מותרים (enum), וגבולות (min/max/maxlength) — כך שנתונים לא תקינים נדחים לפני שהם נשמרים. זו שכבת הגנה נוספת מעבר לוולידציה בצד השרת/לקוח.',
-        type: 'text',
-        duration: 20,
-        order: 4,
-      },
-      {
-        title: 'Aggregation בסיסי',
-        description: '$match, $group, $sort — צבירת נתונים לדוחות',
-        content:
-          'Aggregation Pipeline מעבד מסמכים דרך שלבים עוקבים: $match מסנן, $group מקבץ ומחשב (סכום, ממוצע, ספירה), $sort ממיין. זה הכלי ליצירת דוחות וסטטיסטיקות ישירות במסד הנתונים במקום לעבד הכל בקוד השרת.',
-        type: 'text',
-        duration: 30,
-        order: 5,
-      },
-    ],
   },
-  {
-    slug: 'typescript',
-    title: 'TypeScript',
-    description: 'JavaScript עם טיפוסים — Types, Interfaces, Generics.',
+  typescript: {
     icon: 'BookOpen',
     color: '#6366F1',
-    duration: '7 שעות',
-    difficulty: 'advanced',
-    category: 'fullstack',
     tags: ['typescript', 'types', 'fullstack'],
     estimatedTime: 7,
     level: 6,
     isFeatured: false,
+    category: 'fullstack',
     prerequisites: ['JavaScript'],
-    learningObjectives: [
-      'להגדיר טיפוסים וממשקים (interfaces) לקוד בטוח יותר',
-      'להשתמש ב-Generics לקוד גמיש ומחדש שימוש',
-      'לשלב TypeScript עם React ו-Node.js',
-    ],
-    lessons: [
-      {
-        title: 'Basic Types',
-        description: 'string, number, boolean, arrays, ו-any (שכדאי להימנע ממנו)',
-        content:
-          'TypeScript מוסיף שכבת טיפוסים סטטית מעל JavaScript שנבדקת בזמן קומפילציה, לפני שהקוד בכלל רץ. הטיפוסים הבסיסיים דומים ל-JS (string, number, boolean) בתוספת מערכים מוקלדים (string[]) וטיפול מפורש ב-null/undefined. עדיף להימנע מ-any כי הוא מבטל את כל היתרון של הטיפוסים.',
-        type: 'text',
-        duration: 25,
-        order: 1,
-      },
-      {
-        title: 'Interfaces ו-Types',
-        description: 'הגדרת צורת אובייקטים לקוד עצמי-מתועד',
-        content:
-          'interface מגדיר את הצורה הצפויה של אובייקט — אילו שדות קיימים ומה הטיפוס שלהם. זה משמש כתיעוד חי שהקומפיילר אוכף: אם שוכחים שדה חובה או טועים בטיפוס, השגיאה מתגלה מיד בכתיבה ולא בזמן ריצה אצל משתמש.',
-        type: 'text',
-        duration: 30,
-        order: 2,
-      },
-      {
-        title: 'Union Types',
-        description: 'ערך שיכול להיות אחד מכמה טיפוסים אפשריים',
-        content:
-          'Union types (עם |) מתארים ערך שיכול להיות אחד מכמה אפשרויות — למשל status: "pending" | "success" | "error". זה מונע שגיאות כתיב (typos) שקשה לתפוס ב-JavaScript רגיל, כי הקומפיילר בודק שהערך תואם בדיוק לאחת האפשרויות המוגדרות.',
-        type: 'text',
-        duration: 25,
-        order: 3,
-      },
-      {
-        title: 'Generics',
-        description: 'פונקציות וטיפוסים שעובדים עם כל טיפוס, בלי לוותר על בטיחות',
-        content:
-          'Generics מאפשרים לכתוב קוד לשימוש חוזר שעובד עם טיפוסים שונים תוך שמירה על בדיקת טיפוסים. לדוגמה function first<T>(arr: T[]): T מחזירה פריט מהטיפוס המדויק של המערך שהוזן, במקום any כללי. נפוץ מאוד בפונקציות עזר ו-hooks.',
-        type: 'interactive',
-        duration: 35,
-        order: 4,
-      },
-      {
-        title: 'TypeScript עם React',
-        description: 'הקלדת props, state ואירועים בקומפוננטות',
-        content:
-          'ב-React עם TypeScript מגדירים interface ל-props של כל קומפוננטה, כך שהקומפיילר יתריע אם שוכחים prop חובה או מעבירים טיפוס שגוי. useState<T>() מאפשר להקליד את ה-state במפורש כשהטיפוס לא ברור מהערך ההתחלתי (למשל useState<User | null>(null)).',
-        type: 'text',
-        duration: 30,
-        order: 5,
-      },
-    ],
   },
-]
+}
+
+const MODULES: SeedModule[] = CURATED_MODULES.map((m) => {
+  const meta = MODULE_META[m.slug]
+  if (!meta) {
+    throw new Error(`Seed: missing MODULE_META for curated module slug "${m.slug}" — add it before seeding.`)
+  }
+  return {
+    slug: m.slug,
+    title: m.title,
+    description: m.description,
+    icon: meta.icon,
+    color: meta.color,
+    duration: m.duration,
+    difficulty: m.difficulty,
+    category: meta.category,
+    tags: meta.tags,
+    estimatedTime: meta.estimatedTime,
+    level: meta.level,
+    isFeatured: meta.isFeatured,
+    prerequisites: meta.prerequisites,
+    learningObjectives: m.learningObjectives,
+    lessons: m.lessons.map((l) => ({
+      title: l.title,
+      description: l.description,
+      content: l.content,
+      type: l.type,
+      duration: l.duration,
+      order: l.order,
+    })),
+  }
+})
 
 type SeedQuestion = {
   question: string
@@ -470,288 +175,26 @@ type SeedQuiz = {
   questions: SeedQuestion[]
 }
 
-const QUIZZES: SeedQuiz[] = [
-  {
-    slug: 'html-css-advanced',
-    title: 'HTML & CSS Advanced',
-    description: 'מבחן על HTML5, CSS3, Flexbox, Grid ו-Responsive Design',
-    category: 'Frontend',
-    moduleSlug: 'html-css',
-    difficulty: 'medium',
-    timeLimit: 20,
-    passingScore: 70,
-    questions: [
-      {
-        question: 'מהו התג הנכון ליצירת כותרת ראשית ב-HTML?',
-        type: 'multiple-choice',
-        options: ['<h1>', '<header>', '<title>', '<head>'],
-        correctAnswerIndex: 0,
-        explanation: '<h1> הוא התג הנכון לכותרת ראשית. <header> הוא כותרת של אזור בדף, <title> לכותרת בדפדפן, <head> למידע מטא.',
-      },
-      {
-        question: 'איזה תג משמש ליצירת קישור?',
-        type: 'multiple-choice',
-        options: ['<link>', '<a>', '<href>', '<url>'],
-        correctAnswerIndex: 1,
-        explanation: '<a> הוא תג הקישור. <link> משמש לקישור למשאבים חיצוניים כמו CSS.',
-      },
-      {
-        question: 'HTML הוא שפת תכנות',
-        type: 'true-false',
-        options: ['נכון', 'לא נכון'],
-        correctAnswerIndex: 1,
-        explanation: 'HTML היא שפת סימון (Markup Language), לא שפת תכנות — אין בה לוגיקה או תנאים.',
-      },
-      {
-        question: 'איזו תכונת CSS משמשת ליצירת פריסת Flexbox?',
-        type: 'multiple-choice',
-        options: ['display: flex', 'position: flex', 'float: flex', 'layout: flex'],
-        correctAnswerIndex: 0,
-        explanation: 'display: flex על אלמנט הורה הופך אותו למיכל Flexbox.',
-      },
-      {
-        question: 'מה עושה box-sizing: border-box?',
-        type: 'multiple-choice',
-        options: [
-          'מוסיף מסגרת לכל קופסה',
-          'כולל padding ו-border בתוך הרוחב המוצהר',
-          'מסתיר את גבולות האלמנט',
-          'מבטל את ה-margin',
-        ],
-        correctAnswerIndex: 1,
-        explanation: 'border-box גורם ל-width/height לכלול padding ו-border, מה שמפשט חישובי פריסה.',
-      },
-    ],
-  },
-  {
-    slug: 'javascript-fundamentals',
-    title: 'JavaScript Fundamentals',
-    description: 'בדוק את הידע שלך ב-JavaScript בסיסי — משתנים, פונקציות, אובייקטים',
-    category: 'JavaScript',
-    moduleSlug: 'javascript',
-    difficulty: 'easy',
-    timeLimit: 20,
-    passingScore: 70,
-    questions: [
-      {
-        question: 'מה ההבדל העיקרי בין let ל-const?',
-        type: 'multiple-choice',
-        options: [
-          'אין הבדל',
-          'const לא ניתן להצבה מחדש, let כן',
-          'let עובד רק במערכים',
-          'const עובד רק עם מספרים',
-        ],
-        correctAnswerIndex: 1,
-        explanation: 'משתנה שהוגדר עם const לא ניתן להצבה מחדש, בעוד let כן.',
-      },
-      {
-        question: 'מה תחזיר הפעולה: typeof "5" === 5',
-        type: 'true-false',
-        options: ['נכון', 'לא נכון'],
-        correctAnswerIndex: 1,
-        explanation: '=== משווה גם ערך וגם טיפוס. "5" היא מחרוזת ו-5 הוא מספר, לכן ההשוואה false.',
-      },
-      {
-        question: 'איזו מתודת מערך מחזירה מערך חדש עם כל הפריטים שעברו תנאי?',
-        type: 'multiple-choice',
-        options: ['map', 'filter', 'reduce', 'forEach'],
-        correctAnswerIndex: 1,
-        explanation: 'filter מחזירה מערך חדש עם הפריטים שעבורם הפונקציה שהועברה מחזירה true.',
-      },
-      {
-        question: 'מהי התוצאה של async function שמוחזרת בלי await?',
-        type: 'multiple-choice',
-        options: ['הערך עצמו', 'undefined', 'Promise', 'שגיאה'],
-        correctAnswerIndex: 2,
-        explanation: 'פונקציית async תמיד מחזירה Promise, גם אם בגוף הפונקציה יש return של ערך רגיל.',
-      },
-      {
-        question: 'איך בודקים אם משתנה שווה בדיוק ל-undefined (ולא null)?',
-        type: 'multiple-choice',
-        options: ['x == undefined', 'x === undefined', 'x = undefined', '!x'],
-        correctAnswerIndex: 1,
-        explanation: '=== בודקת גם טיפוס — היא הדרך הבטוחה להבדיל בין undefined ל-null.',
-      },
-    ],
-  },
-  {
-    slug: 'react-components-hooks',
-    title: 'React Components & Hooks',
-    description: 'מבחן מעמיק על React — קומפוננטות, hooks, state management',
-    category: 'React',
-    moduleSlug: 'react',
-    difficulty: 'medium',
-    timeLimit: 25,
-    passingScore: 70,
-    questions: [
-      {
-        question: 'מה מחזיר useState?',
-        type: 'multiple-choice',
-        options: [
-          'רק את הערך הנוכחי',
-          'זוג: הערך הנוכחי ופונקציה לעדכונו',
-          'פונקציה בלבד',
-          'אובייקט קונפיגורציה',
-        ],
-        correctAnswerIndex: 1,
-        explanation: 'useState מחזיר מערך של שני איברים — הערך הנוכחי ופונקציית setter.',
-      },
-      {
-        question: 'מתי useEffect עם מערך תלויות ריק ([]) ירוץ?',
-        type: 'multiple-choice',
-        options: ['בכל רינדור', 'פעם אחת בלבד, אחרי הרינדור הראשון', 'אף פעם', 'רק ב-unmount'],
-        correctAnswerIndex: 1,
-        explanation: 'מערך תלויות ריק אומר ל-React להריץ את ה-effect פעם אחת בלבד, אחרי הרינדור הראשוני.',
-      },
-      {
-        question: 'Props הם ניתנים לשינוי (mutable) בתוך הקומפוננטה שמקבלת אותם',
-        type: 'true-false',
-        options: ['נכון', 'לא נכון'],
-        correctAnswerIndex: 1,
-        explanation: 'Props הם read-only — קומפוננטה לעולם לא צריכה לשנות props שהיא מקבלת.',
-      },
-      {
-        question: 'למה חשוב key ייחודי בעת רינדור רשימה עם map?',
-        type: 'multiple-choice',
-        options: [
-          'זה קוסמטי בלבד',
-          'עוזר ל-React לזהות אילו פריטים השתנו/נוספו/הוסרו',
-          'משפר את מהירות ה-CSS',
-          'חובה רק במובייל',
-        ],
-        correctAnswerIndex: 1,
-        explanation: 'key עוזר ל-React לעקוב אחרי זהות הפריטים בין רינדורים ולעדכן רק את מה שבאמת השתנה.',
-      },
-      {
-        question: 'מה ההבדל בין state ל-props?',
-        type: 'multiple-choice',
-        options: [
-          'אין הבדל',
-          'state מנוהל בתוך הקומפוננטה, props מגיעים מבחוץ',
-          'props ניתנים לשינוי, state לא',
-          'state קיים רק ב-class components',
-        ],
-        correctAnswerIndex: 1,
-        explanation: 'state הוא נתון פנימי שהקומפוננטה מנהלת בעצמה; props מועברים אליה מקומפוננטת ההורה.',
-      },
-    ],
-  },
-  {
-    slug: 'nodejs-express',
-    title: 'Node.js & Express',
-    description: 'בדוק את הידע שלך ב-Node.js, Express, MongoDB ו-API development',
-    category: 'Backend',
-    moduleSlug: 'nodejs',
-    difficulty: 'hard',
-    timeLimit: 30,
-    passingScore: 70,
-    questions: [
-      {
-        question: 'איזו פונקציה מפעילה שרת Express להאזין לבקשות?',
-        type: 'multiple-choice',
-        options: ['app.start()', 'app.listen()', 'app.run()', 'app.serve()'],
-        correctAnswerIndex: 1,
-        explanation: 'app.listen(PORT) מפעיל את שרת ה-HTTP ומתחיל להאזין לבקשות נכנסות.',
-      },
-      {
-        question: 'מה תפקידה של middleware בExpress?',
-        type: 'multiple-choice',
-        options: [
-          'רק להגיש קבצים סטטיים',
-          'לרוץ בין קבלת הבקשה למענה, ולקרוא ל-next() כדי להעביר הלאה',
-          'להחליף את ה-router',
-          'לחבר למסד הנתונים בלבד',
-        ],
-        correctAnswerIndex: 1,
-        explanation: 'Middleware מקבלת (req, res, next) ורצה בשרשרת — לוגים, אימות, ולידציה וכו׳.',
-      },
-      {
-        question: 'איזה קוד סטטוס HTTP מתאים ל"נוצר בהצלחה"?',
-        type: 'multiple-choice',
-        options: ['200', '201', '204', '301'],
-        correctAnswerIndex: 1,
-        explanation: '201 Created מציין שמשאב חדש נוצר בהצלחה בעקבות הבקשה.',
-      },
-      {
-        question: 'JWT הוא מנגנון session מבוסס זיכרון בשרת',
-        type: 'true-false',
-        options: ['נכון', 'לא נכון'],
-        correctAnswerIndex: 1,
-        explanation: 'JWT הוא stateless — כל המידע נמצא באסימון עצמו, השרת לא שומר session בזיכרון.',
-      },
-      {
-        question: 'מה עושה Mongoose Schema Validation?',
-        type: 'multiple-choice',
-        options: [
-          'משפר ביצועי רשת',
-          'דוחה נתונים לא תקינים לפני שהם נשמרים במסד הנתונים',
-          'מצפין סיסמאות אוטומטית',
-          'מייצר תיעוד Swagger',
-        ],
-        correctAnswerIndex: 1,
-        explanation: 'הגדרות required/enum/min/max ב-Schema מונעות שמירת נתונים לא תקינים ב-DB.',
-      },
-    ],
-  },
-  {
-    slug: 'typescript-mastery',
-    title: 'TypeScript Mastery',
-    description: 'מבחן מתקדם על TypeScript — types, interfaces, generics',
-    category: 'TypeScript',
-    moduleSlug: 'typescript',
-    difficulty: 'hard',
-    timeLimit: 25,
-    passingScore: 70,
-    questions: [
-      {
-        question: 'מתי שגיאות טיפוסים ב-TypeScript מתגלות?',
-        type: 'multiple-choice',
-        options: ['בזמן ריצה בלבד', 'בזמן קומפילציה, לפני הרצה', 'רק בבדיקות (tests)', 'אף פעם'],
-        correctAnswerIndex: 1,
-        explanation: 'TypeScript בודק טיפוסים בזמן קומפילציה — לפני שהקוד בכלל רץ.',
-      },
-      {
-        question: 'למה כדאי להימנע מ-any?',
-        type: 'multiple-choice',
-        options: [
-          'זה מילת מפתח שמורה',
-          'הוא מבטל את כל בדיקת הטיפוסים על אותו ערך',
-          'הוא איטי יותר בזמן ריצה',
-          'אין סיבה, זה מומלץ',
-        ],
-        correctAnswerIndex: 1,
-        explanation: 'any מכבה את בדיקת הטיפוסים לחלוטין עבור אותו ערך, ומאבד את היתרון המרכזי של TypeScript.',
-      },
-      {
-        question: 'interface מגדיר התנהגות בזמן ריצה (runtime)',
-        type: 'true-false',
-        options: ['נכון', 'לא נכון'],
-        correctAnswerIndex: 1,
-        explanation: 'interface הוא קונסטרוקט קומפילציה בלבד — הוא "נעלם" לגמרי בקוד ה-JavaScript המקומפל.',
-      },
-      {
-        question: 'מה מטרת ה-Generics (למשל function first<T>(arr: T[]): T)?',
-        type: 'multiple-choice',
-        options: [
-          'לכתוב קוד לשימוש חוזר תוך שמירה על בטיחות טיפוסים',
-          'להאיץ את זמן הריצה',
-          'להחליף מחלקות (classes)',
-          'לתמוך רק במערכים',
-        ],
-        correctAnswerIndex: 0,
-        explanation: 'Generics מאפשרים קוד גנרי שעדיין "יודע" את הטיפוס המדויק שהוזן, בלי לוותר על בדיקת טיפוסים.',
-      },
-      {
-        question: 'Union type (A | B) מתאר ערך שהוא...',
-        type: 'multiple-choice',
-        options: ['גם A וגם B בו-זמנית', 'אחד מ-A או B', 'לא A ולא B', 'מערך של A ו-B'],
-        correctAnswerIndex: 1,
-        explanation: 'Union type מתאר ערך שיכול להיות אחת מכמה אפשרויות טיפוס מוגדרות.',
-      },
-    ],
-  },
-]
+// Derived directly from CURATED_QUIZZES — same single source of truth used by
+// the API's curated-fallback path, so DB-mode and no-DB-mode never drift apart.
+const QUIZZES: SeedQuiz[] = CURATED_QUIZZES.map((q) => ({
+  slug: q.slug,
+  title: q.title,
+  description: q.description,
+  category: q.category,
+  moduleSlug: q.moduleSlug,
+  difficulty: q.difficulty,
+  timeLimit: q.timeLimit,
+  passingScore: q.passingScore,
+  questions: q.questions.map((question) => ({
+    question: question.question,
+    type: question.type,
+    options: question.options,
+    correctAnswerIndex: question.correctAnswerIndex,
+    explanation: question.explanation,
+    points: question.points,
+  })),
+}))
 
 type SeedProject = {
   slug: string
@@ -763,63 +206,16 @@ type SeedProject = {
   estimatedTime: string
 }
 
-const PROJECTS: SeedProject[] = [
-  {
-    slug: 'ecommerce-platform',
-    title: 'מערכת ניהול חנות אונליין',
-    description:
-      'פיתוח מערכת מלאה לניהול חנות אונליין עם React, Node.js ו-MongoDB. כולל מערכת תשלומים, ניהול מלאי ופאנל ניהול.',
-    category: 'Full Stack',
-    technologies: ['React', 'Node.js', 'MongoDB', 'Stripe', 'JWT'],
-    difficulty: 'advanced',
-    estimatedTime: '4-6 שבועות',
-  },
-  {
-    slug: 'weather-app',
-    title: 'אפליקציית מזג אוויר',
-    description: 'אפליקציית מזג אוויר אינטראקטיבית עם חיזוי 7 ימים, מפה עם מיקום המשתמש ועדכונים בזמן אמת.',
-    category: 'Frontend',
-    technologies: ['React', 'TypeScript', 'OpenWeather API', 'Leaflet'],
-    difficulty: 'intermediate',
-    estimatedTime: '2-3 שבועות',
-  },
-  {
-    slug: 'blog-platform',
-    title: 'פלטפורמת בלוגים',
-    description: 'פלטפורמה לכתיבת ופרסום בלוגים עם מערכת תגובות, חיפוש מתקדם ומערכת הרשאות.',
-    category: 'Full Stack',
-    technologies: ['Next.js', 'Prisma', 'PostgreSQL', 'Tailwind CSS'],
-    difficulty: 'intermediate',
-    estimatedTime: '3-4 שבועות',
-  },
-  {
-    slug: 'snake-game',
-    title: 'משחק Snake',
-    description: 'מימוש קלאסי של משחק הנחש עם JavaScript טהור. כולל מערכת ניקוד ורמות קושי.',
-    category: 'Frontend',
-    technologies: ['HTML5', 'CSS3', 'JavaScript', 'Canvas API'],
-    difficulty: 'beginner',
-    estimatedTime: '1-2 שבועות',
-  },
-  {
-    slug: 'task-manager',
-    title: 'מערכת ניהול משימות',
-    description: 'אפליקציית ניהול משימות מתקדמת עם דרגי עדיפות, תגיות, חיפוש וסנכרון בין מכשירים.',
-    category: 'Mobile',
-    technologies: ['React Native', 'Firebase', 'Redux Toolkit'],
-    difficulty: 'intermediate',
-    estimatedTime: '3-5 שבועות',
-  },
-  {
-    slug: 'user-management-api',
-    title: 'API לניהול משתמשים',
-    description: 'RESTful API מלא לניהול משתמשים עם אימות, הרשאות וגיבויים אוטומטיים ותיעוד Swagger.',
-    category: 'Backend',
-    technologies: ['Node.js', 'Express', 'MongoDB', 'JWT', 'Swagger'],
-    difficulty: 'intermediate',
-    estimatedTime: '2-3 שבועות',
-  },
-]
+// Derived directly from CURATED_PROJECTS — one source of truth (see QUIZZES above).
+const PROJECTS: SeedProject[] = CURATED_PROJECTS.map((p) => ({
+  slug: p.slug,
+  title: p.title,
+  description: p.description,
+  category: p.category,
+  technologies: p.technologies,
+  difficulty: p.difficulty,
+  estimatedTime: p.estimatedTime,
+}))
 
 type SeedExercise = {
   slug: string
@@ -832,82 +228,23 @@ type SeedExercise = {
   prompt: string
   starterCode: string
   hint: string
+  solution: string
 }
 
-const EXERCISES: SeedExercise[] = [
-  {
-    slug: 'html-landing',
-    title: 'דף נחיתה HTML',
-    description: 'בנה מבנה בסיסי של דף נחיתה עם כותרת, פסקה וכפתור.',
-    category: 'CSS',
-    difficulty: 'easy',
-    estimatedTime: 30,
-    tags: ['HTML', 'Semantic', 'Layout'],
-    prompt: 'בנה מבנה בסיסי של דף נחיתה עם כותרת, פסקה וכפתור, באמצעות תגיות HTML סמנטיות.',
-    starterCode: '<header>\n  <h1>Welcome</h1>\n</header>',
-    hint: 'השתמש ב-header, main ו-button סמנטיים.',
-  },
-  {
-    slug: 'js-array',
-    title: 'סינון מערך',
-    description: 'צור מחשבון בסיסי עם JavaScript — חיבור, חיסור, כפל וחילוק',
-    category: 'JavaScript',
-    difficulty: 'easy',
-    estimatedTime: 30,
-    tags: ['DOM', 'Events', 'Functions'],
-    prompt: 'כתוב פונקציה שמסננת מספרים זוגיים ממערך.',
-    starterCode: 'function onlyEven(nums) {\n  // your code\n}',
-    hint: 'השתמש ב-filter ובדיקת n % 2 === 0.',
-  },
-  {
-    slug: 'react-counter',
-    title: 'רשימת משימות (Todo List)',
-    description: 'בנה אפליקציית Todo List עם React — הוספה, מחיקה ועדכון משימות',
-    category: 'React',
-    difficulty: 'medium',
-    estimatedTime: 45,
-    tags: ['useState', 'useEffect', 'Props'],
-    prompt: 'צור קומפוננטת מונה עם כפתורי + ו-איפוס, כבסיס לניהול state לפני שעוברים לרשימת משימות מלאה.',
-    starterCode: "import { useState } from 'react'\n\nexport function Counter() {\n  const [n, setN] = useState(0)\n  return null\n}",
-    hint: 'שמור state ב-useState ועדכן עם setN.',
-  },
-  {
-    slug: 'express-api',
-    title: 'API עם Express',
-    description: 'צור REST API עם Node.js ו-Express — CRUD operations למשתמשים',
-    category: 'Backend',
-    difficulty: 'medium',
-    estimatedTime: 60,
-    tags: ['Express', 'REST', 'Middleware'],
-    prompt: 'כתוב route ב-Express שמחזיר רשימת משתמשים, ועוד route שמוסיף משתמש חדש למערך בזיכרון.',
-    starterCode: "const express = require('express')\nconst app = express()\napp.use(express.json())\n\nlet users = []\n\napp.get('/users', (req, res) => {\n  // your code\n})\n\napp.post('/users', (req, res) => {\n  // your code\n})",
-    hint: 'GET מחזיר res.json(users). POST דוחף לתוך users ומחזיר 201.',
-  },
-  {
-    slug: 'memory-game',
-    title: 'משחק זיכרון',
-    description: 'פיתוח משחק זיכרון אינטראקטיבי עם HTML, CSS ו-JavaScript',
-    category: 'Frontend',
-    difficulty: 'easy',
-    estimatedTime: 40,
-    tags: ['Game Logic', 'CSS Animations', 'Local Storage'],
-    prompt: 'כתוב פונקציה שבודקת אם שני קלפים שנבחרו תואמים, ומעדכנת את הניקוד בהתאם.',
-    starterCode: 'function checkMatch(card1, card2) {\n  // your code — return true אם הקלפים תואמים\n}',
-    hint: 'השווה בין card1.value ל-card2.value.',
-  },
-  {
-    slug: 'auth-jwt',
-    title: 'מערכת אימות',
-    description: 'בנה מערכת הרשמה והתחברות עם JWT ו-bcrypt',
-    category: 'Security',
-    difficulty: 'hard',
-    estimatedTime: 90,
-    tags: ['JWT', 'bcrypt', 'Validation'],
-    prompt: 'כתוב פונקציה שמצפינה סיסמה עם bcrypt לפני שמירה, ופונקציה שמייצרת JWT לאחר login מוצלח.',
-    starterCode: "const bcrypt = require('bcryptjs')\nconst jwt = require('jsonwebtoken')\n\nasync function hashPassword(plain) {\n  // your code\n}\n\nfunction generateToken(userId) {\n  // your code\n}",
-    hint: 'bcrypt.hash(plain, 12) ו-jwt.sign({ id: userId }, secret, { expiresIn: \'7d\' }).',
-  },
-];
+// Derived directly from CURATED_EXERCISES — one source of truth (see QUIZZES above).
+const EXERCISES: SeedExercise[] = CURATED_EXERCISES.map((e) => ({
+  slug: e.slug,
+  title: e.title,
+  description: e.description,
+  category: e.category,
+  difficulty: e.difficulty,
+  estimatedTime: e.estimatedTime,
+  tags: e.tags,
+  prompt: e.prompt,
+  starterCode: e.starterCode,
+  hint: e.hint,
+  solution: e.solution,
+}));
 
 async function run() {
   const mongoUri = process.env.MONGODB_URI
@@ -1067,6 +404,7 @@ async function run() {
           prompt: ex.prompt,
           starterCode: ex.starterCode,
           hint: ex.hint,
+          solution: ex.solution,
           isPublished: true,
           createdBy: admin._id,
           updatedBy: admin._id,
