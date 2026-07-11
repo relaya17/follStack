@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { BookOpen, Code, Database, Globe, Zap, Layers, Workflow, GitBranch, Binary, Shield, Cloud, Terminal, Loader2 } from 'lucide-react'
+import { BookOpen, Code, Database, Globe, Zap, Layers, Workflow, GitBranch, Binary, Shield, Cloud, Terminal, Bot, Image as ImageIcon, Gamepad2, Loader2 } from 'lucide-react'
 import { Card } from '@follstack/ui'
 import { apiJson } from '@/lib/api'
 
@@ -19,6 +19,9 @@ const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   Shield,
   Cloud,
   Terminal,
+  Bot,
+  Image: ImageIcon,
+  Gamepad2,
 }
 
 interface ApiLesson {
@@ -96,7 +99,8 @@ export default function LearningPage() {
         <p className="page-subtitle">
           למידה מובנית בכל תחומי הפיתוח — HTML, CSS, JavaScript, React, Node.js, MongoDB, TypeScript, אוטומציה,
           Git, מבני נתונים ואלגוריתמים, אבטחת אפליקציות, כלים ופריסה מודרניים (GitHub, Vercel, Netlify, Docker),
-          ושפות תכנות נוספות (C, C++, C#, Java). כל השיעורים נטענים ישירות מהשרת.
+          שפות תכנות נוספות (C, C++, C#, Java), סוכני AI, פוטושופ, ופיתוח משחקים בדפדפן. כל השיעורים נטענים ישירות
+          מהשרת.
         </p>
       </div>
 
@@ -254,6 +258,18 @@ export default function LearningPage() {
             <span className="text-2xl">→</span>
             <Link href="/learning/languages" className="rounded-full bg-white/20 px-4 py-2 hover:bg-white/30">
               שפות נוספות
+            </Link>
+            <span className="text-2xl">→</span>
+            <Link href="/learning/ai-agents" className="rounded-full bg-white/20 px-4 py-2 hover:bg-white/30">
+              סוכני AI
+            </Link>
+            <span className="text-2xl">→</span>
+            <Link href="/learning/photoshop" className="rounded-full bg-white/20 px-4 py-2 hover:bg-white/30">
+              פוטושופ
+            </Link>
+            <span className="text-2xl">→</span>
+            <Link href="/learning/game-dev" className="rounded-full bg-white/20 px-4 py-2 hover:bg-white/30">
+              פיתוח משחקים
             </Link>
           </div>
         </div>

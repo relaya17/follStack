@@ -46,6 +46,9 @@ const NEXT_PRACTICE: Record<string, string> = {
   security: 'prevent-xss',
   devtools: 'write-a-dockerfile',
   languages: 'c-pointer-swap',
+  'ai-agents': 'define-a-tool-schema',
+  photoshop: 'non-destructive-mask-workflow',
+  'game-dev': 'requestanimationframe-game-loop',
 }
 
 const TYPE_LABELS: Record<ApiLesson['type'], string> = {

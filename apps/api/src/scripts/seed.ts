@@ -181,6 +181,36 @@ const MODULE_META: Record<
     category: 'other',
     prerequisites: ['JavaScript'],
   },
+  'ai-agents': {
+    icon: 'Bot',
+    color: '#7C3AED',
+    tags: ['ai', 'agents', 'mcp', 'rag', 'llm', 'tools'],
+    estimatedTime: 9,
+    level: 9,
+    isFeatured: true,
+    category: 'other',
+    prerequisites: ['JavaScript', 'Node.js'],
+  },
+  photoshop: {
+    icon: 'Image',
+    color: '#31A8FF',
+    tags: ['photoshop', 'design', 'layers', 'export', 'ui'],
+    estimatedTime: 8,
+    level: 2,
+    isFeatured: false,
+    category: 'other',
+    prerequisites: [],
+  },
+  'game-dev': {
+    icon: 'Gamepad2',
+    color: '#EC4899',
+    tags: ['games', 'canvas', 'javascript', 'phaser'],
+    estimatedTime: 10,
+    level: 7,
+    isFeatured: true,
+    category: 'other',
+    prerequisites: ['JavaScript'],
+  },
 }
 
 const MODULES: SeedModule[] = CURATED_MODULES.map((m) => {
