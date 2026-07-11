@@ -5,6 +5,7 @@ import { computeLeaderboard } from '@/services/progressService'
 import { User } from '@/models/User'
 import { QuizAttempt } from '@/models/Quiz'
 import { PracticeCompletion } from '@/models/Practice'
+import { ChatMessage } from '@/models/ChatMessage'
 
 /**
  * @swagger
@@ -371,34 +372,21 @@ export const deleteForumPost = async (req: AuthRequest, res: Response, next: Nex
 export const getChatMessages = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { roomId } = req.params
-    const { limit = 50 } = req.query
+    const limit = Math.min(Number(req.query.limit) || 50, 100)
 
-    // This would typically come from a ChatMessage model
-    // For now, we'll return a mock response
-    const messages = [
-      {
-        id: '1',
-        roomId,
-        message: 'שלום! איך מתקדם הפרויקט?',
-        author: {
-          id: '1',
-          name: 'שרה כהן',
-          avatar: ''
-        },
-        createdAt: new Date().toISOString()
-      },
-      {
-        id: '2',
-        roomId,
-        message: 'היי! הכל בסדר, עובד על ה-API',
-        author: {
-          id: '2',
-          name: 'דוד לוי',
-          avatar: ''
-        },
-        createdAt: new Date().toISOString()
-      }
-    ]
+    const recent = await ChatMessage.find({ roomId })
+      .sort({ createdAt: -1 })
+      .limit(limit)
+      .populate('author', 'name avatar')
+      .lean()
+
+    const messages = recent.reverse().map((m) => ({
+      id: String(m._id),
+      roomId: m.roomId,
+      message: m.message,
+      author: m.author,
+      createdAt: m.createdAt,
+    }))
 
     res.status(200).json({
       success: true,
@@ -422,27 +410,26 @@ export const sendChatMessage = async (req: AuthRequest, res: Response, next: Nex
     const { roomId } = req.params
     const { message } = req.body
 
-    if (!message) {
+    if (!message || !String(message).trim()) {
       throw new AppError('הודעה היא שדה חובה', 400)
     }
 
-    // This would typically save to a ChatMessage model
-    // For now, we'll return a mock response
-    const chatMessage = {
-      id: Date.now().toString(),
+    const created = await ChatMessage.create({
       roomId,
-      message,
-      author: {
-        id: req.user!.id,
-        name: req.user!.name,
-        avatar: req.user!.avatar
-      },
-      createdAt: new Date().toISOString()
-    }
+      message: String(message).trim(),
+      author: req.user!.id,
+    })
+    const populated = await created.populate('author', 'name avatar')
 
     res.status(201).json({
       success: true,
-      data: chatMessage
+      data: {
+        id: String(populated._id),
+        roomId: populated.roomId,
+        message: populated.message,
+        author: populated.author,
+        createdAt: populated.createdAt,
+      },
     })
   } catch (error) {
     next(error)

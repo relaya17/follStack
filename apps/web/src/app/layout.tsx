@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Heebo, Rubik } from 'next/font/google'
 import { SiteHeader } from '@/components/SiteHeader'
 import { APP_NAME } from '@follstack/shared'
+import { AuthProvider } from '@/lib/auth'
 import './globals.css'
 
 const heebo = Heebo({
@@ -29,20 +30,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="he" dir="rtl" data-scroll-behavior="smooth" className={`${heebo.variable} ${rubik.variable}`}>
       <body className="flex min-h-screen flex-col font-sans antialiased">
-        <a href="#main-content" className="skip-link">
-          דלג לתוכן הראשי
-        </a>
-        <SiteHeader />
-        <main id="main-content" className="relative flex-1" tabIndex={-1}>
-          {children}
-        </main>
-        <footer className="site-footer">
-          <div className="page-shell !py-0">
-            <p>
-              © {new Date().getFullYear()} {APP_NAME} — פלטפורמת למידה נגישה
-            </p>
-          </div>
-        </footer>
+        <AuthProvider>
+          <a href="#main-content" className="skip-link">
+            דלג לתוכן הראשי
+          </a>
+          <SiteHeader />
+          <main id="main-content" className="relative flex-1" tabIndex={-1}>
+            {children}
+          </main>
+          <footer className="site-footer">
+            <div className="page-shell !py-0">
+              <p>
+                © {new Date().getFullYear()} {APP_NAME} — פלטפורמת למידה נגישה
+              </p>
+            </div>
+          </footer>
+        </AuthProvider>
       </body>
     </html>
   )

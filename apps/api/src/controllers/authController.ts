@@ -57,7 +57,7 @@ const sendTokenResponse = (user: IUser, statusCode: number, res: Response): void
  */
 export const register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const { name, email, password } = req.body
+        const { name, email, password, role } = req.body
 
         // Check if user already exists
         const existingUser = await User.findOne({ email })
@@ -65,11 +65,16 @@ export const register = async (req: Request, res: Response, next: NextFunction):
             throw new AppError('משתמש עם האימייל הזה כבר קיים', 400)
         }
 
+        // Self-registration may only pick 'student' or 'mentor' — never 'admin'
+        const allowedSelfRoles = ['student', 'mentor']
+        const assignedRole = allowedSelfRoles.includes(role) ? role : 'student'
+
         // Create user
         const user = await User.create({
             name,
             email,
-            password
+            password,
+            role: assignedRole
         })
 
         // Generate verification token
