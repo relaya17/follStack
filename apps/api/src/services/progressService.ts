@@ -97,8 +97,16 @@ export interface LeaderboardEntry {
   badges: number
 }
 
-/** Leaderboard across all users who have at least one real activity record. */
-export async function computeLeaderboard(limit = 10): Promise<LeaderboardEntry[]> {
+interface CombinedRankRow {
+  userId: string
+  xp: number
+  level: number
+  quizzesTaken: number
+  exercisesCompleted: number
+}
+
+/** Shared ranking base for the leaderboard and for a single user's rank — same formula, single source of truth. */
+async function computeRankedUsers(): Promise<CombinedRankRow[]> {
   const [quizAgg, practiceAgg] = await Promise.all([
     QuizAttempt.aggregate([
       { $sort: { score: -1 } },
@@ -121,6 +129,12 @@ export async function computeLeaderboard(limit = 10): Promise<LeaderboardEntry[]
   })
 
   combined.sort((a, b) => b.xp - a.xp)
+  return combined
+}
+
+/** Leaderboard across all users who have at least one real activity record. */
+export async function computeLeaderboard(limit = 10): Promise<LeaderboardEntry[]> {
+  const combined = await computeRankedUsers()
   const top = combined.slice(0, limit)
 
   const users = await User.find({ _id: { $in: top.map((t) => t.userId) } }, 'name avatar').lean()
@@ -138,4 +152,22 @@ export async function computeLeaderboard(limit = 10): Promise<LeaderboardEntry[]
       badges: 0,
     }
   })
+}
+
+export interface UserRank {
+  rank: number
+  totalUsers: number
+}
+
+/**
+ * A single user's real position on the same ranking used by the leaderboard.
+ * Returns null if the user has no ranked activity yet (never taken a quiz/exercise) — an
+ * unranked user has no honest rank number to show, so the caller should render "not ranked yet"
+ * rather than a fabricated placeholder.
+ */
+export async function getUserRank(userId: string): Promise<UserRank | null> {
+  const combined = await computeRankedUsers()
+  const index = combined.findIndex((row) => row.userId === userId)
+  if (index === -1) return null
+  return { rank: index + 1, totalUsers: combined.length }
 }

@@ -8,6 +8,7 @@ import {
   findCuratedModule,
   isMongoReady,
 } from '@/data/curatedContent'
+import { markLessonComplete, getCompletedLessonIds } from '@/services/lessonProgressService'
 
 function curatedModulePayload(m: (typeof CURATED_MODULES)[number]) {
   return {
@@ -198,18 +199,45 @@ export const getLesson = async (req: Request, res: Response, next: NextFunction)
   }
 }
 
+/** Which lessons the current user has completed within one module — powers checkmarks on the module page. */
+export const getModuleProgress = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const { moduleId } = req.params
+
+    if (!isMongoReady()) {
+      res.status(200).json({ success: true, persisted: false, data: { completedLessonIds: [] } })
+      return
+    }
+
+    const completedLessonIds = await getCompletedLessonIds(req.user!.id, moduleId)
+    res.status(200).json({ success: true, persisted: true, data: { completedLessonIds } })
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const completeLesson = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { moduleId, lessonId } = req.params
+    const userId = req.user!.id
+
+    if (!isMongoReady()) {
+      // No DB configured — nothing to persist to, but don't lie about it either.
+      res.status(200).json({
+        success: true,
+        persisted: false,
+        message: 'ה-DB לא מחובר — ההשלמה לא נשמרה. הפעל MongoDB כדי לשמור התקדמות.',
+        data: { moduleId, lessonId, userId, completed: true, completedAt: new Date().toISOString() },
+      })
+      return
+    }
+
+    const completedAt = await markLessonComplete(userId, moduleId, lessonId, true)
+
     res.status(200).json({
       success: true,
-      data: {
-        moduleId,
-        lessonId,
-        userId: req.user?.id ?? 'anonymous',
-        completed: true,
-        completedAt: new Date().toISOString(),
-      },
+      persisted: true,
+      data: { moduleId, lessonId, userId, completed: true, completedAt: completedAt.toISOString() },
     })
   } catch (error) {
     next(error)

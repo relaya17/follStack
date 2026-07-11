@@ -8,6 +8,7 @@ import {
     getForumPost,
     updateForumPost,
     deleteForumPost,
+    createForumReply,
     getChatMessages,
     sendChatMessage,
     getLeaderboard,
@@ -217,6 +218,39 @@ router.put('/posts/:id', protect, updateForumPost)
  *         description: Forum post not found
  */
 router.delete('/posts/:id', protect, deleteForumPost)
+
+/**
+ * @swagger
+ * /api/community/posts/{id}/replies:
+ *   post:
+ *     summary: Reply to a forum post
+ *     tags: [Community]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - content
+ *             properties:
+ *               content:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Reply created successfully
+ *       404:
+ *         description: Forum post not found
+ */
+router.post('/posts/:id/replies', protect, createForumReply)
 
 /**
  * @swagger

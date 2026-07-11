@@ -3,9 +3,10 @@
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
-import { BookOpen, ArrowRight, ChevronDown, ChevronUp } from 'lucide-react'
+import { BookOpen, ArrowRight, ChevronDown, ChevronUp, CheckCircle2, Circle, Loader2 as SpinnerIcon } from 'lucide-react'
 import { Card } from '@follstack/ui'
-import { apiFetchWithRetry } from '@/lib/api'
+import { apiFetch, apiFetchWithRetry, apiJson } from '@/lib/api'
+import { useAuth } from '@/lib/auth'
 
 interface ApiLesson {
   _id: string
@@ -58,13 +59,22 @@ const TYPE_LABELS: Record<ApiLesson['type'], string> = {
   quiz: 'חידון',
 }
 
+interface ModuleProgressResponse {
+  success: boolean
+  persisted: boolean
+  data: { completedLessonIds: string[] }
+}
+
 export default function LearningModulePage() {
   const params = useParams<{ id: string }>()
   const id = params.id
+  const { user } = useAuth()
   const [learningModule, setLearningModule] = useState<ApiModule | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [openLessonId, setOpenLessonId] = useState<string | null>(null)
+  const [completedIds, setCompletedIds] = useState<Set<string>>(new Set())
+  const [marking, setMarking] = useState<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -92,6 +102,35 @@ export default function LearningModulePage() {
       cancelled = true
     }
   }, [id])
+
+  useEffect(() => {
+    if (!user) {
+      setCompletedIds(new Set())
+      return
+    }
+    let cancelled = false
+    apiJson<ModuleProgressResponse>(`/api/learning/modules/${id}/progress`).then((res) => {
+      if (cancelled || !res?.success) return
+      setCompletedIds(new Set(res.data.completedLessonIds))
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [id, user])
+
+  async function toggleLessonComplete(lessonId: string) {
+    if (!user || marking) return
+    setMarking(lessonId)
+    try {
+      const res = await apiFetch(`/api/learning/modules/${id}/lessons/${lessonId}/complete`, { method: 'POST' })
+      const json = await res.json()
+      if (res.ok && json.success) {
+        setCompletedIds((prev) => new Set(prev).add(lessonId))
+      }
+    } finally {
+      setMarking(null)
+    }
+  }
 
   const sortedLessons = useMemo(
     () => (learningModule ? [...learningModule.lessons].sort((a, b) => a.order - b.order) : []),
@@ -155,14 +194,26 @@ export default function LearningModulePage() {
       )}
 
       <Card className="mb-8 p-4 sm:p-6">
-        <h2 className="section-title mb-4">שיעורים ותוכן</h2>
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+          <h2 className="section-title">שיעורים ותוכן</h2>
+          {user ? (
+            <span className="text-sm font-semibold text-slate-500 dark:text-slate-400">
+              {completedIds.size} / {sortedLessons.length} הושלמו
+            </span>
+          ) : (
+            <Link href="/login" className="text-sm font-semibold text-primary-600 hover:underline dark:text-primary-400">
+              התחבר/י כדי לשמור התקדמות
+            </Link>
+          )}
+        </div>
         <div className="space-y-3">
           {sortedLessons.map((lesson, index) => {
             const open = openLessonId === lesson._id
+            const done = completedIds.has(lesson._id)
             return (
               <div
                 key={lesson._id}
-                className="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700"
+                className={`overflow-hidden rounded-xl border ${done ? 'border-green-300 dark:border-green-800' : 'border-slate-200 dark:border-slate-700'}`}
               >
                 <button
                   type="button"
@@ -170,14 +221,21 @@ export default function LearningModulePage() {
                   aria-expanded={open}
                   onClick={() => setOpenLessonId(open ? null : lesson._id)}
                 >
-                  <div className="min-w-0 flex-1">
-                    <span className="font-medium text-slate-900 dark:text-white">
-                      {index + 1}. {lesson.title}
-                    </span>
-                    <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{lesson.description}</p>
-                    <p className="mt-1 text-xs font-semibold text-slate-500">
-                      {TYPE_LABELS[lesson.type]} · {lesson.duration} דק&apos;
-                    </p>
+                  <div className="flex min-w-0 flex-1 items-start gap-2">
+                    {done ? (
+                      <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-green-600" aria-hidden="true" />
+                    ) : (
+                      <Circle className="mt-1 h-5 w-5 shrink-0 text-slate-300 dark:text-slate-600" aria-hidden="true" />
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <span className="font-medium text-slate-900 dark:text-white">
+                        {index + 1}. {lesson.title}
+                      </span>
+                      <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{lesson.description}</p>
+                      <p className="mt-1 text-xs font-semibold text-slate-500">
+                        {TYPE_LABELS[lesson.type]} · {lesson.duration} דק&apos;
+                      </p>
+                    </div>
                   </div>
                   {open ? (
                     <ChevronUp className="mt-1 h-5 w-5 shrink-0" aria-hidden="true" />
@@ -190,16 +248,37 @@ export default function LearningModulePage() {
                     {lesson.content?.trim()
                       ? lesson.content
                       : 'לשיעור זה אין תוכן מפורט עדיין — נסי את המבחן או את AI Mentor.'}
-                    {lesson.type === 'quiz' && (
-                      <div className="mt-4">
+                    <div className="mt-4 flex flex-wrap gap-3">
+                      {lesson.type === 'quiz' && (
                         <Link
                           href="/quizzes"
                           className="inline-flex rounded-xl bg-primary-600 px-4 py-2 text-sm font-bold text-white hover:bg-primary-700"
                         >
                           עבור למבחנים
                         </Link>
-                      </div>
-                    )}
+                      )}
+                      {user && !done && (
+                        <button
+                          type="button"
+                          onClick={() => toggleLessonComplete(lesson._id)}
+                          disabled={marking === lesson._id}
+                          className="inline-flex items-center gap-2 rounded-xl border border-green-600 px-4 py-2 text-sm font-bold text-green-700 transition hover:bg-green-50 disabled:opacity-60 dark:text-green-400 dark:hover:bg-green-950/30"
+                        >
+                          {marking === lesson._id ? (
+                            <SpinnerIcon className="h-4 w-4 animate-spin" aria-hidden="true" />
+                          ) : (
+                            <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+                          )}
+                          סמן כהושלם
+                        </button>
+                      )}
+                      {user && done && (
+                        <span className="inline-flex items-center gap-2 text-sm font-semibold text-green-700 dark:text-green-400">
+                          <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+                          הושלם
+                        </span>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>

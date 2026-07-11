@@ -1,7 +1,12 @@
 import { AuthRequest } from '@/middleware/auth'
 import { Request, Response, NextFunction } from 'express'
+import fs from 'fs'
+import path from 'path'
 import { User } from '@/models/User'
 import { Module } from '@/models/Module'
+import { Project } from '@/models/Project'
+import { Quiz, QuizAttempt } from '@/models/Quiz'
+import { LessonProgress } from '@/models/LessonProgress'
 import { AppError } from '@/middleware/errorHandler'
 
 /**
@@ -13,47 +18,90 @@ import { AppError } from '@/middleware/errorHandler'
  */
 export const getDashboardStats = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    // This would typically aggregate data from multiple models
-    // For now, we'll return a mock response
-    const stats = {
-      users: {
-        total: 1250,
-        active: 980,
-        newThisMonth: 45,
-        verified: 1100
-      },
-      modules: {
-        total: 25,
-        published: 20,
-        draft: 5,
-        featured: 8
-      },
-      learning: {
-        totalLessons: 150,
-        completedLessons: 12500,
-        averageCompletion: 78
-      },
-      projects: {
-        total: 45,
-        active: 30,
-        completed: 15
-      },
-      engagement: {
-        dailyActiveUsers: 450,
-        weeklyActiveUsers: 850,
-        monthlyActiveUsers: 980,
-        averageSessionTime: 25 // minutes
-      },
-      revenue: {
-        monthly: 15000,
-        yearly: 180000,
-        growth: 15.5
-      }
-    }
+    const now = new Date()
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+    const dayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000)
+    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+    const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+
+    const [
+      totalUsers,
+      verifiedUsers,
+      newThisMonth,
+      dailyActive,
+      weeklyActive,
+      monthlyActive,
+      totalModules,
+      publishedModules,
+      featuredModules,
+      lessonCountAgg,
+      completedLessons,
+      totalProjects,
+      activeProjects,
+      completedProjects,
+    ] = await Promise.all([
+      User.countDocuments({}),
+      User.countDocuments({ isVerified: true }),
+      User.countDocuments({ createdAt: { $gte: startOfMonth } }),
+      User.countDocuments({ lastLogin: { $gte: dayAgo } }),
+      User.countDocuments({ lastLogin: { $gte: weekAgo } }),
+      User.countDocuments({ lastLogin: { $gte: monthAgo } }),
+      Module.countDocuments({}),
+      Module.countDocuments({ isPublished: true }),
+      Module.countDocuments({ isFeatured: true }),
+      Module.aggregate([
+        { $project: { count: { $size: '$lessons' } } },
+        { $group: { _id: null, total: { $sum: '$count' } } },
+      ]),
+      LessonProgress.countDocuments({ completed: true }),
+      Project.countDocuments({}),
+      Project.countDocuments({ status: 'in-progress' }),
+      Project.countDocuments({ status: 'completed' }),
+    ])
+
+    const totalLessons = lessonCountAgg[0]?.total ?? 0
+    const averageCompletion =
+      totalLessons > 0 && totalUsers > 0
+        ? Math.round((completedLessons / (totalLessons * totalUsers)) * 100)
+        : 0
 
     res.status(200).json({
       success: true,
-      data: stats
+      source: 'database',
+      data: {
+        users: {
+          total: totalUsers,
+          active: monthlyActive, // "active" = logged in within 30 days, real lastLogin data
+          newThisMonth,
+          verified: verifiedUsers,
+        },
+        modules: {
+          total: totalModules,
+          published: publishedModules,
+          draft: totalModules - publishedModules,
+          featured: featuredModules,
+        },
+        learning: {
+          totalLessons,
+          completedLessons,
+          averageCompletion,
+        },
+        projects: {
+          total: totalProjects,
+          active: activeProjects,
+          completed: completedProjects,
+        },
+        engagement: {
+          dailyActiveUsers: dailyActive,
+          weeklyActiveUsers: weeklyActive,
+          monthlyActiveUsers: monthlyActive,
+          averageSessionTime: 0, // not instrumented anywhere in the app — honestly zeroed, not fabricated
+        },
+        // No payment/billing system exists in this platform (confirmed: no Stripe/payment model,
+        // no subscription field on User). Fabricating revenue numbers would be actively misleading,
+        // so this section is omitted rather than filled with invented figures.
+        revenue: null,
+      },
     })
   } catch (error) {
     next(error)
@@ -307,44 +355,73 @@ export const deleteModule = async (req: Request, res: Response, next: NextFuncti
  *     summary: Get system analytics
  *     tags: [Admin]
  */
+const MONTH_LABELS_HE = ['ינו', 'פבר', 'מרץ', 'אפר', 'מאי', 'יונ', 'יול', 'אוג', 'ספט', 'אוק', 'נוב', 'דצמ']
+
 export const getAnalytics = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { period = 'month' } = req.query
+    const now = new Date()
 
-    // This would typically aggregate data from multiple models
-    // For now, we'll return a mock response
-    const analytics = {
-      period,
-      userGrowth: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-        data: [100, 150, 200, 250, 300, 350]
-      },
-      moduleCompletions: {
-        labels: ['HTML', 'CSS', 'JavaScript', 'React', 'Node.js'],
-        data: [95, 87, 78, 65, 45]
-      },
-      userEngagement: {
-        dailyActiveUsers: [450, 480, 520, 490, 510, 530, 500],
-        weeklyActiveUsers: [850, 900, 950, 920, 980, 1000, 980],
-        averageSessionTime: [22, 25, 28, 24, 26, 29, 25]
-      },
-      popularContent: [
-        { title: 'HTML Basics', completions: 1250 },
-        { title: 'CSS Grid', completions: 980 },
-        { title: 'JavaScript ES6', completions: 850 },
-        { title: 'React Hooks', completions: 720 },
-        { title: 'Node.js Express', completions: 650 }
-      ],
-      userRetention: {
-        day1: 85,
-        day7: 65,
-        day30: 45
-      }
+    // Real user growth — signups per month for the last 6 months
+    const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1)
+    const growthAgg = await User.aggregate([
+      { $match: { createdAt: { $gte: sixMonthsAgo } } },
+      { $group: { _id: { y: { $year: '$createdAt' }, m: { $month: '$createdAt' } }, count: { $sum: 1 } } },
+      { $sort: { '_id.y': 1, '_id.m': 1 } },
+    ])
+    const growthMap = new Map(growthAgg.map((g) => [`${g._id.y}-${g._id.m}`, g.count]))
+    const userGrowthLabels: string[] = []
+    const userGrowthData: number[] = []
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
+      userGrowthLabels.push(MONTH_LABELS_HE[d.getMonth()])
+      userGrowthData.push(growthMap.get(`${d.getFullYear()}-${d.getMonth() + 1}`) ?? 0)
     }
+
+    // Real top 5 most-attempted quizzes (by attempt count), title via populate
+    const topQuizzesAgg = await QuizAttempt.aggregate([
+      { $group: { _id: '$quiz', completions: { $sum: 1 } } },
+      { $sort: { completions: -1 } },
+      { $limit: 5 },
+    ])
+    const quizIds = topQuizzesAgg.map((q) => q._id)
+    const quizzes = quizIds.length ? await Quiz.find({ _id: { $in: quizIds } }, 'title').lean() : []
+    const quizTitleMap = new Map(quizzes.map((q) => [String(q._id), q.title]))
+    const popularContent = topQuizzesAgg.map((q) => ({
+      title: quizTitleMap.get(String(q._id)) ?? 'מבחן',
+      completions: q.completions,
+    }))
+
+    // Real daily active users — distinct logins per day, last 7 days
+    const dailyActiveUsers: number[] = []
+    for (let i = 6; i >= 0; i--) {
+      const dayStart = new Date(now)
+      dayStart.setDate(dayStart.getDate() - i)
+      dayStart.setHours(0, 0, 0, 0)
+      const dayEnd = new Date(dayStart)
+      dayEnd.setDate(dayEnd.getDate() + 1)
+      dailyActiveUsers.push(await User.countDocuments({ lastLogin: { $gte: dayStart, $lt: dayEnd } }))
+    }
+    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+    const weeklyActiveUsers = await User.countDocuments({ lastLogin: { $gte: weekAgo } })
 
     res.status(200).json({
       success: true,
-      data: analytics
+      source: 'database',
+      data: {
+        period,
+        userGrowth: { labels: userGrowthLabels, data: userGrowthData },
+        popularContent,
+        userEngagement: {
+          dailyActiveUsers, // real, last 7 days
+          weeklyActiveUsers, // real, single real number (not a fabricated daily-shaped array)
+          averageSessionTime: 0, // not instrumented anywhere — honestly zeroed, not fabricated
+        },
+        // Cohort retention (day1/day7/day30) requires tracking each user's activity relative to
+        // their signup date — not implemented anywhere in this platform, so this metric is
+        // omitted rather than invented.
+        userRetention: null,
+      },
     })
   } catch (error) {
     next(error)
@@ -358,48 +435,76 @@ export const getAnalytics = async (req: Request, res: Response, next: NextFuncti
  *     summary: Get system logs
  *     tags: [Admin]
  */
+interface RawLogEntry {
+  level?: string
+  message?: string
+  timestamp?: string
+  [key: string]: unknown
+}
+
+/**
+ * Reads winston's JSON-formatted file transport (logs/combined.log). Real, not fabricated —
+ * but honestly limited: on platforms without a writable/persistent filesystem (e.g. Render,
+ * per the comment in logger.ts) this file won't exist, so we return an explicit empty state
+ * rather than fake entries.
+ */
+function readLogFile(filename: string, maxLines: number): RawLogEntry[] {
+  try {
+    const filePath = path.join(process.cwd(), 'logs', filename)
+    if (!fs.existsSync(filePath)) return []
+    const content = fs.readFileSync(filePath, 'utf-8')
+    const lines = content.trim().split('\n').filter(Boolean).slice(-maxLines)
+    return lines
+      .map((line) => {
+        try {
+          return JSON.parse(line) as RawLogEntry
+        } catch {
+          return null
+        }
+      })
+      .filter((e): e is RawLogEntry => e !== null)
+  } catch {
+    return []
+  }
+}
+
 export const getSystemLogs = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { level, limit = 100 } = req.query
+    const numLimit = Math.min(500, Math.max(1, parseInt(limit as string) || 100))
 
-    // This would typically read from log files or a logging service
-    // For now, we'll return a mock response
-    const logs = [
-      {
-        id: '1',
-        level: 'info',
-        message: 'User login successful',
-        timestamp: new Date().toISOString(),
-        userId: '123',
-        ip: '192.168.1.1'
-      },
-      {
-        id: '2',
-        level: 'warn',
-        message: 'Rate limit exceeded',
-        timestamp: new Date().toISOString(),
-        userId: '456',
-        ip: '192.168.1.2'
-      },
-      {
-        id: '3',
-        level: 'error',
-        message: 'Database connection failed',
-        timestamp: new Date().toISOString(),
-        userId: null,
-        ip: null
-      }
-    ]
+    const raw = readLogFile('combined.log', numLimit)
 
-    let filteredLogs = logs
+    if (raw.length === 0) {
+      res.status(200).json({
+        success: true,
+        source: 'no-log-file',
+        message:
+          'לא נמצא קובץ לוגים לקריאה. בסביבות ללא מערכת קבצים בת-כתיבה מתמשכת (כמו Render), הלוגים זמינים רק ב-stdout של השרת ולא דרך ה-API הזה.',
+        count: 0,
+        data: [],
+      })
+      return
+    }
+
+    let entries = raw
+      .map((entry, i) => ({
+        id: String(i),
+        level: entry.level ?? 'info',
+        message: entry.message ?? '',
+        timestamp: entry.timestamp ?? null,
+      }))
+      .reverse() // most recent first
+
     if (level) {
-      filteredLogs = logs.filter(log => log.level === level)
+      entries = entries.filter((log) => log.level === level)
     }
 
     res.status(200).json({
       success: true,
-      count: filteredLogs.length,
-      data: filteredLogs.slice(0, parseInt(limit as string))
+      source: 'file',
+      count: entries.length,
+      data: entries.slice(0, numLimit),
     })
   } catch (error) {
     next(error)

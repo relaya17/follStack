@@ -84,7 +84,8 @@ export const register = async (req: Request, res: Response, next: NextFunction):
 
         // Send verification email
         try {
-            const verifyUrl = `${req.protocol}://${req.get('host')}/api/auth/verifyemail/${verificationToken}`
+            const webAppUrl = (process.env.WEB_APP_URL || 'http://localhost:3000').replace(/\/$/, '')
+            const verifyUrl = `${webAppUrl}/verify-email/${verificationToken}`
             await sendEmail({
                 email: user.email,
                 subject: 'אימות כתובת אימייל - FullStack Learning Hub',
@@ -245,7 +246,8 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
         await user.save({ validateBeforeSave: false })
 
         // Create reset url
-        const resetUrl = `${req.protocol}://${req.get('host')}/api/auth/resetpassword/${resetToken}`
+        const webAppUrl = (process.env.WEB_APP_URL || 'http://localhost:3000').replace(/\/$/, '')
+        const resetUrl = `${webAppUrl}/reset-password/${resetToken}`
 
         try {
             await sendEmail({
@@ -360,7 +362,8 @@ export const resendVerification = async (req: Request, res: Response, next: Next
         await user.save({ validateBeforeSave: false })
 
         try {
-            const verifyUrl = `${req.protocol}://${req.get('host')}/api/auth/verifyemail/${verificationToken}`
+            const webAppUrl = (process.env.WEB_APP_URL || 'http://localhost:3000').replace(/\/$/, '')
+            const verifyUrl = `${webAppUrl}/verify-email/${verificationToken}`
             await sendEmail({
                 email: user.email,
                 subject: 'אימות כתובת אימייל - FullStack Learning Hub',

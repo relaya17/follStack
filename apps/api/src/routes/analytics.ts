@@ -2,7 +2,7 @@ import { Router, Response, NextFunction } from 'express'
 import { AuthRequest, optionalAuth } from '@/middleware/auth'
 import { QuizAttempt } from '@/models/Quiz'
 import { PracticeCompletion } from '@/models/Practice'
-import { computeUserProgress } from '@/services/progressService'
+import { computeUserProgress, getUserRank } from '@/services/progressService'
 import { isMongoReady } from '@/data/curatedContent'
 
 const router = Router()
@@ -57,6 +57,10 @@ function emptyGuestProgress() {
     xp: 0,
     level: 1,
     badges: [],
+    quizzesTaken: 0,
+    exercisesCompleted: 0,
+    rank: null,
+    totalRankedUsers: 0,
   }
 }
 
@@ -81,7 +85,7 @@ router.get('/progress', optionalAuth, async (req: AuthRequest, res: Response, ne
       return
     }
 
-    const progress = await computeUserProgress(userId)
+    const [progress, rankInfo] = await Promise.all([computeUserProgress(userId), getUserRank(userId)])
 
     const [allAttempts, allCompletions] = await Promise.all([
       QuizAttempt.find({ user: userId }).sort({ submittedAt: -1 }).limit(20).populate('quiz', 'title category').lean(),
@@ -174,6 +178,10 @@ router.get('/progress', optionalAuth, async (req: AuthRequest, res: Response, ne
       xp: progress.xp,
       level: progress.level,
       badges: progress.badges,
+      quizzesTaken: progress.quizzesTaken,
+      exercisesCompleted: progress.exercisesCompleted,
+      rank: rankInfo?.rank ?? null,
+      totalRankedUsers: rankInfo?.totalUsers ?? 0,
     })
   } catch (error) {
     next(error)

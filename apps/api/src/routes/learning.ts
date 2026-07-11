@@ -4,6 +4,7 @@ import {
     getModule,
     getLesson,
     completeLesson,
+    getModuleProgress,
     searchModules
 } from '@/controllers/learningController'
 import { protect, optionalAuth } from '@/middleware/auth'
@@ -132,5 +133,25 @@ router.get('/modules/:moduleId/lessons/:lessonId', optionalAuth, getLesson)
  *         description: Lesson not found
  */
 router.post('/modules/:moduleId/lessons/:lessonId/complete', protect, completeLesson)
+
+/**
+ * @swagger
+ * /api/learning/modules/{moduleId}/progress:
+ *   get:
+ *     summary: Get the current user's completed lesson ids within a module
+ *     tags: [Learning]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: moduleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Completed lesson ids retrieved successfully
+ */
+router.get('/modules/:moduleId/progress', protect, getModuleProgress)
 
 export default router

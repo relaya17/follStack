@@ -91,10 +91,14 @@ export function SiteHeader() {
                     חיבורים
                   </span>
                 </Link>
-                <span className="flex items-center gap-1.5 px-2 text-sm font-semibold text-slate-700 dark:text-slate-200">
+                <Link
+                  href="/profile"
+                  className="flex items-center gap-1.5 px-2 text-sm font-semibold text-slate-700 transition hover:text-primary-700 dark:text-slate-200 dark:hover:text-primary-300"
+                  title="הפרופיל שלי"
+                >
                   <User className="h-4 w-4" aria-hidden="true" />
                   {user.name}
-                </span>
+                </Link>
                 <button
                   type="button"
                   onClick={() => {
@@ -169,10 +173,14 @@ export function SiteHeader() {
                         חיבורים
                       </span>
                     </Link>
-                    <span className="flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200">
+                    <Link
+                      href="/profile"
+                      onClick={close}
+                      className="flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200"
+                    >
                       <User className="h-4 w-4" aria-hidden="true" />
                       {user.name}
-                    </span>
+                    </Link>
                     <button
                       type="button"
                       onClick={() => {

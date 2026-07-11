@@ -2,6 +2,8 @@ import { AuthRequest } from '@/middleware/auth'
 import { Request, Response, NextFunction } from 'express'
 import { User } from '@/models/User'
 import { AppError } from '@/middleware/errorHandler'
+import { isMongoReady } from '@/data/curatedContent'
+import { computeLearningProgress, markLessonComplete } from '@/services/lessonProgressService'
 
 /**
  * @swagger
@@ -77,29 +79,21 @@ export const updateProfile = async (req: AuthRequest, res: Response, next: NextF
  */
 export const getLearningProgress = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
-        // This would typically come from a separate Progress model
-        // For now, we'll return a mock response
-        const progress = [
-            {
-                moduleId: 'html-css',
-                moduleName: 'HTML & CSS',
-                completedLessons: 12,
-                totalLessons: 24,
-                progress: 50,
-                lastAccessed: new Date().toISOString()
-            },
-            {
-                moduleId: 'javascript',
-                moduleName: 'JavaScript',
-                completedLessons: 8,
-                totalLessons: 36,
-                progress: 22,
-                lastAccessed: new Date().toISOString()
-            }
-        ]
+        if (!isMongoReady()) {
+            res.status(200).json({
+                success: true,
+                source: 'no-db',
+                message: 'ה-DB לא מחובר — אין התקדמות שמורה להצגה.',
+                data: []
+            })
+            return
+        }
+
+        const progress = await computeLearningProgress(req.user!.id)
 
         res.status(200).json({
             success: true,
+            source: 'database',
             data: progress
         })
     } catch (error) {
@@ -118,19 +112,26 @@ export const updateLessonProgress = async (req: AuthRequest, res: Response, next
     try {
         const { moduleId, lessonId, completed } = req.body
 
-        // This would typically update a Progress model
-        // For now, we'll return a mock response
-        const updatedProgress = {
-            moduleId,
-            lessonId,
-            completed,
-            progress: 75, // This would be calculated based on completed lessons
-            lastAccessed: new Date().toISOString()
+        if (!moduleId || !lessonId) {
+            throw new AppError('חובה לציין moduleId ו-lessonId', 400)
         }
+
+        if (!isMongoReady()) {
+            res.status(200).json({
+                success: true,
+                persisted: false,
+                message: 'ה-DB לא מחובר — השינוי לא נשמר.',
+                data: { moduleId, lessonId, completed: !!completed, lastAccessed: new Date().toISOString() }
+            })
+            return
+        }
+
+        const completedAt = await markLessonComplete(req.user!.id, moduleId, lessonId, !!completed)
 
         res.status(200).json({
             success: true,
-            data: updatedProgress
+            persisted: true,
+            data: { moduleId, lessonId, completed: !!completed, lastAccessed: completedAt.toISOString() }
         })
     } catch (error) {
         next(error)

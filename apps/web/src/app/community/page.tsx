@@ -18,6 +18,7 @@ import { Card } from '@follstack/ui'
 import { apiFetch, apiJson } from '@/lib/api'
 import { useAuth } from '@/lib/auth'
 import { EventChat } from '@/components/EventChat'
+import { ForumSection } from '@/components/ForumSection'
 
 interface CommunityStats {
   totalUsers: number
@@ -535,22 +536,7 @@ export default function CommunityPage() {
             </div>
           )}
 
-          {activeTab === 'forum' && (
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">פורום הקהילה</h2>
-              </div>
-
-              <div className="text-center py-12">
-                <MessageCircle className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-2">פורום בקרוב</h3>
-                <p className="text-gray-600 dark:text-gray-300">
-                  אנו עובדים על פיתוח פורום קהילתי מתקדם עם אפשרויות דיון, שאלות ותשובות ועוד. בינתיים אפשר לשוחח
-                  בצ&apos;אט של כל אירוע.
-                </p>
-              </div>
-            </div>
-          )}
+          {activeTab === 'forum' && <ForumSection />}
         </div>
       </div>
 

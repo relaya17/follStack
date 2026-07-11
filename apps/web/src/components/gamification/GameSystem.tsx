@@ -1,16 +1,15 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { 
-  Trophy, 
-  Star, 
-  Flame, 
-  Target, 
-  Award, 
-  Medal, 
-  Crown, 
+import {
+  Trophy,
+  Star,
+  Flame,
+  Target,
+  Award,
+  Medal,
+  Crown,
   Zap,
-  Heart,
   Shield,
   Sword,
   Gem,
@@ -29,7 +28,9 @@ interface UserStats {
   totalLessons: number
   perfectLessons: number
   gems: number
-  hearts: number
+  /** Real average quiz score (0-100). Replaces the old fabricated "hearts" stat, which had
+   * no backing game mechanic anywhere in the app (nothing ever depleted it). */
+  accuracy: number
   achievements: Achievement[]
   badges: Badge[]
   rank: string
@@ -87,15 +88,15 @@ export function GameSystem({
     totalLessons: 0,
     perfectLessons: 0,
     gems: 0,
-    hearts: 5,
+    accuracy: 0,
     achievements: [],
     badges: [],
     rank: 'חניך',
     league: {
       id: 'bronze',
       name: 'ברונזה',
-      rank: 150,
-      totalUsers: 1000,
+      rank: undefined,
+      totalUsers: 0,
       xpThreshold: 0,
       color: '#CD7F32'
     }
@@ -133,9 +134,16 @@ export function GameSystem({
       xp: number
       level: number
       badges: string[]
-      metrics: { streak: number; totalLessonsCompleted: number }
+      quizzesTaken: number
+      exercisesCompleted: number
+      rank: number | null
+      totalRankedUsers: number
+      metrics: { streak: number; totalLessonsCompleted: number; averageScore: number }
     }>('/api/analytics/progress').then((res) => {
       if (cancelled || !res?.success) return
+      // Gems are a deterministic function of real completions (10/quiz + 5/exercise) — not a
+      // fabricated counter. Accuracy replaces the old "hearts" stat with the real average score.
+      const gems = res.quizzesTaken * 10 + res.exercisesCompleted * 5
       setStats((prev) => ({
         ...prev,
         xp: res.xp,
@@ -143,6 +151,13 @@ export function GameSystem({
         xpToNext: calculateXPToNext(res.level) - res.xp,
         streak: res.metrics.streak,
         totalLessons: res.metrics.totalLessonsCompleted,
+        gems,
+        accuracy: res.metrics.averageScore,
+        league: {
+          ...prev.league,
+          rank: res.rank ?? undefined,
+          totalUsers: res.totalRankedUsers,
+        },
       }))
     })
     return () => {
@@ -461,24 +476,24 @@ export function GameSystem({
             <Gem className="h-8 w-8 text-green-300" />
           </div>
           <p className="text-green-100 text-sm">
-            קנה תכונות מיוחדות
+            10 למבחן + 5 לתרגיל שהושלמו
           </p>
         </motion.div>
 
-        {/* Hearts */}
+        {/* Accuracy — real average quiz score, replaces the old fabricated "hearts" stat */}
         <motion.div
           whileHover={{ scale: 1.02 }}
           className="bg-gradient-to-br from-pink-500 to-rose-600 rounded-xl p-6 text-white"
         >
           <div className="flex items-center justify-between mb-4">
             <div>
-              <p className="text-pink-100 text-sm">לבבות</p>
-              <p className="text-3xl font-bold">{stats.hearts}</p>
+              <p className="text-pink-100 text-sm">דיוק ממוצע</p>
+              <p className="text-3xl font-bold">{stats.accuracy}%</p>
             </div>
-            <Heart className="h-8 w-8 text-pink-300" />
+            <Target className="h-8 w-8 text-pink-300" />
           </div>
           <p className="text-pink-100 text-sm">
-            {stats.hearts === 0 ? 'המתן להתחדשות' : 'מוכן ללמידה!'}
+            {stats.accuracy === 0 ? 'עוד לא נבחנת' : 'ציון ממוצע במבחנים'}
           </p>
         </motion.div>
       </div>
@@ -513,8 +528,13 @@ export function GameSystem({
               דירוג בליגה
             </p>
             <p className="text-2xl font-bold text-gray-900 dark:text-white">
-              #{stats.league.rank}
+              {stats.league.rank ? `#${stats.league.rank}` : '—'}
             </p>
+            {stats.league.rank && stats.league.totalUsers ? (
+              <p className="text-xs text-gray-500 dark:text-gray-500">מתוך {stats.league.totalUsers}</p>
+            ) : (
+              <p className="text-xs text-gray-500 dark:text-gray-500">עדיין לא דורגת — קחו מבחן או תרגיל</p>
+            )}
           </div>
         </div>
       </div>

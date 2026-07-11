@@ -3,20 +3,31 @@
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import { Code2, CheckCircle2, Loader2, Eye, EyeOff } from 'lucide-react'
+import { Code2, CheckCircle2, Loader2, Eye, EyeOff, Terminal } from 'lucide-react'
 import { Card } from '@follstack/ui'
 import { apiJson, apiFetch } from '@/lib/api'
+import { useCodeSandbox, SandboxOutput, RunCodeButton, ClearOutputButton, type SandboxLanguage } from '@/components/CodeSandbox'
 
 interface ApiExercise {
   id: string
   slug: string
   title: string
   description: string
+  category?: string
   prompt: string
   starterCode: string
   hint: string
   solution: string
   completedBy: number
+}
+
+// Categories whose exercises are plain, dependency-free JS/TS that can run directly in the
+// browser sandbox (no JSX/TSX transpilation, no Node built-ins, no other languages). Anything
+// not listed here (Languages, Design, Backend, ...) has no honest way to execute in-browser.
+const SANDBOX_LANGUAGE_BY_CATEGORY: Record<string, SandboxLanguage> = {
+  JavaScript: 'javascript',
+  Algorithms: 'javascript',
+  TypeScript: 'typescript',
 }
 
 interface ExerciseResponse {
@@ -34,6 +45,9 @@ export default function PracticeExercisePage() {
   const [done, setDone] = useState(false)
   const [marking, setMarking] = useState(false)
   const [showSolution, setShowSolution] = useState(false)
+  const sandbox = useCodeSandbox()
+  const sandboxLanguage = exercise?.category ? SANDBOX_LANGUAGE_BY_CATEGORY[exercise.category] : undefined
+  const canRun = sandboxLanguage !== undefined
 
   useEffect(() => {
     if (!id) return
@@ -127,6 +141,24 @@ export default function PracticeExercisePage() {
           aria-label="עורך קוד"
         />
       </Card>
+
+      {canRun && (
+        <Card className="mb-6 overflow-hidden p-0">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-900">
+            <p className="flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300">
+              <Terminal className="h-4 w-4" aria-hidden="true" />
+              פלט הרצה ({sandboxLanguage === 'typescript' ? 'TypeScript' : 'JavaScript'}, בדפדפן — ללא שרת חיצוני)
+            </p>
+            <div className="flex gap-2">
+              <RunCodeButton onRun={() => sandbox.run(code, sandboxLanguage)} running={sandbox.running} />
+              <ClearOutputButton onClear={sandbox.clear} />
+            </div>
+          </div>
+          <div className="bg-slate-950">
+            <SandboxOutput logs={sandbox.logs} running={sandbox.running} />
+          </div>
+        </Card>
+      )}
 
       <div className="mb-6 flex flex-wrap items-center justify-center gap-3">
         <button

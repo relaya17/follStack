@@ -24,6 +24,8 @@ interface AuthContextValue {
   login: (email: string, password: string) => Promise<AuthResult>
   register: (name: string, email: string, password: string, role?: 'student' | 'mentor') => Promise<AuthResult>
   logout: () => void
+  applySession: (token: string, user: AuthUser) => void
+  refreshUser: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
@@ -117,8 +119,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null)
   }, [])
 
+  /** Used by reset-password to log the user in immediately after a successful reset. */
+  const applySession = useCallback((newToken: string, newUser: AuthUser) => {
+    localStorage.setItem('token', newToken)
+    setToken(newToken)
+    setUser(newUser)
+  }, [])
+
+  /** Re-fetch /api/auth/me — used after profile edits or email verification. */
+  const refreshUser = useCallback(async () => {
+    await loadUser()
+  }, [loadUser])
+
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, register, logout }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, token, loading, login, register, logout, applySession, refreshUser }}>
+      {children}
+    </AuthContext.Provider>
   )
 }
 

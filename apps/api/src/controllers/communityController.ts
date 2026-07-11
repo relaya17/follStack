@@ -6,6 +6,14 @@ import { User } from '@/models/User'
 import { QuizAttempt } from '@/models/Quiz'
 import { PracticeCompletion } from '@/models/Practice'
 import { ChatMessage } from '@/models/ChatMessage'
+import { Forum, ForumPost, ForumReply } from '@/models/Forum'
+import { isMongoReady } from '@/data/curatedContent'
+
+function requireDb(): void {
+  if (!isMongoReady()) {
+    throw new AppError('הפורום דורש חיבור למסד נתונים. הגדר MONGODB_URI והסר SKIP_DB.', 503)
+  }
+}
 
 /**
  * @swagger
@@ -16,70 +24,39 @@ import { ChatMessage } from '@/models/ChatMessage'
  */
 export const getForums = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    // This would typically come from a Forum model
-    // For now, we'll return a mock response
-    const forums = [
-      {
-        id: '1',
-        title: 'HTML & CSS',
-        description: 'דיונים על HTML ו-CSS',
-        category: 'general',
-        postCount: 45,
-        lastPost: {
-          id: '1',
-          title: 'איך ליצור layout רספונסיבי?',
-          author: {
-            id: '1',
-            name: 'שרה כהן',
-            avatar: ''
-          },
-          createdAt: new Date().toISOString()
-        },
-        createdAt: new Date().toISOString()
-      },
-      {
-        id: '2',
-        title: 'JavaScript',
-        description: 'דיונים על JavaScript ו-TypeScript',
-        category: 'general',
-        postCount: 78,
-        lastPost: {
-          id: '2',
-          title: 'מה ההבדל בין let ו-const?',
-          author: {
-            id: '2',
-            name: 'דוד לוי',
-            avatar: ''
-          },
-          createdAt: new Date().toISOString()
-        },
-        createdAt: new Date().toISOString()
-      },
-      {
-        id: '3',
-        title: 'עזרה טכנית',
-        description: 'בקשות עזרה ופתרון בעיות',
-        category: 'help',
-        postCount: 23,
-        lastPost: {
-          id: '3',
-          title: 'שגיאה ב-React Router',
-          author: {
-            id: '3',
-            name: 'מיכל אברהם',
-            avatar: ''
-          },
-          createdAt: new Date().toISOString()
-        },
-        createdAt: new Date().toISOString()
-      }
-    ]
+    if (!isMongoReady()) {
+      res.status(200).json({ success: true, source: 'no-db', count: 0, data: [] })
+      return
+    }
 
-    res.status(200).json({
-      success: true,
-      count: forums.length,
-      data: forums
-    })
+    const forums = await Forum.find().sort({ createdAt: -1 }).populate('createdBy', 'name avatar').lean()
+
+    const data = await Promise.all(
+      forums.map(async (forum) => {
+        const [postCount, lastPost] = await Promise.all([
+          ForumPost.countDocuments({ forum: forum._id }),
+          ForumPost.findOne({ forum: forum._id }).sort({ createdAt: -1 }).populate('author', 'name avatar').lean(),
+        ])
+        return {
+          id: String(forum._id),
+          title: forum.title,
+          description: forum.description,
+          category: forum.category,
+          postCount,
+          lastPost: lastPost
+            ? {
+                id: String(lastPost._id),
+                title: lastPost.title,
+                author: lastPost.author,
+                createdAt: lastPost.createdAt,
+              }
+            : null,
+          createdAt: forum.createdAt,
+        }
+      }),
+    )
+
+    res.status(200).json({ success: true, source: 'database', count: data.length, data })
   } catch (error) {
     next(error)
   }
@@ -99,26 +76,22 @@ export const createForum = async (req: AuthRequest, res: Response, next: NextFun
     if (!title || !description || !category) {
       throw new AppError('כותרת, תיאור וקטגוריה הם שדות חובה', 400)
     }
+    requireDb()
 
-    // This would typically save to a Forum model
-    // For now, we'll return a mock response
-    const forum = {
-      id: Date.now().toString(),
-      title,
-      description,
-      category,
-      postCount: 0,
-      createdBy: {
-        id: req.user!.id,
-        name: req.user!.name,
-        avatar: req.user!.avatar
-      },
-      createdAt: new Date().toISOString()
-    }
+    const forum = await Forum.create({ title, description, category, createdBy: req.user!.id })
+    const populated = await forum.populate('createdBy', 'name avatar')
 
     res.status(201).json({
       success: true,
-      data: forum
+      data: {
+        id: String(populated._id),
+        title: populated.title,
+        description: populated.description,
+        category: populated.category,
+        postCount: 0,
+        createdBy: populated.createdBy,
+        createdAt: populated.createdAt,
+      },
     })
   } catch (error) {
     next(error)
@@ -135,26 +108,24 @@ export const createForum = async (req: AuthRequest, res: Response, next: NextFun
 export const getForum = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params
+    requireDb()
 
-    // This would typically come from a Forum model
-    // For now, we'll return a mock response
-    const forum = {
-      id,
-      title: 'HTML & CSS',
-      description: 'דיונים על HTML ו-CSS',
-      category: 'general',
-      postCount: 45,
-      createdBy: {
-        id: '1',
-        name: 'מנהל המערכת',
-        avatar: ''
-      },
-      createdAt: new Date().toISOString()
-    }
+    const forum = await Forum.findById(id).populate('createdBy', 'name avatar').lean()
+    if (!forum) throw new AppError('פורום לא נמצא', 404)
+
+    const postCount = await ForumPost.countDocuments({ forum: forum._id })
 
     res.status(200).json({
       success: true,
-      data: forum
+      data: {
+        id: String(forum._id),
+        title: forum.title,
+        description: forum.description,
+        category: forum.category,
+        postCount,
+        createdBy: forum.createdBy,
+        createdAt: forum.createdAt,
+      },
     })
   } catch (error) {
     next(error)
@@ -171,48 +142,39 @@ export const getForum = async (req: Request, res: Response, next: NextFunction):
 export const getForumPosts = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params
-    const { page = 1, limit = 10 } = req.query
+    const page = Math.max(1, Number(req.query.page) || 1)
+    const limit = Math.min(50, Number(req.query.limit) || 10)
 
-    // This would typically come from a ForumPost model
-    // For now, we'll return a mock response
-    const posts = [
-      {
-        id: '1',
-        title: 'איך ליצור layout רספונסיבי?',
-        content: 'אני רוצה ללמוד איך ליצור layout רספונסיבי עם CSS Grid...',
-        author: {
-          id: '1',
-          name: 'שרה כהן',
-          avatar: ''
-        },
-        replies: 5,
-        views: 23,
-        isPinned: false,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      },
-      {
-        id: '2',
-        title: 'מה ההבדל בין Flexbox ו-Grid?',
-        content: 'אני מבולבל לגבי ההבדלים בין Flexbox ו-CSS Grid...',
-        author: {
-          id: '2',
-          name: 'דוד לוי',
-          avatar: ''
-        },
-        replies: 8,
-        views: 45,
-        isPinned: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      }
-    ]
+    if (!isMongoReady()) {
+      res.status(200).json({ success: true, source: 'no-db', count: 0, data: [] })
+      return
+    }
 
-    res.status(200).json({
-      success: true,
-      count: posts.length,
-      data: posts
-    })
+    const forumExists = await Forum.exists({ _id: id })
+    if (!forumExists) throw new AppError('פורום לא נמצא', 404)
+
+    const posts = await ForumPost.find({ forum: id })
+      .sort({ isPinned: -1, createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .populate('author', 'name avatar')
+      .lean()
+
+    const data = await Promise.all(
+      posts.map(async (post) => ({
+        id: String(post._id),
+        title: post.title,
+        content: post.content,
+        author: post.author,
+        replies: await ForumReply.countDocuments({ post: post._id }),
+        views: post.views,
+        isPinned: post.isPinned,
+        createdAt: post.createdAt,
+        updatedAt: post.updatedAt,
+      })),
+    )
+
+    res.status(200).json({ success: true, source: 'database', count: data.length, data })
   } catch (error) {
     next(error)
   }
@@ -233,29 +195,28 @@ export const createForumPost = async (req: AuthRequest, res: Response, next: Nex
     if (!title || !content) {
       throw new AppError('כותרת ותוכן הם שדות חובה', 400)
     }
+    requireDb()
 
-    // This would typically save to a ForumPost model
-    // For now, we'll return a mock response
-    const post = {
-      id: Date.now().toString(),
-      forumId: id,
-      title,
-      content,
-      author: {
-        id: req.user!.id,
-        name: req.user!.name,
-        avatar: req.user!.avatar
-      },
-      replies: 0,
-      views: 0,
-      isPinned: false,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    }
+    const forumExists = await Forum.exists({ _id: id })
+    if (!forumExists) throw new AppError('פורום לא נמצא', 404)
+
+    const post = await ForumPost.create({ forum: id, title, content, author: req.user!.id })
+    const populated = await post.populate('author', 'name avatar')
 
     res.status(201).json({
       success: true,
-      data: post
+      data: {
+        id: String(populated._id),
+        forumId: id,
+        title: populated.title,
+        content: populated.content,
+        author: populated.author,
+        replies: 0,
+        views: populated.views,
+        isPinned: populated.isPinned,
+        createdAt: populated.createdAt,
+        updatedAt: populated.updatedAt,
+      },
     })
   } catch (error) {
     next(error)
@@ -272,39 +233,71 @@ export const createForumPost = async (req: AuthRequest, res: Response, next: Nex
 export const getForumPost = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params
+    requireDb()
 
-    // This would typically come from a ForumPost model
-    // For now, we'll return a mock response
-    const post = {
-      id,
-      title: 'איך ליצור layout רספונסיבי?',
-      content: 'אני רוצה ללמוד איך ליצור layout רספונסיבי עם CSS Grid. יש לי בעיה עם ה-grid areas...',
-      author: {
-        id: '1',
-        name: 'שרה כהן',
-        avatar: ''
-      },
-      replies: [
-        {
-          id: '1',
-          content: 'אני ממליץ לך להתחיל עם CSS Grid basics...',
-          author: {
-            id: '2',
-            name: 'דוד לוי',
-            avatar: ''
-          },
-          createdAt: new Date().toISOString()
-        }
-      ],
-      views: 23,
-      isPinned: false,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    }
+    const post = await ForumPost.findByIdAndUpdate(id, { $inc: { views: 1 } }, { new: true })
+      .populate('author', 'name avatar')
+      .lean()
+    if (!post) throw new AppError('פוסט לא נמצא', 404)
+
+    const replies = await ForumReply.find({ post: id }).sort({ createdAt: 1 }).populate('author', 'name avatar').lean()
 
     res.status(200).json({
       success: true,
-      data: post
+      data: {
+        id: String(post._id),
+        forumId: String(post.forum),
+        title: post.title,
+        content: post.content,
+        author: post.author,
+        replies: replies.map((r) => ({
+          id: String(r._id),
+          content: r.content,
+          author: r.author,
+          createdAt: r.createdAt,
+        })),
+        views: post.views,
+        isPinned: post.isPinned,
+        createdAt: post.createdAt,
+        updatedAt: post.updatedAt,
+      },
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+/**
+ * @swagger
+ * /api/community/posts/{id}/replies:
+ *   post:
+ *     summary: Reply to a forum post
+ *     tags: [Community]
+ */
+export const createForumReply = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const { id } = req.params
+    const { content } = req.body
+
+    if (!content || !String(content).trim()) {
+      throw new AppError('תוכן התגובה הוא שדה חובה', 400)
+    }
+    requireDb()
+
+    const postExists = await ForumPost.exists({ _id: id })
+    if (!postExists) throw new AppError('פוסט לא נמצא', 404)
+
+    const reply = await ForumReply.create({ post: id, content: String(content).trim(), author: req.user!.id })
+    const populated = await reply.populate('author', 'name avatar')
+
+    res.status(201).json({
+      success: true,
+      data: {
+        id: String(populated._id),
+        content: populated.content,
+        author: populated.author,
+        createdAt: populated.createdAt,
+      },
     })
   } catch (error) {
     next(error)
@@ -321,19 +314,33 @@ export const getForumPost = async (req: Request, res: Response, next: NextFuncti
 export const updateForumPost = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params
-    const updateData = req.body
+    const { title, content } = req.body
+    requireDb()
 
-    // This would typically update a ForumPost model
-    // For now, we'll return a mock response
-    const post = {
-      id,
-      ...updateData,
-      updatedAt: new Date().toISOString()
-    }
+    const existing = await ForumPost.findById(id)
+    if (!existing) throw new AppError('פוסט לא נמצא', 404)
+
+    const isOwner = String(existing.author) === req.user!.id
+    const isAdmin = req.user!.role === 'admin'
+    if (!isOwner && !isAdmin) throw new AppError('אין הרשאה לערוך פוסט זה', 403)
+
+    if (title !== undefined) existing.title = title
+    if (content !== undefined) existing.content = content
+    await existing.save()
+    const populated = await existing.populate('author', 'name avatar')
 
     res.status(200).json({
       success: true,
-      data: post
+      data: {
+        id: String(populated._id),
+        title: populated.title,
+        content: populated.content,
+        author: populated.author,
+        views: populated.views,
+        isPinned: populated.isPinned,
+        createdAt: populated.createdAt,
+        updatedAt: populated.updatedAt,
+      },
     })
   } catch (error) {
     next(error)
@@ -350,9 +357,18 @@ export const updateForumPost = async (req: AuthRequest, res: Response, next: Nex
 export const deleteForumPost = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params
+    requireDb()
 
-    // This would typically delete from a ForumPost model
-    // For now, we'll return a mock response
+    const existing = await ForumPost.findById(id)
+    if (!existing) throw new AppError('פוסט לא נמצא', 404)
+
+    const isOwner = String(existing.author) === req.user!.id
+    const isAdmin = req.user!.role === 'admin'
+    if (!isOwner && !isAdmin) throw new AppError('אין הרשאה למחוק פוסט זה', 403)
+
+    await ForumReply.deleteMany({ post: id })
+    await existing.deleteOne()
+
     res.status(200).json({
       success: true,
       message: 'פוסט נמחק בהצלחה'

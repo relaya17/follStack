@@ -53,9 +53,14 @@ export default function LoginPage() {
             />
           </div>
           <div>
-            <label htmlFor="password" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
-              סיסמה
-            </label>
+            <div className="mb-1 flex items-center justify-between">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                סיסמה
+              </label>
+              <Link href="/forgot-password" className="text-sm font-semibold text-primary-600 hover:underline dark:text-primary-400">
+                שכחת סיסמה?
+              </Link>
+            </div>
             <input
               id="password"
               type="password"
