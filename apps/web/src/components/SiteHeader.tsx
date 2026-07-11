@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { Menu, X, User, LogOut } from 'lucide-react'
+import { Menu, X, User, LogOut, Settings } from 'lucide-react'
 import { APP_NAME, NAV_ITEMS } from '@follstack/shared'
 import { useAuth } from '@/lib/auth'
 
@@ -81,6 +81,16 @@ export function SiteHeader() {
           {!loading &&
             (user ? (
               <>
+                <Link
+                  href="/settings/integrations"
+                  className={linkClass('/settings/integrations')}
+                  title="חיבורי פלטפורמות"
+                >
+                  <span className="inline-flex items-center gap-1.5">
+                    <Settings className="h-4 w-4" aria-hidden="true" />
+                    חיבורים
+                  </span>
+                </Link>
                 <span className="flex items-center gap-1.5 px-2 text-sm font-semibold text-slate-700 dark:text-slate-200">
                   <User className="h-4 w-4" aria-hidden="true" />
                   {user.name}
@@ -149,6 +159,16 @@ export function SiteHeader() {
               {!loading &&
                 (user ? (
                   <>
+                    <Link
+                      href="/settings/integrations"
+                      onClick={close}
+                      className={linkClass('/settings/integrations', true)}
+                    >
+                      <span className="inline-flex items-center gap-1.5">
+                        <Settings className="h-4 w-4" aria-hidden="true" />
+                        חיבורים
+                      </span>
+                    </Link>
                     <span className="flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200">
                       <User className="h-4 w-4" aria-hidden="true" />
                       {user.name}

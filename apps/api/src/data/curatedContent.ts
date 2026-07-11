@@ -795,6 +795,76 @@ export const CURATED_MODULES: CuratedModule[] = [
       },
     ],
   },
+  {
+    id: 'mod-languages',
+    slug: 'languages',
+    title: 'שפות תכנות נוספות — C, C++, C#, Java',
+    description:
+      'סקירה מעשית של ארבע שפות שכל מפתח נתקל בהן — מזיכרון גולמי ב-C ועד לעולם ה-Enterprise וה-Unity.',
+    duration: '10 שעות',
+    difficulty: 'intermediate',
+    category: 'other',
+    prerequisites: ['javascript'],
+    learningObjectives: [
+      'להבין את ההבדל בין שפה מתקומפלת למפורשת, וטיפוסים סטטיים מול דינמיים',
+      'להכיר את C — ניהול זיכרון ידני ומצביעים, הבסיס שעליו נבנו כמעט כל השפות האחרות',
+      'להכיר את C++ — תכנות מונחה-עצמים על גבי C, וביצועים למשחקים ומערכות',
+      'להכיר את C# — עולם ה-.NET ו-Unity, קרוב מאוד ל-Java וגם ל-TypeScript',
+      'להכיר את Java — "כתוב פעם אחת, הרץ בכל מקום", JVM ותעשיית ה-Enterprise/Android',
+    ],
+    lessons: [
+      {
+        id: 'lang-1',
+        title: 'מבוא — למה כדאי להכיר עוד שפה',
+        description: 'שפות מתקומפלות מול מפורשות, וטיפוסים סטטיים מול דינמיים',
+        content:
+          'JavaScript/TypeScript הן שפות מפורשות (interpreted) — הקוד רץ ישירות דרך מנוע (כמו V8), בלי שלב נפרד של הידור לקובץ הרצה. C, C++, C# ו-Java הן שפות מתקומפלות (compiled) — קוד המקור מתורגם מראש לקוד מכונה (או ל-bytecode) לפני שהוא רץ, מה שבדרך כלל נותן ביצועים גבוהים יותר אבל מחייב שלב build. כולן גם טיפוסיות-סטטית (static typing) — כמו TypeScript, אבל בלי ברירת מחדל ל-any: משתנה מוצהר עם טיפוס קבוע (int, string, MyClass) שנבדק כבר בזמן קומפילציה. הכרת שפה מסוג אחר עוזרת להבין עולמות שלמים — משחקים, מערכות הפעלה, אפליקציות Android, תעשיית Enterprise — שכולם בנויים על השפות האלה.',
+        type: 'text',
+        duration: 20,
+        order: 1,
+      },
+      {
+        id: 'lang-2',
+        title: 'C — שפת היסוד',
+        description: 'זיכרון, מצביעים, וקומפילציה — הבסיס לכל מה שבא אחרי',
+        content:
+          'C נוצרה ב-1972 ועדיין הבסיס לכתיבת מערכות הפעלה (Linux, Windows), דרייברים ומערכות משובצות (embedded). אין בה garbage collector — המתכנת מנהל זיכרון ידנית עם malloc (הקצאה) ו-free (שחרור); שכחת free גורמת ל-memory leak. מצביע (pointer) הוא משתנה ששומר כתובת זיכרון של משתנה אחר — int *p = &x מצביע על הכתובת של x, ו-*p ניגש לערך שם. חוסר זהירות עם מצביעים הוא מקור נפוץ לבאגים (ולחורי אבטחה — segmentation fault, buffer overflow). קוד ב-C תמיד עובר קומפילציה (למשל עם gcc) לקובץ הרצה בינארי לפני שהוא רץ.\n```c\nvoid swap(int *a, int *b) {\n  int temp = *a;\n  *a = *b;\n  *b = temp;\n}\n```',
+        type: 'interactive',
+        duration: 30,
+        order: 2,
+      },
+      {
+        id: 'lang-3',
+        title: 'C++ — תכנות מונחה-עצמים על גבי C',
+        description: 'ביצועים גבוהים למשחקים, מנועי גרפיקה ומערכות תובעניות',
+        content:
+          'C++ נוצרה כ"C עם classes" — היא מוסיפה תכנות מונחה-עצמים (מחלקות, ירושה, פולימורפיזם) מעל C, אבל שומרת על שליטה כמעט מלאה בזיכרון וביצועים קרובים לחומרה. זו השפה הדומיננטית בתעשיית המשחקים (Unreal Engine כתוב ב-C++) ובתוכנות תובעניות-ביצועים כמו דפדפנים ומסדי נתונים. מחלקה ב-C++ מגדירה גם נתונים (members) וגם התנהגות (methods); ניהול הזיכרון עדיין בעיקרו ידני (אם כי std::unique_ptr/shared_ptr עוזרים), מה שנותן שליטה אבל דורש משמעת.\n```cpp\nclass Rectangle {\n public:\n  double width, height;\n  double area() { return width * height; }\n};\n```',
+        type: 'text',
+        duration: 25,
+        order: 3,
+      },
+      {
+        id: 'lang-4',
+        title: 'C# — עולם ה-.NET וה-Unity',
+        description: 'שפה מודרנית, קרובה ל-Java וגם ל-TypeScript',
+        content:
+          'C# פותחה על ידי Microsoft כחלק מפלטפורמת .NET, ורצה על Common Language Runtime (CLR) — דומה מאוד ברעיון ל-JVM של Java: קוד מתקומפל ל-bytecode ביניים (IL) שרץ על ה-runtime, לא ישירות לקוד מכונה. בניגוד ל-C/C++, יש ב-C# garbage collector אוטומטי, כך שלא צריך לשחרר זיכרון ידנית. C# היא גם שפת ברירת המחדל של מנוע המשחקים Unity — אחד ממנועי המשחקים הפופולריים בעולם, מה שהופך אותה לרלוונטית במיוחד למי שמתעניין בפיתוח משחקים. התחביר שלה קרוב מאוד ל-Java, ומאפייני טיפוסים מודרניים (כמו nullable types) מזכירים TypeScript.\n```csharp\npublic class Rectangle {\n    public double Width, Height;\n    public double Area() => Width * Height;\n}\n```',
+        type: 'text',
+        duration: 25,
+        order: 4,
+      },
+      {
+        id: 'lang-5',
+        title: 'Java — "כתוב פעם אחת, הרץ בכל מקום"',
+        description: 'JVM, אנדרואיד, ותעשיית ה-Enterprise',
+        content:
+          'הסלוגן ההיסטורי של Java — Write Once, Run Anywhere — מתייחס ל-JVM (Java Virtual Machine): קוד Java מתקומפל ל-bytecode שרץ זהה על כל מערכת הפעלה שיש לה JVM, בלי לקמפל מחדש לכל פלטפורמה. Java היא עדיין שפת הליבה של פיתוח Android (יחד עם Kotlin), ונפוצה מאוד בתעשיית ה-Enterprise (בנקים, ביטוח, מערכות ארגוניות גדולות) בזכות יציבות, טיפוסים חזקים וספריות בשלות כמו Spring. כמו C#, יש לה garbage collector אוטומטי. אקוסיסטם הכלים שלה (Maven/Gradle לניהול תלויות) דומה ברעיון ל-npm בעולם ה-JavaScript.\n```java\npublic class Rectangle {\n    double width, height;\n    double area() { return width * height; }\n}\n```',
+        type: 'text',
+        duration: 20,
+        order: 5,
+      },
+    ],
+  },
 ]
 
 export const CURATED_QUIZZES: CuratedQuiz[] = [
@@ -3380,6 +3450,239 @@ export const CURATED_QUIZZES: CuratedQuiz[] = [
       },
     ],
   },
+  {
+    id: 'quiz-languages',
+    slug: 'languages',
+    title: 'מבחן שפות תכנות נוספות',
+    description: 'C, C++, C#, Java — מושגי יסוד וההבדלים ביניהן',
+    category: 'Languages',
+    moduleSlug: 'languages',
+    difficulty: 'medium',
+    timeLimit: 20,
+    passingScore: 70,
+    questions: [
+      {
+        id: 'q-lang-1',
+        type: 'multiple-choice',
+        question: 'מה ההבדל המרכזי בין שפה מתקומפלת (compiled) לשפה מפורשת (interpreted)?',
+        options: [
+          'אין הבדל אמיתי',
+          'שפה מתקומפלת מתורגמת מראש לקוד מכונה/bytecode לפני הריצה; שפה מפורשת (כמו JavaScript) רצה ישירות דרך מנוע בזמן אמת',
+          'שפה מפורשת תמיד מהירה יותר',
+          'שפה מתקומפלת לא יכולה לרוץ על יותר ממחשב אחד',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'C, C++, C# ו-Java הן שפות מתקומפלות — יש שלב build שמייצר קובץ הרצה או bytecode לפני שהתוכנית רצה בפועל, מה שבדרך כלל מאפשר אופטימיזציות וביצועים גבוהים יותר.',
+        points: 10,
+      },
+      {
+        id: 'q-lang-2',
+        type: 'multiple-choice',
+        question: 'מהו מצביע (pointer) ב-C?',
+        options: [
+          'פונקציה שמצביעה על באג',
+          'משתנה ששומר כתובת זיכרון של משתנה אחר, ומאפשר לגשת ולשנות אותו בעקיפין',
+          'סוג של מערך בלבד',
+          'כלי לניפוי שגיאות (debugger)',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'int *p = &x שומר את הכתובת של x; *p ניגש לערך שנמצא שם. מצביעים הם מה שמאפשר ב-C לפונקציה לשנות ישירות משתנה שהועבר אליה, אך גם מקור נפוץ לבאגים אם משתמשים בהם לא נכון.',
+        points: 10,
+      },
+      {
+        id: 'q-lang-3',
+        type: 'true-false',
+        question: 'ב-C, זיכרון שהוקצה עם malloc משתחרר אוטומטית כשאין בו יותר שימוש (garbage collection).',
+        options: ['נכון', 'לא נכון'],
+        correctAnswerIndex: 1,
+        explanation:
+          'לא נכון — ל-C אין garbage collector. המתכנת חייב לקרוא ל-free() באופן ידני כדי לשחרר זיכרון שהוקצה עם malloc, אחרת נוצר memory leak.',
+        points: 10,
+      },
+      {
+        id: 'q-lang-4',
+        type: 'multiple-choice',
+        question: 'מה הוסיפה C++ מעל C?',
+        options: [
+          'שום דבר, זו אותה שפה בשם אחר',
+          'תכנות מונחה-עצמים (מחלקות, ירושה, פולימורפיזם) תוך שמירה על שליטה כמעט מלאה בזיכרון וביצועים',
+          'Garbage collector אוטומטי מלא',
+          'תמיכה בלעדית בפיתוח Android',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'C++ נוצרה כ"C עם classes". היא נותנת את היכולות של תכנות מונחה-עצמים בלי לוותר על השליטה ברמת חומרה שהופכת אותה לפופולרית במיוחד בתעשיית המשחקים (Unreal Engine) ומערכות תובעניות-ביצועים.',
+        points: 10,
+      },
+      {
+        id: 'q-lang-5',
+        type: 'multiple-choice',
+        question: 'איזה מנוע משחקים מרכזי משתמש ב-C# כשפת ברירת המחדל שלו?',
+        options: ['Unreal Engine', 'Unity', 'Godot (GDScript)', 'CryEngine'],
+        correctAnswerIndex: 1,
+        explanation:
+          'Unity, אחד ממנועי המשחקים הפופולריים בעולם (במיוחד למובייל ואינדי), משתמש ב-C# ככלי הפיתוח הראשי לכתיבת לוגיקת משחק.',
+        points: 10,
+      },
+      {
+        id: 'q-lang-6',
+        type: 'multiple-choice',
+        question: 'מהו CLR ב-.NET / C#?',
+        options: [
+          'ספריית עיצוב ממשק',
+          'ה-runtime (Common Language Runtime) שמריץ קוד C# מתורגם ל-bytecode ביניים (IL) — דומה ברעיון ל-JVM',
+          'שם קובץ הקומפילציה הסופי',
+          'כלי לבדיקות אוטומטיות בלבד',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'בדומה ל-JVM אצל Java, קוד C# לא מתקומפל ישירות לקוד מכונה אלא ל-IL (Intermediate Language) שרץ על ה-CLR — כך אותו קובץ יכול לרוץ על מערכות הפעלה שונות שיש להן CLR.',
+        points: 10,
+      },
+      {
+        id: 'q-lang-7',
+        type: 'true-false',
+        question: 'בניגוד ל-C ו-C++, גם ל-C# וגם ל-Java יש garbage collector אוטומטי.',
+        options: ['נכון', 'לא נכון'],
+        correctAnswerIndex: 0,
+        explanation:
+          'נכון. שתיהן מנהלות זיכרון אוטומטית — המתכנת לא צריך לשחרר זיכרון ידנית כמו ב-C/C++, מה שמפחית סוג שלם של באגים (memory leaks, dangling pointers) במחיר של שליטה פחות ישירה.',
+        points: 10,
+      },
+      {
+        id: 'q-lang-8',
+        type: 'multiple-choice',
+        question: 'מה משמעות הסלוגן ההיסטורי של Java, "כתוב פעם אחת, הרץ בכל מקום"?',
+        options: [
+          'שאפשר להעתיק קוד JS ל-Java ישירות',
+          'שקוד Java מתקומפל ל-bytecode אחיד שרץ זהה על כל מערכת הפעלה שיש לה JVM, בלי לקמפל מחדש לכל פלטפורמה',
+          'שצריך לכתוב את התוכנית פעם אחת בלבד לנצח',
+          'שZava רצה רק על שרתי Oracle',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'ה-JVM (Java Virtual Machine) הוא שכבת התיווך: כל עוד יש JVM למערכת ההפעלה, אותו קובץ bytecode מקומפל ירוץ עליה — זה מה שהפך את Java לפופולרית כל כך בתעשיית ה-Enterprise שרצה על שרתים מגוונים.',
+        points: 10,
+      },
+      {
+        id: 'q-lang-9',
+        type: 'multiple-choice',
+        question: 'איפה Java עדיין דומיננטית מאוד כיום?',
+        options: [
+          'פיתוח iOS בלבד',
+          'פיתוח Android (יחד עם Kotlin) ותעשיית ה-Enterprise (בנקים, ביטוח, מערכות ארגוניות גדולות)',
+          'עיצוב גרפי',
+          'היא כבר לא בשימוש כלל',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'למרות שהיא לא "החדשה בעיר", Java נשארת שפת ליבה ל-Android ולמערכות Enterprise יציבות בזכות בשלות, טיפוסים חזקים וספריות ותיקות כמו Spring.',
+        points: 10,
+      },
+      {
+        id: 'q-lang-10',
+        type: 'multiple-choice',
+        question: 'מה מייצג C# תחבירית, ביחס לשפות אחרות שכבר מכירים?',
+        options: [
+          'שונה לגמרי מכל שפה אחרת',
+          'קרוב מאוד ל-Java בתחביר, ומזכיר גם TypeScript במאפייני טיפוסים מודרניים כמו nullable types',
+          'זהה לגמרי לפייתון',
+          'לא תומך בכלל בטיפוסים',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'מי שמכיר Java או TypeScript ילמד C# הכי מהר מכל השפות בפרק הזה — התחביר וקונספט המחלקות דומים מאוד.',
+        points: 10,
+      },
+      {
+        id: 'q-lang-11',
+        type: 'multiple-choice',
+        question: 'למה כתיבת קוד ב-C דורשת זהירות מיוחדת בהשוואה ל-JavaScript?',
+        options: [
+          'אין שום הבדל בזהירות הנדרשת',
+          'כי אין הגנות אוטומטיות כמו garbage collection וניהול זיכרון בטוח — טעות במצביע יכולה לגרום ל-segmentation fault או לחור אבטחה כמו buffer overflow',
+          'כי C לא תומכת בפונקציות',
+          'כי C רצה רק בדפדפן',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'JavaScript מגינה על המתכנת מניהול זיכרון ידני. ב-C, גישה לזיכרון מעבר לתחום שהוקצה (buffer overflow) היא לא רק באג — היא אחת מווקטורי התקיפה הנפוצים ביותר בתוכנה כתובה-C היסטורית.',
+        points: 10,
+      },
+      {
+        id: 'q-lang-12',
+        type: 'multiple-choice',
+        question: 'מהו הכלי המקביל ל-npm בעולם ה-Java?',
+        options: ['Docker', 'Maven או Gradle', 'Webpack', 'Postman'],
+        correctAnswerIndex: 1,
+        explanation:
+          'Maven ו-Gradle הם כלי ניהול-תלויות ובנייה בעולם ה-Java — באותו רעיון כללי כמו npm/pnpm בעולם ה-JavaScript, אך עם קובצי תצורה (pom.xml / build.gradle) בפורמט שונה.',
+        points: 10,
+      },
+      {
+        id: 'q-lang-13',
+        type: 'multiple-choice',
+        question: 'איזו מהשפות הבאות היא הכי "קרובה לחומרה" (הכי הרבה שליטה ישירה בזיכרון)?',
+        options: ['Java', 'C#', 'C', 'JavaScript'],
+        correctAnswerIndex: 2,
+        explanation:
+          'C היא השפה הכי "נמוכה" ברשימה — בלי שכבות הפשטה של garbage collection, קרובה מאוד לזיכרון ולחומרה. בדיוק בגלל זה היא עדיין הבסיס לכתיבת מערכות הפעלה ומערכות משובצות.',
+        points: 10,
+      },
+      {
+        id: 'q-lang-14',
+        type: 'true-false',
+        question: 'מנוע המשחקים Unreal Engine כתוב בעיקר ב-C++.',
+        options: ['נכון', 'לא נכון'],
+        correctAnswerIndex: 0,
+        explanation:
+          'נכון. Unreal Engine כתוב ברובו ב-C++ בזכות הביצועים הגבוהים הנדרשים לגרפיקה ופיזיקה בזמן אמת — אם כי הוא גם מאפשר סקריפטינג ברמה גבוהה יותר (Blueprints).',
+        points: 10,
+      },
+      {
+        id: 'q-lang-15',
+        type: 'multiple-choice',
+        question: 'מה משותף ל-C#, Java ו-TypeScript מבחינת מערכת הטיפוסים?',
+        options: [
+          'שלושתן דינמיות לגמרי כמו JavaScript רגיל',
+          'שלושתן תומכות בטיפוסים סטטיים שנבדקים לפני הריצה, בניגוד ל-JavaScript הגולמית',
+          'רק TypeScript תומכת בטיפוסים',
+          'אין שום דמיון ביניהן',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'למרות שהן שפות שונות מאוד בפרטים, C#, Java ו-TypeScript חולקות פילוסופיה של בדיקת טיפוסים בזמן קומפילציה (או build) — מה שתופס הרבה באגים לפני שהקוד בכלל רץ.',
+        points: 10,
+      },
+      {
+        id: 'q-lang-16',
+        type: 'multiple-choice',
+        question: 'מדוע דווקא C נחשבת "שפת היסוד" שעליה נבנו כמעט כל השפות האחרות?',
+        options: [
+          'כי היא הכי חדשה',
+          'כי היא נוצרה מוקדם מאוד (1972), פשוטה יחסית וקרובה לחומרה — ומהדרים/runtimes של שפות רבות אחרות נכתבו במקור ב-C',
+          'כי אי אפשר לכתוב בה תוכנה אמיתית',
+          'כי היא רצה רק בדפדפן',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'הרבה מהכלים שבונים שפות אחרות — מהדרים, runtimes, מערכות הפעלה עצמן — נכתבו במקור ב-C, מה שהופך אותה לשכבת יסוד היסטורית וטכנית בעולם התכנות.',
+        points: 10,
+      },
+      {
+        id: 'q-lang-17',
+        type: 'multiple-choice',
+        question: 'אם מכירים כבר TypeScript היטב, איזו משפות הפרק הזה כנראה תהיה הכי "טבעית" ללמידה?',
+        options: ['C', 'C++', 'C# או Java', 'אי אפשר לדעת'],
+        correctAnswerIndex: 2,
+        explanation:
+          'C# ו-Java חולקות עם TypeScript גישה של טיפוסים סטטיים, תכנות מונחה-עצמים עם classes, וגם garbage collection אוטומטי — בעוד ש-C ו-C++ דורשות שינוי חשיבה משמעותי יותר סביב ניהול זיכרון ידני.',
+        points: 10,
+      },
+    ],
+  },
 ]
 
 export type CuratedProject = {
@@ -3799,6 +4102,37 @@ export const CURATED_EXERCISES: CuratedExercise[] = [
     hint: 'עבור על המערך עם filter כדי לאסוף את כל השמות שבהם process.env[name] הוא undefined, ואז זרוק שגיאה אחת עם כולם אם המערך שהתקבל לא ריק.',
     solution:
       'function requireEnv(names) {\n  const missing = names.filter((name) => !process.env[name])\n  if (missing.length > 0) {\n    throw new Error(`Missing required environment variables: ${missing.join(\', \')}`)\n  }\n}',
+  },
+  {
+    id: 'ex-lang-c-swap',
+    slug: 'c-pointer-swap',
+    title: 'החלפת ערכים עם מצביעים ב-C',
+    description: 'כתוב פונקציה ב-C שמחליפה בין שני מספרים באמצעות מצביעים',
+    category: 'Languages',
+    difficulty: 'medium',
+    estimatedTime: 20,
+    tags: ['Languages', 'C', 'Pointers'],
+    prompt:
+      'כתוב פונקציה swap(int *a, int *b) ב-C שמקבלת שני מצביעים למספרים שלמים, ומחליפה ביניהם "במקום" (in place) — כך שאחרי הקריאה, הערכים שאליהם מצביעים a ו-b יהיו מוחלפים.',
+    starterCode: 'void swap(int *a, int *b) {\n  // your code\n}',
+    hint: 'שמור את *a במשתנה זמני לפני שאתה דורס אותו, בדיוק כמו החלפת שני משתנים רגילה — רק שכאן ניגשים לערך דרך המצביע עם *.',
+    solution: 'void swap(int *a, int *b) {\n  int temp = *a;\n  *a = *b;\n  *b = temp;\n}',
+  },
+  {
+    id: 'ex-lang-java-rectangle',
+    slug: 'java-rectangle-class',
+    title: 'מחלקת Rectangle ב-Java',
+    description: 'כתוב מחלקה פשוטה ב-Java עם שדות ומתודה לחישוב שטח',
+    category: 'Languages',
+    difficulty: 'easy',
+    estimatedTime: 20,
+    tags: ['Languages', 'Java', 'OOP'],
+    prompt:
+      'כתוב מחלקה Rectangle ב-Java עם שני שדות (width, height מסוג double), constructor שמקבל את שניהם, ומתודה area() שמחזירה את השטח (width * height).',
+    starterCode: 'public class Rectangle {\n  // your code\n}',
+    hint: 'הגדר את השדות כ-private, כתוב constructor בשם Rectangle(double width, double height) ששומר אותם ב-this.width/this.height, ומתודה public double area().',
+    solution:
+      'public class Rectangle {\n    private double width;\n    private double height;\n\n    public Rectangle(double width, double height) {\n        this.width = width;\n        this.height = height;\n    }\n\n    public double area() {\n        return width * height;\n    }\n}',
   },
 ]
 

@@ -171,6 +171,16 @@ const MODULE_META: Record<
     category: 'devops',
     prerequisites: ['Git', 'Node.js'],
   },
+  languages: {
+    icon: 'Terminal',
+    color: '#334155',
+    tags: ['c', 'cpp', 'csharp', 'java', 'languages'],
+    estimatedTime: 10,
+    level: 8,
+    isFeatured: false,
+    category: 'other',
+    prerequisites: ['JavaScript'],
+  },
 }
 
 const MODULES: SeedModule[] = CURATED_MODULES.map((m) => {

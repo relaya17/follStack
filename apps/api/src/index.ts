@@ -26,6 +26,7 @@ import practiceRoutes from '@/routes/practice'
 import projectRoutes from '@/routes/project'
 import communityRoutes from '@/routes/community'
 import newsRoutes from '@/routes/news'
+import integrationsRoutes from '@/routes/integrations'
 import eventRoutes from '@/routes/events'
 import glossaryRoutes from '@/routes/glossary'
 import aiRoutes from '@/routes/ai'
@@ -160,6 +161,7 @@ app.use('/api/practice', practiceRoutes)
 app.use('/api/project', projectRoutes)
 app.use('/api/community', communityRoutes)
 app.use('/api/news', newsRoutes)
+app.use('/api/integrations', integrationsRoutes)
 app.use('/api/events', eventRoutes)
 app.use('/api/glossary', glossaryRoutes)
 app.use('/api/ai', aiRoutes)
