@@ -725,6 +725,76 @@ export const CURATED_MODULES: CuratedModule[] = [
       },
     ],
   },
+  {
+    id: 'mod-devtools',
+    slug: 'devtools',
+    title: 'כלים ותשתיות פיתוח מודרניות (DevOps ופריסה)',
+    description:
+      'GitHub, Vercel, Netlify, Next.js, Vite, מסדי נתונים, Docker, CI/CD, משתני סביבה ו-Serverless/Edge — המפה השלמה של איך קוד הופך למוצר חי.',
+    duration: '9 שעות',
+    difficulty: 'intermediate',
+    category: 'devops',
+    prerequisites: ['git', 'nodejs'],
+    learningObjectives: [
+      'להכיר את הפלטפורמות המרכזיות לניהול קוד ופריסה — GitHub, Vercel, Netlify',
+      'להבין מתי להשתמש ב-Next.js ומתי ב-Vite, ומה כל אסטרטגיית רינדור (SSR/SSG/ISR) פותרת',
+      'לדעת לבחור בין מסד נתונים SQL, NoSQL ומסד נתונים סרוורלס',
+      'להכיר Docker, GitHub Actions ו-CI/CD כתשתית לפריסה אוטומטית ובטוחה',
+      'לנהל משתני סביבה, סודות, DNS ופונקציות Serverless/Edge נכון',
+    ],
+    lessons: [
+      {
+        id: 'dt-1',
+        title: 'GitHub, Vercel ו-Netlify',
+        description: 'הפלטפורמות שמריצות כמעט כל פרויקט web מודרני',
+        content:
+          'GitHub היא הפלטפורמה המרכזית לאירוח קוד ושיתוף פעולה — Issues, Pull Requests וסקירת קוד, וגם GitHub Actions לאוטומציה (בנייה, בדיקות, פריסה) על כל push. Vercel היא פלטפורמת פריסה שנבנתה על ידי יוצרי Next.js ומותאמת אליו בצורה עמוקה — כל push מפרוס גלובלית תוך שניות, עם Image Optimization ו-ISR מובנים; המסלול החינמי (Hobby) מיועד לשימוש לא-מסחרי בלבד. Netlify היא פלטפורמת אירוח כללית יותר לפרונט-אנד, פשוטה לחיבור עם כל framework, עם Deploy Preview אוטומטי לכל Pull Request ומודל תמחור מבוסס "קרדיטים" לפי תעבורה וזמן ריצה. זו הפלטפורמה שבה מתארח אתר ה-web של follStack.',
+        type: 'text',
+        duration: 25,
+        order: 1,
+      },
+      {
+        id: 'dt-2',
+        title: 'Next.js ו-Vite',
+        description: 'שתי גישות שונות לבניית פרונט-אנד מודרני',
+        content:
+          'Next.js הוא framework מעל React עם App Router מבוסס React Server Components. שלוש אסטרטגיות רינדור מרכזיות: SSG (Static Site Generation) — לתוכן שכמעט לא משתנה, כמו עמודי שיווק; SSR (Server-Side Rendering) — לתוכן מותאם-אישית שתלוי בסשן, כמו לוח בקרה; ו-ISR (Incremental Static Regeneration) — עמוד נבנה סטטית אבל מתעדכן ברקע לפי מרווח זמן, ומשלב מהירות של סטטי עם רעננות תקופתית. Vite, לעומת זאת, הוא כלי בנייה (build tool) לפרויקטי SPA שאינם Next.js — הוא לא בונה חבילה מלאה בזמן פיתוח אלא מגיש קבצים על-פי דרישה דרך ESM טבעי, ולכן שרת הפיתוח עולה תוך אלפיות שנייה, מהיר משמעותית מכלים ותיקים כמו Webpack.',
+        type: 'text',
+        duration: 25,
+        order: 2,
+      },
+      {
+        id: 'dt-3',
+        title: 'מסדי נתונים — SQL, NoSQL וסרוורלס',
+        description: 'איך בוחרים את מסד הנתונים הנכון לפרויקט',
+        content:
+          'PostgreSQL (SQL) מתאים כשצריך joins, טרנזקציות ACID אמינות ונתונים מובנים — פיננסים, מלאי, תחומים מוסדרים. MongoDB (NoSQL) מתאים כשהסכימה משתנה מהר, המידע מסמכי באופיו, ורוצים פיתוח מהיר וסקיילינג אופקי מובנה — בדיוק למה follStack עצמו בנוי על MongoDB דרך Mongoose. דור חדש של מסדי נתונים "סרוורלס" עולה תוך שניות ומחויב לפי שימוש: Neon (Postgres עם scale-to-zero ו-branching מיידי בסגנון Git), Supabase (Backend-as-a-Service מלא — DB + Auth + API אוטומטי, נהדר למפתח יחיד שבונה MVP), ו-PlanetScale (MySQL על גבי Vitess, מתאים לסקייל גדול).',
+        type: 'text',
+        duration: 20,
+        order: 3,
+      },
+      {
+        id: 'dt-4',
+        title: 'Docker, GitHub Actions ו-CI/CD',
+        description: 'איך אריזת קוד ואוטומציה הופכות פריסה לבטוחה וחוזרת',
+        content:
+          'Docker אורז אפליקציה יחד עם כל התלויות שהיא צריכה ליחידה (container) שרצה זהה בכל סביבה — קליל בהרבה מ-Virtual Machine כי הוא חולק את ה-kernel של מערכת ההפעלה המארחת. Image הוא התבנית לקריאה-בלבד (בנויה מ-Dockerfile); Container הוא מופע רץ שלה. CI/CD (Continuous Integration / Continuous Deployment) אומר שכל push מריץ אוטומטית לינט, בדיקות, בנייה ולעיתים גם פריסה — GitHub Actions הוא הכלי המובנה של GitHub לכך, מוגדר בקובצי YAML שמתארים jobs/steps שרצים על כל push או Pull Request. עקרונות אבטחה חשובים: לנעוץ actions לגרסה קבועה, ולהגדיר הרשאות מינימליות לכל job.',
+        type: 'interactive',
+        duration: 30,
+        order: 4,
+      },
+      {
+        id: 'dt-5',
+        title: 'משתני סביבה, DNS, Serverless/Edge ו-Monorepo',
+        description: 'התשתית ה"שקטה" שמחזיקה הכל יחד',
+        content:
+          'משתני סביבה (environment variables) מפרידים תצורה מהקוד עצמו ומאפשרים ערכים שונים לכל סביבה (פיתוח/staging/פרודקשן). סודות (secrets) — מפתחות API, סיסמאות — דורשים הגנה חזקה יותר: לעולם לא בקוד שנשלח ל-Git, אלא במנגנון הסודות המוצפן של פלטפורמת הפריסה. DNS מחבר דומיין קריא-לאדם לפלטפורמת האירוח; ברגע שהוא מצביע נכון, Vercel/Netlify מנפיקים SSL אוטומטית. פונקציות Serverless רצות על-פי דרישה ללא ניהול שרת; פונקציות Edge מריצות את אותו רעיון פיזית קרוב למשתמש בנקודות קצה של הרשת — מהירות משמעותית יותר, במיוחד ב-cold start. ולבסוף, כלי Monorepo כמו pnpm workspaces (המפעיל את @follstack/shared ו-@follstack/ui בפרויקט הזה) ו-Turborepo מאפשרים לנהל כמה חבילות קוד במאגר אחד עם קאשינג חכם של משימות.',
+        type: 'text',
+        duration: 25,
+        order: 5,
+      },
+    ],
+  },
 ]
 
 export const CURATED_QUIZZES: CuratedQuiz[] = [
@@ -3052,6 +3122,264 @@ export const CURATED_QUIZZES: CuratedQuiz[] = [
       },
     ],
   },
+  {
+    id: 'quiz-devtools',
+    slug: 'devtools',
+    title: 'מבחן כלים ותשתיות פיתוח מודרניות',
+    description: 'GitHub, Vercel, Netlify, Next.js, Vite, מסדי נתונים, Docker, CI/CD ועוד',
+    category: 'DevOps',
+    moduleSlug: 'devtools',
+    difficulty: 'medium',
+    timeLimit: 20,
+    passingScore: 70,
+    questions: [
+      {
+        id: 'q-dt-1',
+        type: 'multiple-choice',
+        question: 'מה עושה GitHub Actions?',
+        options: [
+          'מארח מסדי נתונים',
+          'מאפשר להגדיר זרימות עבודה אוטומטיות (בנייה, בדיקות, פריסה) שרצות על כל push או Pull Request',
+          'מחליף את Git לגמרי',
+          'משמש רק לניהול Issues',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'GitHub Actions מוגדר בקובצי YAML שמתארים jobs/steps, ורץ על runners מתארחים כל אימת שמתרחש אירוע כמו push. זה הכלי המעשי שמאחורי מושג ה-CI/CD.\n```yaml\non: [push]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - run: npm test\n```',
+        points: 10,
+      },
+      {
+        id: 'q-dt-2',
+        type: 'multiple-choice',
+        question: 'מה ההגבלה המרכזית של מסלול ה-Hobby (החינמי) של Vercel?',
+        options: [
+          'אין הגבלות כלל',
+          'הוא מיועד לשימוש לא-מסחרי בלבד — אתר שמייצר הכנסה צריך לעבור למסלול Pro',
+          'אפשר לפרוס רק פעם ביום',
+          'הוא תומך רק ב-HTML סטטי',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'מסלול Hobby כולל תשתית נדיבה (CDN, CI/CD אוטומטי, הגנת DDoS) אך ורק ל-non-commercial use. פרויקט שמניב הכנסה מחויב לעבור למסלול Pro בתשלום.',
+        points: 10,
+      },
+      {
+        id: 'q-dt-3',
+        type: 'multiple-choice',
+        question: 'מהו ISR (Incremental Static Regeneration) ב-Next.js?',
+        options: [
+          'רינדור שמתבצע רק בדפדפן הלקוח',
+          'עמוד נבנה סטטית אך מתעדכן אוטומטית ברקע לפי מרווח זמן מוגדר — משלב מהירות סטטית עם רעננות תקופתית',
+          'שיטה להצפין נתיבים בשרת',
+          'תחליף מלא ל-CSS Modules',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'הביקור הראשון אחרי תום מרווח הזמן מפעיל רינדור-מחדש ברקע; מבקרים הבאים מקבלים את הגרסה המעודכנת. זו התשובה של Next.js לפשרה בין מהירות (SSG) לטריות (SSR).',
+        points: 10,
+      },
+      {
+        id: 'q-dt-4',
+        type: 'true-false',
+        question: 'Vite בונה חבילה (bundle) מלאה של כל הפרויקט לפני שהוא מתחיל להגיש קבצים בזמן פיתוח.',
+        options: ['נכון', 'לא נכון'],
+        correctAnswerIndex: 1,
+        explanation:
+          'לא נכון — זה בדיוק ההבדל מ-Webpack. Vite מגיש קבצים על-פי דרישה דרך ESM טבעי בזמן פיתוח, ולכן שרת הפיתוח עולה כמעט מיידית גם בפרויקטים גדולים.',
+        points: 10,
+      },
+      {
+        id: 'q-dt-5',
+        type: 'multiple-choice',
+        question: 'מתי עדיף לבחור PostgreSQL (SQL) על פני MongoDB (NoSQL)?',
+        options: [
+          'כשהסכימה משתנה כל הזמן',
+          'כשצריך joins, טרנזקציות ACID אמינות ונתונים מובנים/רגישים — כמו פיננסים או מלאי',
+          'רק כשהצוות קטן',
+          'MongoDB תמיד עדיף',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'PostgreSQL מצטיין בשאילתות מורכבות ו-joins ובערבויות טרנזקציה חזקות. MongoDB, לעומת זאת, מתאים יותר לסכימה גמישה ופיתוח מהיר — בדיוק למה follStack עצמו משתמש בו.',
+        points: 10,
+      },
+      {
+        id: 'q-dt-6',
+        type: 'multiple-choice',
+        question: 'מה מייחד את Neon כמסד נתונים "סרוורלס"?',
+        options: [
+          'הוא לא מבוסס Postgres',
+          'הוא Postgres עם scale-to-zero אמיתי ו-branching מיידי בסגנון Git, גם במסלול החינמי',
+          'אין לו שום מסלול חינמי',
+          'הוא מבוסס MySQL',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'Neon הוא הספק הרשמי מאחורי מוצר ה-Postgres של Vercel עצמו, ומאפשר ליצור "branch" מלא של מסד הנתונים תוך שניות — שימושי במיוחד לזרימות CI/CD ותצוגות מקדימות.',
+        points: 10,
+      },
+      {
+        id: 'q-dt-7',
+        type: 'multiple-choice',
+        question: 'מה ההבדל בין Docker image ל-container?',
+        options: [
+          'אין הבדל, זה אותו דבר',
+          'Image הוא תבנית לקריאה-בלבד (מבנה מ-Dockerfile); Container הוא מופע רץ בפועל של אותה תבנית',
+          'Container הוא קובץ, ו-Image הוא תהליך רץ',
+          'Image רץ רק ב-Linux, ו-Container רץ בכל מערכת הפעלה',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'אפשר להריץ כמה containers שונים מאותו image בו-זמנית — כל אחד הוא מופע נפרד ומבודד, אבל כולם בנויים מאותה "תבנית".\n```dockerfile\nFROM node:20-alpine\nWORKDIR /app\nCOPY package*.json ./\nRUN npm install\nCOPY . .\nCMD ["node", "index.js"]\n```',
+        points: 10,
+      },
+      {
+        id: 'q-dt-8',
+        type: 'multiple-choice',
+        question: 'למה container קליל יותר מ-Virtual Machine?',
+        options: [
+          'כי הוא לא מריץ קוד אמיתי',
+          'כי הוא חולק את ה-kernel של מערכת ההפעלה המארחת, במקום להריץ מערכת הפעלה מלאה משלו',
+          'כי הוא לא כולל תלויות',
+          'אין הבדל בביצועים בין השניים',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'VM מדמה חומרה שלמה ומריץ מערכת הפעלה מלאה משלו — כבד ואיטי יותר לעלייה. Container חולק kernel עם המארח ומבודד רק ברמת התהליך, ולכן קליל ומהיר משמעותית.',
+        points: 10,
+      },
+      {
+        id: 'q-dt-9',
+        type: 'multiple-choice',
+        question: 'מה ההבדל בין משתנה סביבה (environment variable) רגיל לבין secret?',
+        options: [
+          'אין הבדל טכני',
+          'Secret הוא סוג של משתנה סביבה שדורש הגנה נוספת — הצפנה, רוטציה והרשאות גישה מוגבלות, ולעולם לא נשמר בקוד שנשלח ל-Git',
+          'משתני סביבה תקפים רק בפיתוח',
+          'Secret הוא תמיד מספר, ומשתנה סביבה הוא תמיד מחרוזת',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'כל secret הוא משתנה סביבה, אבל לא כל משתנה סביבה הוא secret. משתני תצורה רגילים (כמו כתובת API ציבורית) פחות רגישים ממפתחות/סיסמאות שדורשים ניהול קפדני יותר.',
+        points: 10,
+      },
+      {
+        id: 'q-dt-10',
+        type: 'multiple-choice',
+        question: 'איך DNS מאפשר לדומיין מותאם-אישית להצביע על אתר שפרוס ב-Netlify/Vercel?',
+        options: [
+          'הוא לא קשור לזה כלל',
+          'דרך רשומות DNS (כמו CNAME/A) שמצביעות מהדומיין לפלטפורמת הפריסה; ברגע שהן נכונות, הפלטפורמה מנפיקה SSL אוטומטית',
+          'צריך להתקין תוכנה מקומית על השרת',
+          'רק דומיינים בתשלום נתמכים',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'DNS הוא "ספר הכתובות" של האינטרנט — הוא מתרגם שם דומיין קריא לכתובת/יעד טכני. אחרי שהרשומה מוגדרת נכון, Vercel/Netlify מטפלים גם באישור SSL באופן אוטומטי.',
+        points: 10,
+      },
+      {
+        id: 'q-dt-11',
+        type: 'multiple-choice',
+        question: 'מתי עדיף להשתמש בפונקציית Edge במקום פונקציית Serverless רגילה?',
+        options: [
+          'כשצריך לגשת למסד נתונים מורכב',
+          'כשהעבודה צריכה לקרות פיזית קרוב למשתמש ומהר — הפניות לפי מיקום, בדיקות A/B, בדיקות אימות/בוט, הזרמת תגובות',
+          'לעולם לא — Serverless תמיד עדיף',
+          'רק לעיבוד תמונות כבד',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'פונקציות Edge רצות בנקודות קצה של הרשת קרוב פיזית למשתמש, ולכן מהירות משמעותית יותר — במיוחד ב-cold start. לעבודה שדורשת חבילות npm כבדות או קריאות DB ארוכות, serverless רגיל מתאים יותר.',
+        points: 10,
+      },
+      {
+        id: 'q-dt-12',
+        type: 'multiple-choice',
+        question: 'מה תפקידו של pnpm workspaces בפרויקט מונורפו כמו follStack?',
+        options: [
+          'הוא מריץ את הבדיקות האוטומטיות',
+          'הוא מאפשר למאגר קוד אחד להכיל כמה חבילות (כמו apps/web, apps/api, packages/shared) שמפנות זו לזו מקומית, בהתקנה יעילה מבוססת-symlink',
+          'הוא מחליף לגמרי את Git',
+          'הוא כלי לעיצוב ממשק משתמש',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'זה בדיוק מה שמפעיל את @follstack/shared ו-@follstack/ui בפרויקט — חבילות פנימיות שנעשה בהן שימוש חוזר בין apps/web ל-apps/api בלי לפרסם אותן ל-npm.',
+        points: 10,
+      },
+      {
+        id: 'q-dt-13',
+        type: 'multiple-choice',
+        question: 'מה תפקידו של Turborepo מעל pnpm workspaces?',
+        options: [
+          'הוא מנהל את מסד הנתונים',
+          'הוא מוסיף הרצת משימות (build/test/lint) עם קאשינג חכם — בונה מחדש רק את מה שבאמת השתנה',
+          'הוא כלי לפריסה בלבד',
+          'הוא מחליף את TypeScript',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'pnpm workspaces פותר את בעיית ניהול החבילות; Turborepo פותר את בעיית המהירות של הרצת משימות על פני כל החבילות, על ידי קאשינג תוצאות שלא השתנו.',
+        points: 10,
+      },
+      {
+        id: 'q-dt-14',
+        type: 'true-false',
+        question: 'ב-App Router של Next.js, עמוד שלא שולף מידע דינמי הופך אוטומטית לסטטי (SSG).',
+        options: ['נכון', 'לא נכון'],
+        correctAnswerIndex: 0,
+        explanation:
+          'נכון. אם אין fetch דינמי או שימוש בנתוני בקשה/סשן, Next.js מזהה זאת ומייצר את העמוד כ-Static מראש בזמן ה-build.',
+        points: 10,
+      },
+      {
+        id: 'q-dt-15',
+        type: 'multiple-choice',
+        question: 'מה עושה Docker Compose?',
+        options: [
+          'מריץ קוד ישירות בענן',
+          'מגדיר ומריץ אפליקציות מרובות-קונטיינרים (למשל אפליקציה + מסד נתונים + מטמון) מקובץ YAML אחד',
+          'ממיר Dockerfile ל-JavaScript',
+          'מחליף את Git Actions',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'במקום להריץ כל container בנפרד עם פקודות ארוכות, קובץ docker-compose.yml מתאר את כל השירותים (app, db, cache) יחד ומאפשר להעלות את כולם בפקודה אחת.',
+        points: 10,
+      },
+      {
+        id: 'q-dt-16',
+        type: 'multiple-choice',
+        question: 'מהי אחת מהמלצות האבטחה המרכזיות ל-GitHub Actions ב-2026?',
+        options: [
+          'להשתמש תמיד ב-@latest עבור כל action',
+          'לנעוץ (pin) actions לגרסת SHA מלאה במקום ל-tag שניתן לשינוי, ולהגדיר permissions מינימליים ברמת ה-job',
+          'לא להשתמש ב-secrets בכלל',
+          'להריץ הכל עם הרשאות admin',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'tag כמו v4 יכול להשתנות בעתיד ולהצביע על קוד אחר; נעיצה ל-SHA מבטיחה שהworkflow תמיד ירוץ בדיוק אותו קוד שנבדק ואושר. עקרון ההרשאה המינימלית מצמצם נזק אם ה-workflow נפרץ.',
+        points: 10,
+      },
+      {
+        id: 'q-dt-17',
+        type: 'multiple-choice',
+        question: 'מה ההבדל המרכזי בין Supabase ל-Neon?',
+        options: [
+          'אין הבדל, שניהם אותו מוצר',
+          'Supabase היא פלטפורמת Backend-as-a-Service מלאה (DB+Auth+API) על בסיס מסד ייעודי-לא-סרוורלס; Neon הוא Postgres סרוורלס טהור עם scale-to-zero ו-branching',
+          'Neon תומך רק ב-MySQL',
+          'Supabase לא תומך ב-Postgres',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'לכן ההמלצה המקובלת: MVP עצמאי שרוצה הכל-במקום-אחד → Supabase. פרויקט Next.js/React שרוצה branching מהיר ב-CI/CD → Neon.',
+        points: 10,
+      },
+    ],
+  },
 ]
 
 export type CuratedProject = {
@@ -3440,6 +3768,38 @@ export const CURATED_EXERCISES: CuratedExercise[] = [
     solution:
       "const bcrypt = require('bcryptjs')\n\nasync function checkPassword(plainPassword, hashedPassword) {\n  return bcrypt.compare(plainPassword, hashedPassword)\n}",
   },
+  {
+    id: 'ex-devtools-dockerfile',
+    slug: 'write-a-dockerfile',
+    title: 'כתיבת Dockerfile לאפליקציית Node',
+    description: 'ארוז אפליקציית Express פשוטה לתוך Docker image',
+    category: 'DevOps',
+    difficulty: 'medium',
+    estimatedTime: 25,
+    tags: ['DevOps', 'Docker', 'Containers'],
+    prompt:
+      'כתוב Dockerfile לאפליקציית Node.js/Express: משתמש בבסיס node:20-alpine, מגדיר תיקיית עבודה, מתקין תלויות (npm install) לפני העתקת שאר הקוד (כדי לנצל cache), מעתיק את שאר הקבצים, וחושף פורט 3000 עם הרצת האפליקציה.',
+    starterCode: '# כתוב כאן את ה-Dockerfile',
+    hint: 'העתק קודם רק package*.json והרץ npm install — כך Docker יכול לעשות cache לשכבה הזו ולא להתקין תלויות מחדש בכל שינוי קוד.',
+    solution:
+      'FROM node:20-alpine\nWORKDIR /app\nCOPY package*.json ./\nRUN npm install --production\nCOPY . .\nEXPOSE 3000\nCMD ["node", "index.js"]',
+  },
+  {
+    id: 'ex-devtools-env-check',
+    slug: 'validate-env-vars',
+    title: 'אימות משתני סביבה נדרשים באתחול',
+    description: 'כתוב פונקציה שבודקת שכל משתני הסביבה הקריטיים קיימים לפני שהשרת עולה',
+    category: 'DevOps',
+    difficulty: 'easy',
+    estimatedTime: 20,
+    tags: ['DevOps', 'Environment Variables', 'Node.js'],
+    prompt:
+      'כתוב פונקציה requireEnv(names) שמקבלת מערך של שמות משתני סביבה נדרשים, בודקת שכולם קיימים ב-process.env, וזורקת שגיאה עם רשימת כל המשתנים החסרים (לא רק הראשון שנתקלים בו) אם חסר משהו.',
+    starterCode: 'function requireEnv(names) {\n  // your code\n}',
+    hint: 'עבור על המערך עם filter כדי לאסוף את כל השמות שבהם process.env[name] הוא undefined, ואז זרוק שגיאה אחת עם כולם אם המערך שהתקבל לא ריק.',
+    solution:
+      'function requireEnv(names) {\n  const missing = names.filter((name) => !process.env[name])\n  if (missing.length > 0) {\n    throw new Error(`Missing required environment variables: ${missing.join(\', \')}`)\n  }\n}',
+  },
 ]
 
 export function listCuratedExercises(filters?: { category?: string; difficulty?: string }) {
@@ -3463,4 +3823,76 @@ export function isMongoReady(): boolean {
   } catch {
     return false
   }
+}
+
+// --- Glossary — terms & acronyms used across every module (for the reference
+// page, flashcards and the memory-match game) ---
+
+export type CuratedGlossaryTerm = {
+  id: string
+  term: string
+  fullForm: string
+  definition: string
+  category: string
+}
+
+export const CURATED_GLOSSARY: CuratedGlossaryTerm[] = [
+  { id: 'g-html', term: 'HTML', fullForm: 'HyperText Markup Language', definition: 'שפת הסימון שמגדירה את המבנה והתוכן של דף אינטרנט.', category: 'html-css' },
+  { id: 'g-css', term: 'CSS', fullForm: 'Cascading Style Sheets', definition: 'שפת העיצוב שקובעת איך HTML נראה — צבעים, פריסה, גדלים.', category: 'html-css' },
+  { id: 'g-dom', term: 'DOM', fullForm: 'Document Object Model', definition: 'ייצוג עץ-אובייקטים של הדף בזיכרון, שדרכו JavaScript קורא ומשנה תוכן.', category: 'javascript' },
+  { id: 'g-api', term: 'API', fullForm: 'Application Programming Interface', definition: 'ממשק מוגדר שדרכו תוכנה אחת "מדברת" עם תוכנה אחרת.', category: 'nodejs' },
+  { id: 'g-rest', term: 'REST', fullForm: 'Representational State Transfer', definition: 'סגנון ארכיטקטוני ל-API מבוסס HTTP ופעולות סטנדרטיות (GET/POST/PUT/DELETE).', category: 'nodejs' },
+  { id: 'g-json', term: 'JSON', fullForm: 'JavaScript Object Notation', definition: 'פורמט חילופי-נתונים קליל מבוסס טקסט, הסטנדרט ל-API-ים מודרניים.', category: 'javascript' },
+  { id: 'g-http', term: 'HTTP', fullForm: 'HyperText Transfer Protocol', definition: 'הפרוטוקול שמעביר בקשות ותגובות בין דפדפן לשרת.', category: 'nodejs' },
+  { id: 'g-https', term: 'HTTPS', fullForm: 'HTTP Secure', definition: 'HTTP מוצפן באמצעות TLS/SSL — הסטנדרט לכל אתר בפרודקשן.', category: 'security' },
+  { id: 'g-crud', term: 'CRUD', fullForm: 'Create, Read, Update, Delete', definition: 'ארבע הפעולות הבסיסיות שכל מערכת שמנהלת נתונים צריכה לתמוך בהן.', category: 'mongodb' },
+  { id: 'g-spa', term: 'SPA', fullForm: 'Single Page Application', definition: 'אפליקציה שטוענת דף HTML יחיד ומעדכנת תוכן דינמית בלי ריענון מלא.', category: 'react' },
+  { id: 'g-pwa', term: 'PWA', fullForm: 'Progressive Web App', definition: 'אתר שמתנהג כמו אפליקציה — עובד אופליין, ניתן להתקנה, נוטיפיקציות.', category: 'javascript' },
+  { id: 'g-ui', term: 'UI', fullForm: 'User Interface', definition: 'המראה והרכיבים הוויזואליים שהמשתמש מקיים איתם אינטראקציה.', category: 'react' },
+  { id: 'g-ux', term: 'UX', fullForm: 'User Experience', definition: 'החוויה הכוללת של המשתמש בשימוש במוצר — לא רק איך זה נראה, איך זה מרגיש.', category: 'react' },
+  { id: 'g-cli', term: 'CLI', fullForm: 'Command Line Interface', definition: 'ממשק טקסטואלי לשליטה בתוכנה דרך פקודות בטרמינל.', category: 'automation' },
+  { id: 'g-ide', term: 'IDE', fullForm: 'Integrated Development Environment', definition: 'סביבת פיתוח משולבת (כמו VS Code) עם עורך, דיבאגר וכלים במקום אחד.', category: 'automation' },
+  { id: 'g-esm', term: 'ESM', fullForm: 'ECMAScript Modules', definition: 'מערכת המודולים הרשמית של JavaScript (import/export).', category: 'javascript' },
+  { id: 'g-js', term: 'JS', fullForm: 'JavaScript', definition: 'שפת התכנות של הדפדפן, וגם (דרך Node.js) של השרת.', category: 'javascript' },
+  { id: 'g-ts', term: 'TS', fullForm: 'TypeScript', definition: 'תוסף טיפוסים סטטיים מעל JavaScript, שמתגלה ב-compile-time לא ב-runtime.', category: 'typescript' },
+  { id: 'g-jsx', term: 'JSX', fullForm: 'JavaScript XML', definition: 'תחביר שמערבב HTML בתוך JavaScript — הבסיס לכתיבת קומפוננטות React.', category: 'react' },
+  { id: 'g-npm', term: 'npm', fullForm: 'Node Package Manager', definition: 'מנהל החבילות הסטנדרטי של Node.js, ומאגר הספריות הגדול בעולם ה-JS.', category: 'nodejs' },
+  { id: 'g-cdn', term: 'CDN', fullForm: 'Content Delivery Network', definition: 'רשת שרתים גיאוגרפית שמפזרת תוכן קרוב פיזית למשתמש למהירות טעינה.', category: 'devtools' },
+  { id: 'g-dns', term: 'DNS', fullForm: 'Domain Name System', definition: 'המערכת שמתרגמת שם דומיין קריא לכתובת/יעד טכני.', category: 'devtools' },
+  { id: 'g-ssr', term: 'SSR', fullForm: 'Server-Side Rendering', definition: 'רינדור העמוד בשרת בכל בקשה — טוב לתוכן דינמי ומותאם-אישית.', category: 'devtools' },
+  { id: 'g-ssg', term: 'SSG', fullForm: 'Static Site Generation', definition: 'בניית עמודים סטטיים מראש בזמן ה-build — הכי מהיר לתוכן שלא משתנה.', category: 'devtools' },
+  { id: 'g-isr', term: 'ISR', fullForm: 'Incremental Static Regeneration', definition: 'עמוד סטטי שמתעדכן ברקע לפי מרווח זמן — משלב מהירות עם רעננות.', category: 'devtools' },
+  { id: 'g-csr', term: 'CSR', fullForm: 'Client-Side Rendering', definition: 'הדפדפן עצמו בונה את ה-HTML בזמן ריצה, אחרי טעינת ה-JavaScript.', category: 'react' },
+  { id: 'g-ci', term: 'CI', fullForm: 'Continuous Integration', definition: 'מיזוג ובדיקה אוטומטיים של קוד חדש בכל push, לגילוי באגים מוקדם.', category: 'automation' },
+  { id: 'g-cd', term: 'CD', fullForm: 'Continuous Deployment / Delivery', definition: 'פריסה אוטומטית (או כמעט-אוטומטית) לפרודקשן אחרי שקוד עובר בדיקות.', category: 'automation' },
+  { id: 'g-vcs', term: 'VCS', fullForm: 'Version Control System', definition: 'מערכת שעוקבת אחרי היסטוריית שינויים בקוד — Git הוא הדוגמה המובילה.', category: 'git' },
+  { id: 'g-orm', term: 'ORM', fullForm: 'Object-Relational Mapping', definition: 'שכבה שממפה טבלאות SQL לאובייקטים בקוד (למשל Prisma, Sequelize).', category: 'devtools' },
+  { id: 'g-odm', term: 'ODM', fullForm: 'Object-Document Mapping', definition: 'כמו ORM אך למסדי מסמכים — Mongoose הוא ה-ODM של MongoDB.', category: 'mongodb' },
+  { id: 'g-jwt', term: 'JWT', fullForm: 'JSON Web Token', definition: 'טוקן חתום שמכיל מידע על המשתמש, נפוץ לאימות ב-API-ים.', category: 'security' },
+  { id: 'g-cors', term: 'CORS', fullForm: 'Cross-Origin Resource Sharing', definition: 'מנגנון שמאפשר (או חוסם) בקשות מדומיין אחד לשרת בדומיין אחר.', category: 'security' },
+  { id: 'g-xss', term: 'XSS', fullForm: 'Cross-Site Scripting', definition: 'הזרקת קוד זדוני שרץ בדפדפן של משתמשים אחרים דרך קלט לא מסונן.', category: 'security' },
+  { id: 'g-csrf', term: 'CSRF', fullForm: 'Cross-Site Request Forgery', definition: 'זיוף בקשה שמנצל עוגיות session כדי לפעול בשם משתמש בלי ידיעתו.', category: 'security' },
+  { id: 'g-sql', term: 'SQL', fullForm: 'Structured Query Language', definition: 'שפת השאילתות הסטנדרטית למסדי נתונים יחסיים כמו PostgreSQL.', category: 'devtools' },
+  { id: 'g-nosql', term: 'NoSQL', fullForm: 'Not Only SQL', definition: 'משפחת מסדי נתונים לא-יחסיים (מסמכים, מפתח-ערך, גרפים) כמו MongoDB.', category: 'mongodb' },
+  { id: 'g-acid', term: 'ACID', fullForm: 'Atomicity, Consistency, Isolation, Durability', definition: 'ארבע תכונות שמבטיחות אמינות טרנזקציות במסד נתונים.', category: 'mongodb' },
+  { id: 'g-waf', term: 'WAF', fullForm: 'Web Application Firewall', definition: 'שכבת הגנה שמסננת תעבורה זדונית לפני שהיא מגיעה לשרת.', category: 'security' },
+  { id: 'g-ddos', term: 'DDoS', fullForm: 'Distributed Denial of Service', definition: 'התקפה שמציפה שרת בבקשות ממקורות רבים כדי להפיל אותו.', category: 'security' },
+  { id: 'g-mvc', term: 'MVC', fullForm: 'Model-View-Controller', definition: 'תבנית ארכיטקטונית שמפרידה נתונים (Model), תצוגה (View) ולוגיקה (Controller).', category: 'nodejs' },
+  { id: 'g-dry', term: 'DRY', fullForm: "Don't Repeat Yourself", definition: 'עיקרון שאומר להימנע משכפול קוד/לוגיקה — כל ידע צריך מקור אמת יחיד.', category: 'algorithms' },
+  { id: 'g-kiss', term: 'KISS', fullForm: 'Keep It Simple, Stupid', definition: 'עיקרון שאומר להעדיף פתרון פשוט על פני מורכב, כשאפשר.', category: 'algorithms' },
+  { id: 'g-yagni', term: 'YAGNI', fullForm: "You Aren't Gonna Need It", definition: 'אל תבנה תכונה "כי אולי תצטרך אותה" — רק כשבאמת צריך אותה.', category: 'algorithms' },
+  { id: 'g-tdd', term: 'TDD', fullForm: 'Test-Driven Development', definition: 'לכתוב את הבדיקה (test) לפני הקוד עצמו, ולפתח עד שהיא עוברת.', category: 'automation' },
+  { id: 'g-qa', term: 'QA', fullForm: 'Quality Assurance', definition: 'תחום העיסוק בבדיקת תוכנה ואיתור באגים לפני שהם מגיעים למשתמש.', category: 'automation' },
+  { id: 'g-devops', term: 'DevOps', fullForm: 'Development + Operations', definition: 'תרבות/פרקטיקה שמאחדת פיתוח ותפעול — אוטומציה, CI/CD, ניטור.', category: 'devtools' },
+  { id: 'g-saas', term: 'SaaS', fullForm: 'Software as a Service', definition: 'מודל שבו תוכנה נצרכת דרך הדפדפן/מנוי, בלי התקנה מקומית.', category: 'devtools' },
+  { id: 'g-baas', term: 'BaaS', fullForm: 'Backend as a Service', definition: 'פלטפורמה שמספקת שרת/DB/Auth מוכנים מראש — כמו Supabase.', category: 'devtools' },
+  { id: 'g-oop', term: 'OOP', fullForm: 'Object-Oriented Programming', definition: 'פרדיגמת תכנות שמארגנת קוד סביב אובייקטים עם מצב והתנהגות.', category: 'javascript' },
+  { id: 'g-bigo', term: 'Big O', fullForm: 'Big O Notation', definition: 'סימון מתמטי שמתאר איך זמן/זיכרון של אלגוריתם גדל ביחס לגודל הקלט.', category: 'algorithms' },
+  { id: 'g-lifo', term: 'LIFO', fullForm: 'Last In, First Out', definition: 'עקרון הפעולה של Stack — האיבר האחרון שנכנס הוא הראשון שיוצא.', category: 'algorithms' },
+  { id: 'g-fifo', term: 'FIFO', fullForm: 'First In, First Out', definition: 'עקרון הפעולה של Queue — האיבר הראשון שנכנס הוא הראשון שיוצא.', category: 'algorithms' },
+]
+
+export function listGlossaryTerms(category?: string): CuratedGlossaryTerm[] {
+  if (!category || category === 'all') return CURATED_GLOSSARY
+  return CURATED_GLOSSARY.filter((t) => t.category === category)
 }

@@ -161,6 +161,16 @@ const MODULE_META: Record<
     category: 'other',
     prerequisites: ['JavaScript', 'Node.js'],
   },
+  devtools: {
+    icon: 'Cloud',
+    color: '#0EA5E9',
+    tags: ['devops', 'github', 'vercel', 'netlify', 'docker', 'ci-cd'],
+    estimatedTime: 9,
+    level: 7,
+    isFeatured: false,
+    category: 'devops',
+    prerequisites: ['Git', 'Node.js'],
+  },
 }
 
 const MODULES: SeedModule[] = CURATED_MODULES.map((m) => {

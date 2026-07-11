@@ -44,6 +44,7 @@ const NEXT_PRACTICE: Record<string, string> = {
   git: 'git-gitignore',
   algorithms: 'binary-search',
   security: 'prevent-xss',
+  devtools: 'write-a-dockerfile',
 }
 
 const TYPE_LABELS: Record<ApiLesson['type'], string> = {

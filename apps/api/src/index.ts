@@ -27,6 +27,7 @@ import projectRoutes from '@/routes/project'
 import communityRoutes from '@/routes/community'
 import newsRoutes from '@/routes/news'
 import eventRoutes from '@/routes/events'
+import glossaryRoutes from '@/routes/glossary'
 import aiRoutes from '@/routes/ai'
 import adminRoutes from '@/routes/admin'
 import voiceRoutes from '@/routes/voice'
@@ -160,6 +161,7 @@ app.use('/api/project', projectRoutes)
 app.use('/api/community', communityRoutes)
 app.use('/api/news', newsRoutes)
 app.use('/api/events', eventRoutes)
+app.use('/api/glossary', glossaryRoutes)
 app.use('/api/ai', aiRoutes)
 app.use('/api/analytics', analyticsRoutes)
 app.use('/api/social', socialRoutes)

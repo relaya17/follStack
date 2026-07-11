@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { BookOpen, Code, Database, Globe, Zap, Layers, Workflow, GitBranch, Binary, Shield, Loader2 } from 'lucide-react'
+import { BookOpen, Code, Database, Globe, Zap, Layers, Workflow, GitBranch, Binary, Shield, Cloud, Loader2 } from 'lucide-react'
 import { Card } from '@follstack/ui'
 import { apiJson } from '@/lib/api'
 
@@ -17,6 +17,7 @@ const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   GitBranch,
   Binary,
   Shield,
+  Cloud,
 }
 
 interface ApiLesson {
@@ -93,7 +94,8 @@ export default function LearningPage() {
         </div>
         <p className="page-subtitle">
           למידה מובנית בכל תחומי הפיתוח — HTML, CSS, JavaScript, React, Node.js, MongoDB, TypeScript, אוטומציה,
-          Git, מבני נתונים ואלגוריתמים, ואבטחת אפליקציות. כל השיעורים נטענים ישירות מהשרת.
+          Git, מבני נתונים ואלגוריתמים, אבטחת אפליקציות, וכלים ופריסה מודרניים (GitHub, Vercel, Netlify, Docker).
+          כל השיעורים נטענים ישירות מהשרת.
         </p>
       </div>
 
@@ -202,7 +204,7 @@ export default function LearningPage() {
           <h2 className="text-3xl font-bold mb-4">מסלול למידה מומלץ</h2>
           <p className="text-xl mb-6 opacity-90">
             מתחיל? התחל עם Git, עבור ל-HTML & CSS ו-JavaScript, ואז React, Node.js, MongoDB, TypeScript, מבני
-            נתונים, אוטומציה ואבטחה
+            נתונים, אוטומציה, אבטחה, וכלים ופריסה מודרניים
           </p>
           <div className="flex flex-wrap justify-center gap-4 text-sm">
             <Link href="/learning/git" className="rounded-full bg-white/20 px-4 py-2 hover:bg-white/30">
@@ -243,6 +245,10 @@ export default function LearningPage() {
             <span className="text-2xl">→</span>
             <Link href="/learning/security" className="rounded-full bg-white/20 px-4 py-2 hover:bg-white/30">
               אבטחה
+            </Link>
+            <span className="text-2xl">→</span>
+            <Link href="/learning/devtools" className="rounded-full bg-white/20 px-4 py-2 hover:bg-white/30">
+              כלים ופריסה
             </Link>
           </div>
         </div>
