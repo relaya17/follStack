@@ -4739,7 +4739,7 @@ export const CURATED_EXERCISES: CuratedExercise[] = [
     id: 'ex-js-array',
     slug: 'js-array',
     title: 'סינון מערך',
-    description: 'צור מחשבון בסיסי עם JavaScript — חיבור, חיסור, כפל וחילוק',
+    description: 'כתוב פונקציה שמסננת מספרים זוגיים ממערך באמצעות Array.filter',
     category: 'JavaScript',
     difficulty: 'easy',
     estimatedTime: 30,
@@ -4752,8 +4752,8 @@ export const CURATED_EXERCISES: CuratedExercise[] = [
   {
     id: 'ex-react-counter',
     slug: 'react-counter',
-    title: 'רשימת משימות (Todo List)',
-    description: 'בנה אפליקציית Todo List עם React — הוספה, מחיקה ועדכון משימות',
+    title: 'קומפוננטת מונה (Counter)',
+    description: 'בנה קומפוננטת מונה עם React ו-useState — כפתורי הגדלה ואיפוס',
     category: 'React',
     difficulty: 'medium',
     estimatedTime: 45,
@@ -5224,6 +5224,35 @@ export const CURATED_GLOSSARY: CuratedGlossaryTerm[] = [
   { id: 'g-bigo', term: 'Big O', fullForm: 'Big O Notation', definition: 'סימון מתמטי שמתאר איך זמן/זיכרון של אלגוריתם גדל ביחס לגודל הקלט.', category: 'algorithms' },
   { id: 'g-lifo', term: 'LIFO', fullForm: 'Last In, First Out', definition: 'עקרון הפעולה של Stack — האיבר האחרון שנכנס הוא הראשון שיוצא.', category: 'algorithms' },
   { id: 'g-fifo', term: 'FIFO', fullForm: 'First In, First Out', definition: 'עקרון הפעולה של Queue — האיבר הראשון שנכנס הוא הראשון שיוצא.', category: 'algorithms' },
+
+  // שפות תכנות נוספות (C, C++, C#, Java)
+  { id: 'g-jvm', term: 'JVM', fullForm: 'Java Virtual Machine', definition: 'המכונה הוירטואלית שמריצה bytecode של Java — אותו קוד מהודר רץ על כל מערכת הפעלה שיש לה JVM.', category: 'languages' },
+  { id: 'g-jit', term: 'JIT', fullForm: 'Just-In-Time Compilation', definition: 'קומפילציה שקורית בזמן ריצה, לא מראש — משמשת ב-JVM וב-CLR כדי לשלב את הגמישות של interpretation עם המהירות של קוד מהודר.', category: 'languages' },
+  { id: 'g-clr', term: 'CLR', fullForm: 'Common Language Runtime', definition: 'סביבת הריצה של פלטפורמת .NET (C#) — מנהלת זיכרון, טיפוסים ואבטחה, במקביל ל-JVM אצל Java.', category: 'languages' },
+  { id: 'g-stl', term: 'STL', fullForm: 'Standard Template Library', definition: 'ספריית מבני הנתונים והאלגוריתמים הסטנדרטית של C++ — vector, map, sort ועוד, גנרית באמצעות templates.', category: 'languages' },
+  { id: 'g-raii', term: 'RAII', fullForm: 'Resource Acquisition Is Initialization', definition: 'דפוס ניהול משאבים ב-C++: משאב (זיכרון, קובץ) נתפס בבנאי של אובייקט ומשוחרר אוטומטית בהרסן — מונע דליפות זיכרון.', category: 'languages' },
+  { id: 'g-gc', term: 'GC', fullForm: 'Garbage Collector', definition: 'מנגנון שמשחרר אוטומטית זיכרון של אובייקטים שאין אליהם עוד הפניה — קיים ב-Java/C#/JS, לא קיים ב-C/C++ (שם משחררים ידנית).', category: 'languages' },
+
+  // סוכני AI
+  { id: 'g-llm', term: 'LLM', fullForm: 'Large Language Model', definition: 'מודל שפה גדול שאומן על כמויות עצומות של טקסט ויודע לחזות/לייצר טקסט — הבסיס לכל סוכן AI מודרני (GPT, Claude ועוד).', category: 'ai-agents' },
+  { id: 'g-rag', term: 'RAG', fullForm: 'Retrieval-Augmented Generation', definition: 'טכניקה שבה מחפשים מידע רלוונטי (למשל במסמכים) ומזינים אותו ל-LLM לפני שהוא עונה — מקטין הזיות ומעדכן ידע בלי לאמן מחדש.', category: 'ai-agents' },
+  { id: 'g-mcp', term: 'MCP', fullForm: 'Model Context Protocol', definition: 'פרוטוקול פתוח (מבית Anthropic) שמאחד את הדרך שבה סוכני AI מתחברים לכלים, מסדי נתונים ומקורות מידע חיצוניים — "USB-C לבינה מלאכותית".', category: 'ai-agents' },
+  { id: 'g-nlp', term: 'NLP', fullForm: 'Natural Language Processing', definition: 'תחום ה-AI שעוסק בהבנה ועיבוד של שפה אנושית — הבסיס התאורטי שעליו בנויים מודלי שפה.', category: 'ai-agents' },
+  { id: 'g-gpt', term: 'GPT', fullForm: 'Generative Pre-trained Transformer', definition: 'ארכיטקטורת מודל שפה שמבוססת על Transformer, מאומנת מראש (pre-trained) על טקסט כללי ואז מכוונת למשימות ספציפיות.', category: 'ai-agents' },
+  { id: 'g-rlhf', term: 'RLHF', fullForm: 'Reinforcement Learning from Human Feedback', definition: 'שיטת אימון שמשפרת מודל שפה לפי דירוגי איכות של בני אדם על התשובות שלו — כך המודל לומד להיות מועיל ובטוח יותר.', category: 'ai-agents' },
+
+  // פוטושופ
+  { id: 'g-psd', term: 'PSD', fullForm: 'Photoshop Document', definition: 'פורמט הקובץ המקורי של Photoshop — שומר שכבות, מסכות וטקסט בנפרד, בניגוד ל-JPG/PNG שהם "שטוחים".', category: 'photoshop' },
+  { id: 'g-rgb', term: 'RGB', fullForm: 'Red, Green, Blue', definition: 'מודל הצבע המבוסס-אור המשמש למסכים — כל צבע מורכב משילוב עוצמות של אדום, ירוק וכחול.', category: 'photoshop' },
+  { id: 'g-cmyk', term: 'CMYK', fullForm: 'Cyan, Magenta, Yellow, Key (Black)', definition: 'מודל הצבע המבוסס-דיו המשמש לדפוס — הפוך מ-RGB, כי דיו סופג אור במקום לפלוט אותו.', category: 'photoshop' },
+  { id: 'g-dpi', term: 'DPI', fullForm: 'Dots Per Inch', definition: 'רזולוציית הדפסה — כמה נקודות דיו נדפסות באינץ׳; ככל שגבוה יותר, ההדפסה חדה יותר.', category: 'photoshop' },
+  { id: 'g-ppi', term: 'PPI', fullForm: 'Pixels Per Inch', definition: 'צפיפות הפיקסלים של תמונה דיגיטלית או מסך — קובעת כמה חדה התמונה תיראה בגודל תצוגה נתון.', category: 'photoshop' },
+
+  // פיתוח משחקים
+  { id: 'g-fps', term: 'FPS', fullForm: 'Frames Per Second', definition: 'קצב הרענון של המשחק — כמה פריימים מצוירים בשנייה; 60 FPS נחשב יעד סטנדרטי לתחושת חלקות.', category: 'game-dev' },
+  { id: 'g-aabb', term: 'AABB', fullForm: 'Axis-Aligned Bounding Box', definition: 'תיבת-תיחום מלבנית שמיושרת לצירי X/Y (בלי סיבוב) — השיטה הפשוטה והנפוצה ביותר לזיהוי התנגשויות במשחקי 2D.', category: 'game-dev' },
+  { id: 'g-hud', term: 'HUD', fullForm: 'Heads-Up Display', definition: 'שכבת הממשק שמוצגת מעל המשחק עצמו — חיים, ניקוד, מפה — בלי להפריע לפעולה במסך.', category: 'game-dev' },
+  { id: 'g-npc', term: 'NPC', fullForm: 'Non-Player Character', definition: 'כל דמות במשחק שאינה נשלטת על ידי השחקן — אויבים, סוחרים, דמויות רקע.', category: 'game-dev' },
 ]
 
 export function listGlossaryTerms(category?: string): CuratedGlossaryTerm[] {

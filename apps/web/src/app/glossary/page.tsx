@@ -38,6 +38,10 @@ const CATEGORY_LABELS: Record<string, string> = {
   algorithms: 'אלגוריתמים',
   security: 'אבטחה',
   devtools: 'כלים ופריסה',
+  languages: 'שפות נוספות',
+  'ai-agents': 'סוכני AI',
+  photoshop: 'פוטושופ',
+  'game-dev': 'פיתוח משחקים',
 }
 
 function shuffle<T>(arr: T[]): T[] {
