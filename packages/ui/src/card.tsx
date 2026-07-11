@@ -1,10 +1,14 @@
-import type { ReactNode } from 'react'
+import type { HTMLAttributes, ReactNode } from 'react'
 
-export interface CardProps {
+export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode
   className?: string
 }
 
-export function Card({ children, className = '' }: CardProps) {
-  return <div className={`surface-card ${className}`.trim()}>{children}</div>
+export function Card({ children, className = '', ...props }: CardProps) {
+  return (
+    <div className={`surface-card ${className}`.trim()} {...props}>
+      {children}
+    </div>
+  )
 }

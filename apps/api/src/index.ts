@@ -25,6 +25,7 @@ import quizRoutes from '@/routes/quiz'
 import practiceRoutes from '@/routes/practice'
 import projectRoutes from '@/routes/project'
 import communityRoutes from '@/routes/community'
+import newsRoutes from '@/routes/news'
 import aiRoutes from '@/routes/ai'
 import adminRoutes from '@/routes/admin'
 import voiceRoutes from '@/routes/voice'
@@ -156,6 +157,7 @@ app.use('/api/quiz', quizRoutes)
 app.use('/api/practice', practiceRoutes)
 app.use('/api/project', projectRoutes)
 app.use('/api/community', communityRoutes)
+app.use('/api/news', newsRoutes)
 app.use('/api/ai', aiRoutes)
 app.use('/api/analytics', analyticsRoutes)
 app.use('/api/social', socialRoutes)

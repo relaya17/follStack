@@ -16,5 +16,6 @@ export const NAV_ITEMS: NavItem[] = [
   { href: '/quizzes', label: 'חידונים', description: 'בדיקת ידע' },
   { href: '/projects', label: 'פרויקטים', description: 'בניית תיק עבודות' },
   { href: '/community', label: 'קהילה', description: 'למידה משותפת' },
+  { href: '/news', label: 'חדשות', description: 'עדכוני תכנות מהעולם' },
   { href: '/ai-mentor', label: 'AI Mentor', description: 'מנטור חכם' },
 ]
