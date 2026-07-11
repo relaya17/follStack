@@ -36,7 +36,7 @@ const difficultyLabels = {
   hard: 'קשה'
 }
 
-const categories = ['all', 'JavaScript', 'React', 'Backend', 'Frontend', 'CSS', 'Security']
+const categories = ['all', 'JavaScript', 'React', 'Backend', 'Frontend', 'CSS', 'Security', 'Database', 'TypeScript', 'DevOps', 'Automation']
 const difficulties = ['all', 'easy', 'medium', 'hard']
 
 export default function PracticePage() {

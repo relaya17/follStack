@@ -16,7 +16,7 @@ import { PracticeExercise } from '@/models/Practice'
 import { logger } from '@/utils/logger'
 import { CURATED_MODULES, CURATED_QUIZZES, CURATED_PROJECTS, CURATED_EXERCISES } from '@/data/curatedContent'
 
-const SEED_ADMIN_EMAIL = 'seed-admin@follstack.local'
+const SEED_ADMIN_EMAIL = 'seed-admin@follstack.com'
 
 type SeedLesson = {
   title: string
@@ -120,6 +120,16 @@ const MODULE_META: Record<
     isFeatured: false,
     category: 'fullstack',
     prerequisites: ['JavaScript'],
+  },
+  automation: {
+    icon: 'Workflow',
+    color: '#F97316',
+    tags: ['automation', 'ci-cd', 'testing', 'devops'],
+    estimatedTime: 8,
+    level: 6,
+    isFeatured: false,
+    category: 'devops',
+    prerequisites: ['JavaScript', 'Node.js'],
   },
 }
 

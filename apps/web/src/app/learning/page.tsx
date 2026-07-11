@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { BookOpen, Code, Database, Globe, Zap, Layers, Loader2 } from 'lucide-react'
+import { BookOpen, Code, Database, Globe, Zap, Layers, Workflow, Loader2 } from 'lucide-react'
 import { Card } from '@follstack/ui'
 import { apiJson } from '@/lib/api'
 
@@ -13,6 +13,7 @@ const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   Layers,
   Database,
   BookOpen,
+  Workflow,
 }
 
 interface ApiLesson {
@@ -88,8 +89,8 @@ export default function LearningPage() {
           <h1 className="page-title">מודולי למידה</h1>
         </div>
         <p className="page-subtitle">
-          למידה מובנית בכל תחומי הפיתוח — HTML, CSS, JavaScript, React, Node.js, MongoDB ו-TypeScript. כל השיעורים
-          נטענים ישירות מהשרת.
+          למידה מובנית בכל תחומי הפיתוח — HTML, CSS, JavaScript, React, Node.js, MongoDB, TypeScript ואוטומציה. כל
+          השיעורים נטענים ישירות מהשרת.
         </p>
       </div>
 
@@ -196,7 +197,9 @@ export default function LearningPage() {
       <div className="mt-16 bg-gradient-to-r from-primary-600 to-primary-800 rounded-lg p-8 text-white">
         <div className="text-center">
           <h2 className="text-3xl font-bold mb-4">מסלול למידה מומלץ</h2>
-          <p className="text-xl mb-6 opacity-90">מתחיל? התחל עם HTML & CSS, עבור ל-JavaScript, ואז ל-React ו-Node.js</p>
+          <p className="text-xl mb-6 opacity-90">
+            מתחיל? התחל עם HTML & CSS, עבור ל-JavaScript, ואז ל-React, Node.js, MongoDB, TypeScript ואוטומציה
+          </p>
           <div className="flex flex-wrap justify-center gap-4 text-sm">
             <Link href="/learning/html-css" className="rounded-full bg-white/20 px-4 py-2 hover:bg-white/30">
               HTML & CSS
@@ -216,6 +219,14 @@ export default function LearningPage() {
             <span className="text-2xl">→</span>
             <Link href="/learning/mongodb" className="rounded-full bg-white/20 px-4 py-2 hover:bg-white/30">
               MongoDB
+            </Link>
+            <span className="text-2xl">→</span>
+            <Link href="/learning/typescript" className="rounded-full bg-white/20 px-4 py-2 hover:bg-white/30">
+              TypeScript
+            </Link>
+            <span className="text-2xl">→</span>
+            <Link href="/learning/automation" className="rounded-full bg-white/20 px-4 py-2 hover:bg-white/30">
+              אוטומציה
             </Link>
           </div>
         </div>

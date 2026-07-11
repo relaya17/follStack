@@ -453,6 +453,74 @@ export const CURATED_MODULES: CuratedModule[] = [
       },
     ],
   },
+  {
+    id: 'mod-automation',
+    slug: 'automation',
+    title: 'אוטומציה',
+    description: 'בדיקות אוטומטיות, Zapier/no-code, CI/CD וסקריפטים — איך הייטק חוסך זמן ומצמצם טעויות אנוש.',
+    duration: '8 שעות',
+    difficulty: 'intermediate',
+    category: 'devops',
+    prerequisites: ['javascript', 'nodejs'],
+    learningObjectives: [
+      'להבין מתי ולמה משתמשים באוטומציה בתהליכי פיתוח וב-QA',
+      'לכתוב תרחיש בדיקה אוטומטי בסיסי (Playwright/Selenium style)',
+      'לבנות pipeline של CI/CD עם GitHub Actions',
+      'לחבר אפליקציות ללא קוד (Zapier) ולכתוב סקריפט אוטומציה עצמאי',
+    ],
+    lessons: [
+      {
+        id: 'auto-1',
+        title: 'מבוא לאוטומציה בהייטק',
+        description: 'למה חברות משקיעות זמן בכתיבת אוטומציה',
+        content:
+          'אוטומציה היא כל תהליך שמוחלף מביצוע ידני חוזר לביצוע אוטומטי על ידי קוד או כלי. שלושה תחומים עיקריים בהייטק: אוטומציה של בדיקות (QA — להריץ תרחישי משתמש בלי אדם שילחץ ידנית), אוטומציה של תהליכי פיתוח (CI/CD — build/test/deploy בכל push), ואוטומציה של תהליכים עסקיים ללא קוד (Zapier/Make — לחבר אפליקציות בלי לתכנת). היתרון המרכזי בכולם: חיסכון בזמן, עקביות (אין "עייפות" או טעויות אנוש), ומהירות פידבק.',
+        type: 'text',
+        duration: 20,
+        order: 1,
+      },
+      {
+        id: 'auto-2',
+        title: 'בדיקות אוטומטיות (Test Automation)',
+        description: 'Selenium / Playwright / Cypress',
+        content:
+          'כלים כמו Playwright ו-Cypress שולטים בדפדפן אמיתי (או headless) ומדמים משתמש: לחיצות, הקלדה, בדיקת תוכן במסך. תרחיש בדיקה אוטומטי רץ תוך שניות ואפשר להריץ אותו מאות פעמים בלי עלות נוספת — לעומת בדיקה ידנית שדורשת אדם בכל פעם. הכלל: בדיקות שחוזרות על עצמן (regression) הן המועמד הראשון לאוטומציה; בדיקות exploratory חד-פעמיות נשארות ידניות.\n\nדוגמה (Playwright):\n```js\nawait page.goto(\'https://follstack.app/login\')\nawait page.fill(\'#email\', \'test@example.com\')\nawait page.click(\'button[type="submit"]\')\nawait expect(page.locator(\'.welcome\')).toBeVisible()\n```',
+        type: 'interactive',
+        duration: 35,
+        order: 2,
+      },
+      {
+        id: 'auto-3',
+        title: 'Zapier ואוטומציה ללא קוד',
+        description: 'Trigger → Action, בלי לכתוב שורת קוד',
+        content:
+          'Zapier (ובדומה לו Make/n8n) מחברים אפליקציות דרך "Trigger" (אירוע שמפעיל את התהליך, למשל "התקבל אימייל חדש") ו-"Action" (מה שקורה בעקבותיו, למשל "הוסף שורה בגיליון Google Sheets"). זה מתאים לתהליכים עסקיים/תפעוליים פשוטים שלא שווים פיתוח קוד ייעודי — אבל פחות גמיש מקוד מותאם אישית, ועולה כסף לפי מספר ההרצות. כלל אצבע: התחל ב-Zapier לתהליך פשוט וחד-פעמי; עבור לקוד כשהלוגיקה מסתבכת או הנפח גדל.',
+        type: 'text',
+        duration: 25,
+        order: 3,
+      },
+      {
+        id: 'auto-4',
+        title: 'CI/CD — אוטומציה של תהליך הפיתוח',
+        description: 'GitHub Actions ו-pipelines',
+        content:
+          'Continuous Integration (CI) אומר שבכל push הרצת build+טסטים רצה אוטומטית, כדי לתפוס באגים מוקדם. Continuous Deployment/Delivery (CD) ממשיך משם ומעלה את הקוד לסביבת staging/production אוטומטית אם הכל עבר. GitHub Actions מגדיר את זה בקובץ YAML בתיקיית .github/workflows — כל "job" רץ בסביבה נקייה (container) ומריץ שלבים (steps) לפי הסדר.\n\nדוגמה:\n```yaml\nname: CI\non: [push]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - run: npm install\n      - run: npm test\n```',
+        type: 'interactive',
+        duration: 40,
+        order: 4,
+      },
+      {
+        id: 'auto-5',
+        title: 'סקריפטים ואוטומציה עם AI',
+        description: 'משימות מתוזמנות ושילוב מודלי AI',
+        content:
+          'מעבר לכלים מוכנים, אפשר לכתוב סקריפט Node.js/Python עצמאי שמבצע משימה מתוזמנת (cron) — למשל ניקוי רשומות ישנות, שליחת דוח יומי, או סנכרון בין מערכות. שילוב AI (קריאה ל-API של מודל שפה) מאפשר להוסיף "שיקול דעת" לאוטומציה — למשל לסווג פניות תמיכה לפי נושא, לסכם טקסט ארוך, או לזהות אנומליות בנתונים — משימות שקשה לכתוב עבורן חוקים קשיחים. חשוב תמיד להגביל הרשאות הסקריפט למינימום הנדרש (least privilege) ולתעד/לנטר ריצות אוטומטיות.',
+        type: 'text',
+        duration: 30,
+        order: 5,
+      },
+    ],
+  },
 ]
 
 export const CURATED_QUIZZES: CuratedQuiz[] = [
@@ -1799,6 +1867,259 @@ export const CURATED_QUIZZES: CuratedQuiz[] = [
       },
     ],
   },
+  {
+    id: 'quiz-automation',
+    slug: 'automation-basics',
+    title: 'אוטומציה — יסודות',
+    description: 'בדיקות אוטומטיות, Zapier, CI/CD וסקריפטים — שאלות לפי עקרונות מקובלים בתעשייה.',
+    category: 'DevOps',
+    moduleSlug: 'automation',
+    difficulty: 'medium',
+    timeLimit: 30,
+    passingScore: 70,
+    questions: [
+      {
+        id: 'q-auto-1',
+        type: 'multiple-choice',
+        question: 'מה המטרה המרכזית של אוטומציה בתהליכי פיתוח ו-QA?',
+        options: [
+          'להחליף לגמרי את כל בני האדם בצוות',
+          'לחסוך זמן ולצמצם טעויות אנוש בביצוע פעולות חוזרות',
+          'להאט את קצב השחרורים לצורך בטיחות',
+          'רק לצרכי שיווק',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'אוטומציה לא נועדה להחליף אנשים לגמרי, אלא לשחרר אותם ממשימות חוזרות ומייגעות (ולכן רגישות לטעויות) ולתת פידבק מהיר יותר — למשל להריץ אלפי בדיקות רגרסיה בדקות במקום ימים.',
+        points: 10,
+      },
+      {
+        id: 'q-auto-2',
+        type: 'multiple-choice',
+        question: 'איזה סוג בדיקה הכי מתאים להפוך לאוטומטית?',
+        options: [
+          'בדיקת רגרסיה חוזרת שרצה בכל release',
+          'בדיקה חד-פעמית של פיצ׳ר חדש לגמרי (exploratory)',
+          'בדיקת חוויית משתמש סובייקטיבית',
+          'אין הבדל — הכל שווה לאוטומציה',
+        ],
+        correctAnswerIndex: 0,
+        explanation:
+          'בדיקות רגרסיה (לוודא שפיצ׳רים קיימים לא נשברו) חוזרות על עצמן בכל release — ההשקעה באוטומציה שלהן משתלמת מהר. בדיקות exploratory חד-פעמיות דורשות שיקול דעת אנושי ופחות משתלם לאמת.',
+        points: 10,
+      },
+      {
+        id: 'q-auto-3',
+        type: 'multiple-choice',
+        question: 'מה עושה כלי כמו Playwright או Cypress?',
+        options: [
+          'מנהל מסד נתונים',
+          'שולט בדפדפן אמיתי (או headless) ומדמה פעולות משתמש (קליק, הקלדה, ניווט)',
+          'מקמפל TypeScript',
+          'מריץ שרת Express',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'כלי בדיקות E2E (end-to-end) כמו Playwright/Cypress מפעילים דפדפן אמיתי ומבצעים בו פעולות בדיוק כמו משתמש — לחיצות, מילוי טפסים, ואז בודקים שהתוצאה במסך תואמת ציפייה.\n\nדוגמה:\n```js\nawait page.click(\'#submit\')\nawait expect(page.locator(\'.success\')).toBeVisible()\n```',
+        points: 10,
+      },
+      {
+        id: 'q-auto-4',
+        type: 'multiple-choice',
+        question: 'מהו flaky test?',
+        options: [
+          'בדיקה שתמיד נכשלת',
+          'בדיקה שלפעמים עוברת ולפעמים נכשלת בלי שהקוד באמת השתנה — לרוב בגלל תזמון/רשת לא יציבים',
+          'בדיקה שרצה רק פעם אחת',
+          'בדיקה שכתובה ב-Python',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'flaky test פוגע באמון בסוויטת הבדיקות — אם היא נכשלת "סתם", אנשים מתחילים להתעלם מכשלונות אמיתיים. גורמים נפוצים: המתנה קצרה מדי לאלמנט שנטען, תלות בסדר הרצה, או תלות בזמן/רשת חיצוניים.',
+        points: 10,
+      },
+      {
+        id: 'q-auto-5',
+        type: 'multiple-choice',
+        question: 'מהו Trigger ב-Zapier?',
+        options: [
+          'הפעולה הסופית שמתבצעת',
+          'האירוע שמפעיל את כל שרשרת האוטומציה (למשל "התקבל אימייל חדש")',
+          'שם המשתמש המחובר',
+          'קובץ קונפיגורציה קבוע',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'Trigger הוא ההתחלה של ה-"Zap" — האירוע שגורם לתהליך להתחיל. אחריו מגיעה שרשרת של Actions (פעולות) שמתבצעות אוטומטית כתגובה.',
+        points: 10,
+      },
+      {
+        id: 'q-auto-6',
+        type: 'multiple-choice',
+        question: 'מתי עדיף להשתמש ב-Zapier/no-code במקום לכתוב קוד מותאם אישית?',
+        options: [
+          'תמיד — no-code עדיף על קוד בכל מקרה',
+          'לתהליך עסקי/תפעולי פשוט וחד-פעמי שלא שווה השקעת פיתוח',
+          'לעולם לא — no-code לא אמין',
+          'רק כשיש יותר מ-1000 הרצות ביום',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'no-code מתאים לתהליכים פשוטים יחסית (חיבור בין שתי אפליקציות, לוגיקה לינארית) שלא מצדיקים זמן פיתוח וכתיבת קוד ייעודי. כשהלוגיקה מסתבכת, נדרש שליטה מלאה, או שהיקף הריצות גדל משמעותית — קוד מותאם אישית עדיף (יותר גמיש וזול בטווח הארוך).',
+        points: 10,
+      },
+      {
+        id: 'q-auto-7',
+        type: 'multiple-choice',
+        question: 'מה ההבדל בין Continuous Integration (CI) ל-Continuous Deployment (CD)?',
+        options: [
+          'אין הבדל, זה אותו דבר',
+          'CI מריץ build+טסטים אוטומטית בכל push; CD ממשיך משם ומפרסם אוטומטית לסביבה חיה',
+          'CD קורה רק פעם בשנה',
+          'CI רץ רק ידנית',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'CI מתמקד בלתפוס בעיות מוקדם — כל push מפעיל build ובדיקות אוטומטיות. CD (Continuous Deployment/Delivery) מרחיב את זה ומפרסם את הקוד אוטומטית (או בלחיצת כפתור אחת) לסביבת staging/production אם כל הבדיקות עברו.',
+        points: 10,
+      },
+      {
+        id: 'q-auto-8',
+        type: 'multiple-choice',
+        question: 'איפה מגדירים workflow ב-GitHub Actions?',
+        options: [
+          'בקובץ package.json בלבד',
+          'בקבצי YAML בתיקיית .github/workflows',
+          'ב-README.md',
+          'בהגדרות המשתמש בלבד',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'כל workflow מוגדר כקובץ YAML נפרד בתיקיית .github/workflows — הוא מגדיר מתי הוא רץ (on:), אילו jobs, ואילו steps רצים בכל job.\n\nדוגמה:\n```yaml\nname: CI\non: [push]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - run: npm install\n      - run: npm test\n```',
+        points: 10,
+      },
+      {
+        id: 'q-auto-9',
+        type: 'multiple-choice',
+        question: 'למה כדאי שבדיקות אוטומטיות ירוצו כחלק מ-CI ולא רק ידנית לפני release?',
+        options: [
+          'זה לא באמת חשוב',
+          'זה תופס באגים מיד עם כל שינוי, לפני שהם מצטברים ומסתבכים לתקן',
+          'זה עושה את הבדיקות איטיות יותר בכוונה',
+          'CI לא תומך בבדיקות בכלל',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'ככל שבאג מתגלה מוקדם יותר (מיד אחרי הקומיט שיצר אותו), קל וזול יותר לתקן אותו — המפתח עוד זוכר מה שינה. חכות לפדיקה ידנית לפני release אומר שבאגים מצטברים ומתגלים באיחור, כשקשה יותר לאתר את הגורם.',
+        points: 10,
+      },
+      {
+        id: 'q-auto-10',
+        type: 'multiple-choice',
+        question: 'מהו cron job?',
+        options: [
+          'שגיאת תכנות נפוצה',
+          'משימה מתוזמנת שרצה אוטומטית לפי לוח זמנים קבוע (למשל כל לילה בחצות)',
+          'סוג של מסד נתונים',
+          'ספריית React',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'cron הוא מתזמן משימות ותיק (מקורו ב-Unix) שמריץ פקודה/סקריפט לפי תבנית זמן (דקה/שעה/יום/חודש/יום בשבוע) — שימושי לגיבויים, דוחות יומיים, ניקוי נתונים ישנים וכו\'.',
+        points: 10,
+      },
+      {
+        id: 'q-auto-11',
+        type: 'multiple-choice',
+        question: 'איך AI (מודל שפה) יכול לתרום לאוטומציה של משימות עסקיות?',
+        options: [
+          'רק ליצירת תמונות',
+          'להוסיף "שיקול דעת" למשימות שקשה לכתוב עבורן חוקים קשיחים — כמו סיווג טקסט חופשי או סיכום',
+          'AI לא רלוונטי לאוטומציה',
+          'רק להחליף מסדי נתונים',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'אוטומציה מבוססת חוקים (if/else) מתקשה עם קלט חופשי ולא צפוי — למשל לסווג פניית תמיכה לפי תוכן חופשי. מודל שפה יכול "להבין" את הכוונה ולקבל החלטה, ואז להעביר לתהליך אוטומטי המשכי (למשל שיוך לצוות הנכון).',
+        points: 10,
+      },
+      {
+        id: 'q-auto-12',
+        type: 'multiple-choice',
+        question: 'מהו עקרון ה-Least Privilege כשמריצים סקריפט אוטומציה?',
+        options: [
+          'לתת לסקריפט הרשאות מנהל מלאות תמיד, ליתר ביטחון',
+          'לתת לסקריפט רק את ההרשאות המינימליות הנחוצות למשימה שלו',
+          'להריץ סקריפטים בלי שום הרשאות בכלל',
+          'עיקרון שרלוונטי רק למסדי נתונים',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'אם סקריפט אוטומציה נפרץ או מכיל באג, הנזק הפוטנציאלי מוגבל להרשאות שיש לו. לכן עדיף key/token עם גישה מצומצמת בדיוק למה שנדרש (למשל רק קריאה מטבלה מסוימת) ולא הרשאות מנהל גורפות.',
+        points: 10,
+      },
+      {
+        id: 'q-auto-13',
+        type: 'multiple-choice',
+        question: 'מה ההבדל המרכזי בין אוטומציה מבוססת-קוד (Playwright/סקריפט Node) לאוטומציה no-code (Zapier)?',
+        options: [
+          'אין הבדל בפועל',
+          'קוד מותאם אישית גמיש יותר וזול בסקייל גדול; no-code מהיר להקמה אך פחות גמיש ועולה לפי הרצות',
+          'no-code תמיד מהיר יותר בזמן ריצה',
+          'קוד עובד רק על Windows',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'no-code (Zapier) מאפשר הקמה מהירה בלי מפתח, אבל מוגבל ללוגיקה שהפלטפורמה תומכת בה ומחייב תשלום לפי מספר הרצות. קוד מותאם אישית דורש זמן פיתוח, אך מאפשר כל לוגיקה, קל יותר לתחזק בסקייל גדול, וזול יותר לטווח ארוך.',
+        points: 10,
+      },
+      {
+        id: 'q-auto-14',
+        type: 'multiple-choice',
+        question: 'מה תפקיד ה-"steps" בתוך job ב-GitHub Actions?',
+        options: [
+          'רק תיעוד, לא מתבצע בפועל',
+          'רשימת הפעולות שרצות ברצף בתוך אותה סביבת הרצה (checkout, install, test וכו׳)',
+          'הגדרת משתני סביבה בלבד',
+          'קובע את שם הפרויקט',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'כל job מכיל רשימת steps שרצים אחד אחרי השני על אותה מכונה וירטואלית — כל step יכול להיות פקודת shell (run:) או שימוש בפעולה מוכנה מהקהילה (uses:), כמו actions/checkout שמושך את הקוד מה-repo.',
+        points: 10,
+      },
+      {
+        id: 'q-auto-15',
+        type: 'multiple-choice',
+        question: 'מה קורה אם שלב (step) ב-CI pipeline נכשל (למשל טסט נכשל)?',
+        options: [
+          'ה-pipeline ממשיך כרגיל ומתעלם מהכישלון',
+          'ברירת המחדל — ה-workflow עוצר ומסומן ככשלון, כדי למנוע דיפלוי של קוד שבור',
+          'GitHub מתקן את הבאג אוטומטית',
+          'זה משפיע רק על הענף main',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'ברירת המחדל היא ש-step שנכשל עוצר את ה-job (ולעיתים את כל ה-workflow) ומסמן אותו ככשלון — זו בדיוק המטרה: למנוע מקוד שלא עבר בדיקות להגיע לפרודקשן. אפשר להגדיר continue-on-error במקרים ספציפיים, אך זה לא ברירת המחדל.',
+        points: 10,
+      },
+      {
+        id: 'q-auto-16',
+        type: 'multiple-choice',
+        question: 'למה חשוב לתעד ולנטר (monitor) הרצות של סקריפטי אוטומציה מתוזמנים?',
+        options: [
+          'זה לא באמת נדרש אם הסקריפט "עובד"',
+          'כדי לדעת מיד אם הרצה נכשלה בשקט (למשל cron job שנתקע) לפני שהנזק מצטבר',
+          'רק לצרכי חיוב כספי',
+          'ניטור רלוונטי רק לשרתי production, לא לסקריפטים',
+        ],
+        correctAnswerIndex: 1,
+        explanation:
+          'סקריפט אוטומציה שרץ ללא השגחה (למשל בלילה) יכול להיכשל בשקט — בלי לוגים/התראות, אף אחד לא ידע עד שהנזק (נתונים לא מסונכרנים, גיבוי שלא קרה) כבר גדול. לוגים ברורים והתראה על כשלון הם חלק בלתי נפרד מאוטומציה אמינה.',
+        points: 10,
+      },
+    ],
+  },
 ]
 
 export type CuratedProject = {
@@ -2056,6 +2377,40 @@ export const CURATED_EXERCISES: CuratedExercise[] = [
     hint: 'שדה אופציונלי מסומן ב-?. הפונקציה הגנרית פשוט מחזירה arr[0].',
     solution:
       'interface Product {\n  title: string\n  price: number\n  inStock?: boolean\n}\n\nfunction getFirst<T>(arr: T[]): T | undefined {\n  return arr[0]\n}',
+  },
+  {
+    id: 'ex-cicd-yaml',
+    slug: 'cicd-github-actions',
+    title: 'GitHub Actions — Workflow ראשון',
+    description: 'כתוב קובץ CI שמריץ התקנה ובדיקות אוטומטית בכל push',
+    category: 'DevOps',
+    difficulty: 'medium',
+    estimatedTime: 40,
+    tags: ['CI/CD', 'GitHub Actions', 'YAML'],
+    prompt:
+      'השלם קובץ GitHub Actions workflow שרץ על כל push לענף main: מושך את הקוד, מתקין תלויות עם npm, ומריץ את הבדיקות (npm test).',
+    starterCode:
+      'name: CI\non:\n  push:\n    branches: [main]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      # your code — checkout, install, test\n',
+    hint: 'השתמש ב-actions/checkout@v4, ואז שני steps עם run: npm install ו-run: npm test.',
+    solution:
+      'name: CI\non:\n  push:\n    branches: [main]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n        with:\n          node-version: 20\n      - run: npm install\n      - run: npm test',
+  },
+  {
+    id: 'ex-automation-script',
+    slug: 'automation-cleanup-script',
+    title: 'סקריפט אוטומציה מתוזמן',
+    description: 'כתוב פונקציה שמנקה אוטומטית משתמשים לא מאומתים וישנים',
+    category: 'Automation',
+    difficulty: 'medium',
+    estimatedTime: 45,
+    tags: ['Node.js', 'Cron', 'Automation', 'MongoDB'],
+    prompt:
+      'כתוב פונקציה אסינכרונית שמיועדת לרוץ כ-cron job יומי, ומוחקת משתמשים שנרשמו (createdAt) לפני יותר משבוע ועדיין isVerified=false (לא אימתו את המייל).',
+    starterCode:
+      'async function cleanupUnverifiedUsers() {\n  // your code — מחק משתמשים לא מאומתים בני יותר משבוע\n}',
+    hint: 'חשב תאריך סף עם Date.now() פחות 7 ימים במילישניות, והשתמש ב-User.deleteMany עם תנאי $lt על createdAt ו-isVerified: false.',
+    solution:
+      'async function cleanupUnverifiedUsers() {\n  const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)\n  const result = await User.deleteMany({\n    isVerified: false,\n    createdAt: { $lt: weekAgo },\n  })\n  console.log(`Removed ${result.deletedCount} unverified users`)\n  return result.deletedCount\n}',
   },
 ]
 

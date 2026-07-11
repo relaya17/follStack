@@ -37,6 +37,10 @@ const NEXT_PRACTICE: Record<string, string> = {
   'html-css': 'html-landing',
   javascript: 'js-array',
   react: 'react-counter',
+  nodejs: 'express-api',
+  mongodb: 'mongodb-query',
+  typescript: 'typescript-types',
+  automation: 'cicd-github-actions',
 }
 
 const TYPE_LABELS: Record<ApiLesson['type'], string> = {
