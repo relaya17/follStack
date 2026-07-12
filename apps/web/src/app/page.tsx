@@ -3,10 +3,9 @@
 import Link from 'next/link'
 import { APP_NAME, APP_TAGLINE, NAV_ITEMS } from '@follstack/shared'
 import { Card } from '@follstack/ui'
-import { AdaptiveLearning } from '@/components/adaptive/AdaptiveLearning'
 import { ProgressTracking } from '@/components/analytics/ProgressTracking'
 import { GameSystem } from '@/components/gamification/GameSystem'
-import { SocialFeatures } from '@/components/social/SocialFeatures'
+import { CommunitySnapshot } from '@/components/community/CommunitySnapshot'
 
 export default function HomePage() {
   return (
@@ -63,10 +62,9 @@ export default function HomePage() {
       </section>
 
       <section className="space-y-12 sm:space-y-16" aria-label="כלים מתקדמים">
-        <AdaptiveLearning />
         <ProgressTracking />
         <GameSystem />
-        <SocialFeatures />
+        <CommunitySnapshot />
       </section>
     </div>
   )

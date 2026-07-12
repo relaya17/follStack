@@ -37,7 +37,6 @@ import certificateRoutes from '@/routes/certificates'
 import arRoutes from '@/routes/ar'
 import metaverseRoutes from '@/routes/metaverse'
 import analyticsRoutes from '@/routes/analytics'
-import socialRoutes from '@/routes/social'
 import { startNewsIngestScheduler, stopNewsIngestScheduler } from '@/services/newsIngestService'
 
 // Load environment variables
@@ -167,7 +166,6 @@ app.use('/api/events', eventRoutes)
 app.use('/api/glossary', glossaryRoutes)
 app.use('/api/ai', aiRoutes)
 app.use('/api/analytics', analyticsRoutes)
-app.use('/api/social', socialRoutes)
 app.use('/api/admin', adminRoutes)
 app.use('/api/voice', voiceRoutes)
 app.use('/api/translation', translationRoutes)
