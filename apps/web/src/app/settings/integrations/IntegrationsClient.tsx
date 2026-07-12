@@ -41,6 +41,15 @@ interface IntegrationsResponse {
   connections: Connection[]
 }
 
+interface ResourceItem {
+  id?: string
+  name?: string
+  fullName?: string
+  language?: string
+  type?: string
+  url?: string
+}
+
 const META: Record<
   Provider,
   { label: string; description: string; icon: typeof Github; color: string }
@@ -75,7 +84,7 @@ export default function IntegrationsClient() {
   const [loading, setLoading] = useState(true)
   const [busy, setBusy] = useState<Provider | null>(null)
   const [renderKey, setRenderKey] = useState('')
-  const [resources, setResources] = useState<Record<Provider, unknown[] | null>>({
+  const [resources, setResources] = useState<Record<Provider, ResourceItem[] | null>>({
     github: null,
     vercel: null,
     render: null,
@@ -127,7 +136,7 @@ export default function IntegrationsClient() {
         setBanner({ type: 'err', text: data.message || 'לא ניתן להתחיל חיבור' })
         return
       }
-      window.location.href = data.url
+      window.location.assign(data.url as string)
     } catch {
       setBanner({ type: 'err', text: 'שגיאת רשת בחיבור' })
     } finally {
@@ -183,7 +192,7 @@ export default function IntegrationsClient() {
         : provider === 'vercel'
           ? '/api/integrations/vercel/projects'
           : '/api/integrations/render/services'
-    const res = await apiJson<{ success: boolean; data: unknown[] }>(path)
+    const res = await apiJson<{ success: boolean; data: ResourceItem[] }>(path)
     setResources((prev) => ({ ...prev, [provider]: res?.data ?? [] }))
     setBusy(null)
   }
@@ -324,7 +333,7 @@ export default function IntegrationsClient() {
                     {list.length === 0 ? (
                       <li className="text-sm text-slate-500">אין פריטים להצגה</li>
                     ) : (
-                      list.map((item: any) => (
+                      list.map((item) => (
                         <li
                           key={item.id || item.fullName || item.name}
                           className="flex items-center justify-between gap-2 rounded-lg bg-slate-50 px-3 py-2 text-sm dark:bg-slate-900/60"

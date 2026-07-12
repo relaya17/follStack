@@ -17,7 +17,6 @@ import {
   Eye,
   MousePointer,
   Keyboard,
-  Code,
   Star,
   Flame,
   Trophy,

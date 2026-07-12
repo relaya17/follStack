@@ -30,9 +30,17 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
 
-function normalizeUser(raw: any): AuthUser {
+function normalizeUser(raw: {
+  id?: string
+  _id?: string
+  name: string
+  email: string
+  role: AuthUser['role']
+  isVerified: boolean
+  avatar?: string
+}): AuthUser {
   return {
-    id: raw.id ?? raw._id,
+    id: raw.id ?? raw._id ?? '',
     name: raw.name,
     email: raw.email,
     role: raw.role,
