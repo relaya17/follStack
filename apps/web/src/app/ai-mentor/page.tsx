@@ -3,8 +3,8 @@
 import { Suspense, useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Card } from '@follstack/ui'
-import { Brain, Mic, MicOff, Send, Sparkles, Lightbulb, Loader2, BookOpen, Code } from 'lucide-react'
-import { apiUrl } from '@/lib/api'
+import { Brain, Mic, MicOff, Send, Sparkles, Lightbulb, Loader2, BookOpen, Code, Volume2 } from 'lucide-react'
+import { apiUrl, apiFetch } from '@/lib/api'
 
 interface RelatedContentItem {
   type: 'lesson' | 'glossary'
@@ -111,8 +111,45 @@ function AIMentorChat() {
     },
   ])
   const [inputMessage, setInputMessage] = useState('')
+  const [speakingId, setSpeakingId] = useState<string | null>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
   const bootstrappedQuery = useRef(false)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+
+  const playAloud = async (messageId: string, text: string) => {
+    if (speakingId === messageId) {
+      audioRef.current?.pause()
+      setSpeakingId(null)
+      return
+    }
+    setSpeakingId(messageId)
+    try {
+      const res = await apiFetch('/api/voice/generate-audio', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, language: 'he' }),
+      })
+      const json = await res.json()
+      const audioUrl: string | null = json?.data?.audioUrl ?? null
+      if (!res.ok || !audioUrl) {
+        setError(
+          res.status === 401
+            ? 'השמעה קולית דורשת התחברות.'
+            : 'אין מפתח OpenAI מוגדר בשרת — אין קול אמיתי זמין כרגע.',
+        )
+        setSpeakingId(null)
+        return
+      }
+      const audio = new Audio(audioUrl)
+      audioRef.current = audio
+      audio.onended = () => setSpeakingId(null)
+      audio.onerror = () => setSpeakingId(null)
+      await audio.play()
+    } catch {
+      setError('נכשלה השמעת הקול.')
+      setSpeakingId(null)
+    }
+  }
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -311,16 +348,28 @@ function AIMentorChat() {
                       ))}
                     </div>
                   )}
-                  <p
-                    className={`mt-2 text-xs ${
-                      message.type === 'user' ? 'text-primary-100' : 'text-slate-500 dark:text-slate-400'
-                    }`}
-                  >
-                    {message.timestamp.toLocaleTimeString('he-IL', {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })}
-                  </p>
+                  <div className="mt-2 flex items-center justify-between gap-2">
+                    <p
+                      className={`text-xs ${
+                        message.type === 'user' ? 'text-primary-100' : 'text-slate-500 dark:text-slate-400'
+                      }`}
+                    >
+                      {message.timestamp.toLocaleTimeString('he-IL', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </p>
+                    {message.type === 'ai' && message.id !== 'welcome' && (
+                      <button
+                        type="button"
+                        onClick={() => playAloud(message.id, message.content)}
+                        aria-label={speakingId === message.id ? 'עצור השמעה' : 'השמע בקול'}
+                        className="rounded-lg p-1 text-slate-500 transition hover:bg-slate-200 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200"
+                      >
+                        <Volume2 className={`h-3.5 w-3.5 ${speakingId === message.id ? 'text-primary-600 dark:text-primary-400' : ''}`} aria-hidden="true" />
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}

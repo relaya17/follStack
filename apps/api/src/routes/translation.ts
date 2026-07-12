@@ -43,8 +43,6 @@ router.use(protect)
  *               context:
  *                 type: string
  *                 enum: [general, technical, academic, business, casual]
- *               realTime:
- *                 type: boolean
  *     responses:
  *       200:
  *         description: Text translated successfully

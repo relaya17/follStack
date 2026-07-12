@@ -4,6 +4,7 @@ import { User } from '@/models/User'
 import { AppError } from '@/middleware/errorHandler'
 import { isMongoReady } from '@/data/curatedContent'
 import { computeLearningProgress, markLessonComplete } from '@/services/lessonProgressService'
+import { computeUserProgress } from '@/services/progressService'
 
 /**
  * @swagger
@@ -147,21 +148,44 @@ export const updateLessonProgress = async (req: AuthRequest, res: Response, next
  */
 export const getUserStats = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
-        // This would typically come from a separate Stats model
-        // For now, we'll return a mock response
-        const stats = {
-            totalLearningTime: 45, // hours
-            completedModules: 2,
-            completedProjects: 5,
-            streak: 7, // days
-            level: 3,
-            xp: 1250,
-            badges: ['first-lesson', 'week-streak', 'project-complete']
+        if (!isMongoReady()) {
+            res.status(200).json({
+                success: true,
+                source: 'no-db',
+                data: {
+                    totalLearningTime: null, // never tracked by this platform — honest null, not fabricated
+                    completedModules: 0,
+                    streak: 0,
+                    level: 1,
+                    xp: 0,
+                    quizzesTaken: 0,
+                    exercisesCompleted: 0,
+                    badges: [],
+                },
+            })
+            return
         }
+
+        const [progress, moduleProgress] = await Promise.all([
+            computeUserProgress(req.user!.id),
+            computeLearningProgress(req.user!.id),
+        ])
+        const completedModules = moduleProgress.filter((m) => m.progress >= 100).length
 
         res.status(200).json({
             success: true,
-            data: stats
+            source: 'database',
+            data: {
+                totalLearningTime: null, // not instrumented on the client — honest null, not fabricated
+                completedModules,
+                streak: progress.streakDays,
+                level: progress.level,
+                xp: progress.xp,
+                quizzesTaken: progress.quizzesTaken,
+                averageScore: progress.averageScore,
+                exercisesCompleted: progress.exercisesCompleted,
+                badges: progress.badges,
+            },
         })
     } catch (error) {
         next(error)
@@ -177,32 +201,31 @@ export const getUserStats = async (req: AuthRequest, res: Response, next: NextFu
  */
 export const getUserProjects = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
-        // This would typically come from a separate Project model
-        // For now, we'll return a mock response
-        const projects = [
-            {
-                id: '1',
-                title: 'Todo App',
-                description: 'A simple todo application built with React',
-                status: 'completed',
-                createdAt: new Date().toISOString()
-            },
-            {
-                id: '2',
-                title: 'E-commerce Site',
-                description: 'Full-stack e-commerce application',
-                status: 'in-progress',
-                createdAt: new Date().toISOString()
-            }
-        ]
-
+        // This platform doesn't have per-user project submission/tracking (the /projects page is
+        // a browsable catalog, not something users "complete" and record). Returning an honest
+        // empty list instead of the previously hardcoded fake "Todo App" / "E-commerce Site" pair.
         res.status(200).json({
             success: true,
-            data: projects
+            message: 'מעקב פרויקטים אישיים עדיין לא נתמך בפלטפורמה — זה לא באג, הפיצ׳ר פשוט לא קיים עדיין.',
+            data: [],
         })
     } catch (error) {
         next(error)
     }
+}
+
+// Metadata for the real, rule-based badges computed in progressService.computeUserProgress —
+// that function returns plain badge-name strings; this just adds an icon/description for display.
+// No "earnedAt" timestamp is included below: badge award dates aren't tracked, only current
+// badge state, so an honest response omits the field rather than inventing a date.
+const BADGE_METADATA: Record<string, { icon: string; description: string }> = {
+    'חידון ראשון': { icon: '🎓', description: 'השלמת את החידון הראשון שלך' },
+    'חמישה חידונים': { icon: '📚', description: 'השלמת חמישה חידונים' },
+    'תרגיל ראשון': { icon: '💻', description: 'השלמת את התרגיל הראשון שלך' },
+    'מתרגל פעיל': { icon: '🔧', description: 'השלמת חמישה תרגולים לפחות' },
+    'רצף 3 ימים': { icon: '🔥', description: 'למדת שלושה ימים ברצף' },
+    'רצף שבועי': { icon: '🏆', description: 'למדת שבעה ימים ברצף' },
+    'דיוק גבוה': { icon: '🎯', description: 'ציון ממוצע מעל 90 בשלושה חידונים לפחות' },
 }
 
 /**
@@ -214,36 +237,20 @@ export const getUserProjects = async (req: AuthRequest, res: Response, next: Nex
  */
 export const getUserBadges = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
-        // This would typically come from a separate Badge model
-        // For now, we'll return a mock response
-        const badges = [
-            {
-                id: 'first-lesson',
-                name: 'First Lesson',
-                description: 'Completed your first lesson',
-                icon: '🎓',
-                earnedAt: new Date().toISOString()
-            },
-            {
-                id: 'week-streak',
-                name: 'Week Streak',
-                description: 'Learned for 7 days in a row',
-                icon: '🔥',
-                earnedAt: new Date().toISOString()
-            },
-            {
-                id: 'project-complete',
-                name: 'Project Master',
-                description: 'Completed your first project',
-                icon: '🏆',
-                earnedAt: new Date().toISOString()
-            }
-        ]
+        if (!isMongoReady()) {
+            res.status(200).json({ success: true, data: [] })
+            return
+        }
 
-        res.status(200).json({
-            success: true,
-            data: badges
-        })
+        const progress = await computeUserProgress(req.user!.id)
+        const badges = progress.badges.map((name) => ({
+            id: name,
+            name,
+            description: BADGE_METADATA[name]?.description ?? '',
+            icon: BADGE_METADATA[name]?.icon ?? '🏅',
+        }))
+
+        res.status(200).json({ success: true, data: badges })
     } catch (error) {
         next(error)
     }

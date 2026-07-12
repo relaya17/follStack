@@ -37,10 +37,6 @@ router.use(protect)
  *                 enum: [he, en, ar, es, fr, de, it, pt, ru, zh, ja, ko]
  *               context:
  *                 type: string
- *               arMode:
- *                 type: boolean
- *               metaverseMode:
- *                 type: boolean
  *     responses:
  *       200:
  *         description: Voice response generated successfully
@@ -72,8 +68,6 @@ router.post('/chat', processVoiceMessage)
  *               voice:
  *                 type: string
  *               speed:
- *                 type: number
- *               pitch:
  *                 type: number
  *     responses:
  *       200:

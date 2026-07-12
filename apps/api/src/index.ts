@@ -34,8 +34,6 @@ import adminRoutes from '@/routes/admin'
 import voiceRoutes from '@/routes/voice'
 import translationRoutes from '@/routes/translation'
 import certificateRoutes from '@/routes/certificates'
-import arRoutes from '@/routes/ar'
-import metaverseRoutes from '@/routes/metaverse'
 import analyticsRoutes from '@/routes/analytics'
 import { startNewsIngestScheduler, stopNewsIngestScheduler } from '@/services/newsIngestService'
 
@@ -170,8 +168,6 @@ app.use('/api/admin', adminRoutes)
 app.use('/api/voice', voiceRoutes)
 app.use('/api/translation', translationRoutes)
 app.use('/api/certificates', certificateRoutes)
-app.use('/api/ar', arRoutes)
-app.use('/api/metaverse', metaverseRoutes)
 
 // Socket.IO connection handling
 io.on('connection', (socket) => {
