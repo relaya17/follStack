@@ -242,7 +242,7 @@ const generateAlternatives = async (
     return (
       completion.choices[0]?.message?.content
         ?.split('\n')
-        .map((l) => l.trim())
+        .map((l: string) => l.trim())
         .filter(Boolean)
         .slice(0, 3) || []
     )
