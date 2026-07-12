@@ -39,3 +39,7 @@ coverage/
 
 # Misc
 .vercel
+
+# Runtime data (news feed / archive written by API ingest)
+apps/api/data/
+!apps/api/data/.gitkeep

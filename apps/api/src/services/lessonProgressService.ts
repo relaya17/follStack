@@ -19,7 +19,7 @@ interface ModuleMeta {
 }
 
 /** Resolves a module's display title + lesson count from real DB content first, curated fallback second. */
-async function resolveModuleMeta(moduleId: string): Promise<ModuleMeta | null> {
+export async function resolveModuleMeta(moduleId: string): Promise<ModuleMeta | null> {
   if (isMongoReady()) {
     try {
       const module = mongoose.Types.ObjectId.isValid(moduleId)
@@ -76,4 +76,28 @@ export async function computeLearningProgress(userId: string): Promise<ModulePro
   )
 
   return summaries.filter((s): s is ModuleProgressSummary => s !== null)
+}
+
+export interface ModuleCompletionStatus {
+  moduleId: string
+  moduleTitle: string
+  completedLessons: number
+  totalLessons: number
+  isComplete: boolean
+}
+
+/** Real check of whether a user has completed every lesson in a specific module — used to gate certificate issuance. */
+export async function getModuleCompletionStatus(userId: string, moduleId: string): Promise<ModuleCompletionStatus | null> {
+  const meta = await resolveModuleMeta(moduleId)
+  if (!meta) return null
+
+  const completedLessons = await LessonProgress.countDocuments({ user: userId, moduleId, completed: true })
+
+  return {
+    moduleId,
+    moduleTitle: meta.title,
+    completedLessons,
+    totalLessons: meta.totalLessons,
+    isComplete: meta.totalLessons > 0 && completedLessons >= meta.totalLessons,
+  }
 }

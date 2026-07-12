@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
-import { BookOpen, ArrowRight, ChevronDown, ChevronUp, CheckCircle2, Circle, Loader2 as SpinnerIcon } from 'lucide-react'
+import { BookOpen, ArrowRight, ChevronDown, ChevronUp, CheckCircle2, Circle, Loader2 as SpinnerIcon, Award } from 'lucide-react'
 import { Card } from '@follstack/ui'
 import { apiFetch, apiFetchWithRetry, apiJson } from '@/lib/api'
 import { useAuth } from '@/lib/auth'
@@ -75,6 +75,9 @@ export default function LearningModulePage() {
   const [openLessonId, setOpenLessonId] = useState<string | null>(null)
   const [completedIds, setCompletedIds] = useState<Set<string>>(new Set())
   const [marking, setMarking] = useState<string | null>(null)
+  const [certificateCode, setCertificateCode] = useState<string | null>(null)
+  const [certificateBusy, setCertificateBusy] = useState(false)
+  const [certificateError, setCertificateError] = useState<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -129,6 +132,29 @@ export default function LearningModulePage() {
       }
     } finally {
       setMarking(null)
+    }
+  }
+
+  async function requestCertificate() {
+    if (!user || certificateBusy) return
+    setCertificateBusy(true)
+    setCertificateError(null)
+    try {
+      const res = await apiFetch('/api/certificates/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ moduleId: id }),
+      })
+      const json = await res.json()
+      if (res.ok && json.success) {
+        setCertificateCode(json.data.verifyCode)
+      } else {
+        setCertificateError(json?.message || 'לא הצלחנו להנפיק תעודה כרגע.')
+      }
+    } catch {
+      setCertificateError('שגיאת רשת — נסה שוב.')
+    } finally {
+      setCertificateBusy(false)
     }
   }
 
@@ -286,6 +312,45 @@ export default function LearningModulePage() {
           })}
         </div>
       </Card>
+
+      {user && sortedLessons.length > 0 && completedIds.size >= sortedLessons.length && (
+        <Card className="mb-8 p-6 text-center">
+          <div className="mb-3 flex justify-center">
+            <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500 text-white">
+              <Award className="h-6 w-6" aria-hidden="true" />
+            </span>
+          </div>
+          <h2 className="mb-2 font-[family-name:var(--font-display)] text-lg font-bold text-slate-900 dark:text-white">
+            סיימת את כל השיעורים במודול!
+          </h2>
+          {certificateCode ? (
+            <div className="mt-3">
+              <p className="mb-3 text-sm text-slate-600 dark:text-slate-300">התעודה שלך מוכנה.</p>
+              <Link
+                href={`/certificate/${certificateCode}`}
+                className="inline-flex rounded-2xl bg-amber-500 px-6 py-3 font-bold text-white hover:bg-amber-600"
+              >
+                צפה בתעודה
+              </Link>
+            </div>
+          ) : (
+            <div className="mt-3">
+              <button
+                type="button"
+                onClick={requestCertificate}
+                disabled={certificateBusy}
+                className="inline-flex items-center gap-2 rounded-2xl bg-amber-500 px-6 py-3 font-bold text-white hover:bg-amber-600 disabled:opacity-60"
+              >
+                {certificateBusy ? <SpinnerIcon className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Award className="h-4 w-4" aria-hidden="true" />}
+                קבל תעודת השלמה
+              </button>
+              {certificateError && (
+                <p className="mt-2 text-sm text-red-600 dark:text-red-400">{certificateError}</p>
+              )}
+            </div>
+          )}
+        </Card>
+      )}
 
       <div className="flex flex-wrap items-center justify-center gap-3">
         <Link

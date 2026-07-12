@@ -7,6 +7,7 @@ import { Code2, CheckCircle2, Loader2, Eye, EyeOff, Terminal } from 'lucide-reac
 import { Card } from '@follstack/ui'
 import { apiJson, apiFetch } from '@/lib/api'
 import { useCodeSandbox, SandboxOutput, RunCodeButton, ClearOutputButton, type SandboxLanguage } from '@/components/CodeSandbox'
+import { CodeEditor } from '@/components/CodeEditor'
 
 interface ApiExercise {
   id: string
@@ -133,12 +134,11 @@ export default function PracticeExercisePage() {
       </Card>
 
       <Card className="mb-6 overflow-hidden p-0">
-        <textarea
+        <CodeEditor
           value={code}
-          onChange={(e) => setCode(e.target.value)}
-          className="min-h-64 w-full resize-y bg-slate-950 p-4 font-mono text-sm leading-relaxed text-slate-100 outline-none"
-          spellCheck={false}
-          aria-label="עורך קוד"
+          onChange={setCode}
+          language={sandboxLanguage ?? 'javascript'}
+          ariaLabel="עורך קוד"
         />
       </Card>
 

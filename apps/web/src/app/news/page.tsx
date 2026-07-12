@@ -9,7 +9,7 @@ interface NewsItem {
   id: string
   title: string
   url: string
-  source: 'devto' | 'hackernews' | 'reddit'
+  source: 'devto' | 'hackernews' | 'reddit' | 'lobsters' | 'github' | 'rss'
   sourceLabel: string
   author: string | null
   publishedAt: string
@@ -17,12 +17,15 @@ interface NewsItem {
   points: number | null
   commentsCount: number | null
   imageUrl: string | null
+  summary?: string | null
 }
 
 interface NewsResponse {
   success: boolean
   count: number
-  cachedAt: string
+  updatedAt?: string
+  cachedAt?: string
+  sources?: string[]
   sourceErrors?: string[]
   data: NewsItem[]
 }
@@ -31,13 +34,19 @@ const sourceFilters: { id: 'all' | NewsItem['source']; label: string }[] = [
   { id: 'all', label: 'הכל' },
   { id: 'devto', label: 'dev.to' },
   { id: 'hackernews', label: 'Hacker News' },
-  { id: 'reddit', label: 'r/programming' },
+  { id: 'reddit', label: 'Reddit' },
+  { id: 'lobsters', label: 'Lobsters' },
+  { id: 'github', label: 'GitHub' },
+  { id: 'rss', label: 'בלוגים / RSS' },
 ]
 
 const sourceColors: Record<NewsItem['source'], string> = {
   devto: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
   hackernews: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
   reddit: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+  lobsters: 'bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-200',
+  github: 'bg-slate-200 text-slate-800 dark:bg-slate-700 dark:text-slate-100',
+  rss: 'bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-200',
 }
 
 function timeAgo(iso: string): string {
@@ -82,7 +91,8 @@ export default function NewsPage() {
           <h1 className="page-title">חדשות תכנות</h1>
         </div>
         <p className="page-subtitle">
-          עדכונים אמיתיים בזמן אמת מ-dev.to, Hacker News ו-r/programming — לא תוכן מבוים.
+          איסוף שוטף ממקורות ציבוריים — dev.to, Hacker News, Reddit, Lobsters, GitHub, ו-RSS של בלוגים
+          (Smashing, CSS-Tricks, TechCrunch ועוד). נשמר לקובץ בשרת ומתעדכן אוטומטית.
         </p>
       </div>
 
@@ -129,7 +139,7 @@ export default function NewsPage() {
           {filtered.map((item) => (
             <Card key={item.id} className="p-6 hover:shadow-lg transition-shadow duration-300">
               <div className="flex items-start justify-between mb-3 gap-3">
-                <span className={`inline-flex shrink-0 px-3 py-1 rounded-full text-xs font-medium ${sourceColors[item.source]}`}>
+                <span className={`inline-flex shrink-0 px-3 py-1 rounded-full text-xs font-medium ${sourceColors[item.source] ?? sourceColors.rss}`}>
                   {item.sourceLabel}
                 </span>
                 <span className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">

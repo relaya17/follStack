@@ -33,11 +33,12 @@ import aiRoutes from '@/routes/ai'
 import adminRoutes from '@/routes/admin'
 import voiceRoutes from '@/routes/voice'
 import translationRoutes from '@/routes/translation'
-import blockchainRoutes from '@/routes/blockchain'
+import certificateRoutes from '@/routes/certificates'
 import arRoutes from '@/routes/ar'
 import metaverseRoutes from '@/routes/metaverse'
 import analyticsRoutes from '@/routes/analytics'
 import socialRoutes from '@/routes/social'
+import { startNewsIngestScheduler, stopNewsIngestScheduler } from '@/services/newsIngestService'
 
 // Load environment variables
 import dotenv from 'dotenv'
@@ -170,7 +171,7 @@ app.use('/api/social', socialRoutes)
 app.use('/api/admin', adminRoutes)
 app.use('/api/voice', voiceRoutes)
 app.use('/api/translation', translationRoutes)
-app.use('/api/blockchain', blockchainRoutes)
+app.use('/api/certificates', certificateRoutes)
 app.use('/api/ar', arRoutes)
 app.use('/api/metaverse', metaverseRoutes)
 
@@ -254,6 +255,7 @@ async function start() {
         logger.info(`🚀 follStack API running on http://${HOST}:${PORT}`)
         logger.info(`📚 Environment: ${process.env.NODE_ENV}`)
         logger.info(`🔗 CORS Origin: ${process.env.CORS_ORIGIN || 'http://localhost:3000'}`)
+        startNewsIngestScheduler()
     })
 }
 
@@ -265,6 +267,7 @@ start().catch((err) => {
 // Graceful shutdown
 process.on('SIGTERM', () => {
     logger.info('SIGTERM received, shutting down gracefully')
+    stopNewsIngestScheduler()
     server.close(() => {
         logger.info('Process terminated')
         process.exit(0)
@@ -273,6 +276,7 @@ process.on('SIGTERM', () => {
 
 process.on('SIGINT', () => {
     logger.info('SIGINT received, shutting down gracefully')
+    stopNewsIngestScheduler()
     server.close(() => {
         logger.info('Process terminated')
         process.exit(0)

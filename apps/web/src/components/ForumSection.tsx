@@ -41,7 +41,7 @@ interface ForumReply {
   createdAt: string
 }
 
-interface ForumPostDetail extends ForumPostSummary {
+interface ForumPostDetail extends Omit<ForumPostSummary, 'replies'> {
   forumId: string
   replies: number | ForumReply[]
 }

@@ -1,18 +1,11 @@
 import { Router } from 'express'
-import { getNews } from '@/controllers/newsController'
+import { getNews, getNewsArchive, getNewsSources, refreshNews } from '@/controllers/newsController'
 
 const router = Router()
 
-/**
- * @swagger
- * /api/news:
- *   get:
- *     summary: Get aggregated real programming news
- *     tags: [News]
- *     responses:
- *       200:
- *         description: News items retrieved successfully
- */
 router.get('/', getNews)
+router.get('/sources', getNewsSources)
+router.get('/archive', getNewsArchive)
+router.post('/refresh', refreshNews)
 
 export default router
