@@ -6,12 +6,22 @@ import { Card } from '@follstack/ui'
 import { Brain, Mic, MicOff, Send, Sparkles, Lightbulb, Loader2, BookOpen, Code } from 'lucide-react'
 import { apiUrl } from '@/lib/api'
 
+interface RelatedContentItem {
+  type: 'lesson' | 'glossary'
+  title: string
+  moduleTitle?: string
+  snippet: string
+}
+
 interface ChatMessage {
   id: string
   type: 'user' | 'ai'
   content: string
   timestamp: Date
+  relatedContent?: RelatedContentItem[]
 }
+
+const MENTOR_NAME = 'אורי'
 
 interface SpeechRecognitionResultLike {
   readonly transcript: string
@@ -96,8 +106,7 @@ function AIMentorChat() {
     {
       id: 'welcome',
       type: 'ai',
-      content:
-        'שלום! אני ה־AI Mentor של follStack. אפשר לשאול אותי על React, Node, MongoDB, או כל נושא Full-Stack — ואעזור לך צעד־אחר־צעד.',
+      content: `שלום, אני ${MENTOR_NAME} — המנטור החכם של follStack. אפשר לשאול אותי על React, Node, MongoDB, או כל נושא Full-Stack — ואעזור לך צעד־אחר־צעד, ואתבסס על השיעורים שכבר יש באתר כשזה רלוונטי.`,
       timestamp: new Date(),
     },
   ])
@@ -149,6 +158,7 @@ function AIMentorChat() {
         payload?.data?.answer ||
         payload?.answer ||
         'לא התקבלה תשובה מהמנטור. נסה שוב בעוד רגע.'
+      const relatedContent: RelatedContentItem[] | undefined = payload?.data?.relatedContent
 
       setMessages((prev) => [
         ...prev,
@@ -157,6 +167,7 @@ function AIMentorChat() {
           type: 'ai',
           content: answer,
           timestamp: new Date(),
+          relatedContent,
         },
       ])
     } catch (err) {
@@ -253,7 +264,7 @@ function AIMentorChat() {
               </div>
               <div className="text-right">
                 <h2 className="font-[family-name:var(--font-display)] text-lg font-bold text-slate-900 dark:text-white">
-                  שיחה עם המנטור
+                  שיחה עם {MENTOR_NAME}
                 </h2>
                 <p className="text-sm text-emerald-600 dark:text-emerald-400">מוכן לעזור</p>
               </div>
@@ -286,6 +297,20 @@ function AIMentorChat() {
                   }`}
                 >
                   <p className="whitespace-pre-wrap text-[0.98rem] leading-relaxed">{message.content}</p>
+                  {message.relatedContent && message.relatedContent.length > 0 && (
+                    <div className="mt-3 space-y-1.5 border-t border-slate-200 pt-2.5 dark:border-slate-700">
+                      <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+                        תוכן קשור באתר:
+                      </p>
+                      {message.relatedContent.map((item, i) => (
+                        <p key={i} className="text-xs text-slate-600 dark:text-slate-300">
+                          {item.type === 'lesson' ? '📘' : '🔤'}{' '}
+                          <span className="font-semibold">{item.title}</span>
+                          {item.moduleTitle ? ` — ${item.moduleTitle}` : ''}
+                        </p>
+                      ))}
+                    </div>
+                  )}
                   <p
                     className={`mt-2 text-xs ${
                       message.type === 'user' ? 'text-primary-100' : 'text-slate-500 dark:text-slate-400'
@@ -303,7 +328,7 @@ function AIMentorChat() {
               <div className="flex justify-end">
                 <div className="inline-flex items-center gap-2 rounded-2xl bg-slate-100 px-4 py-3 text-sm text-slate-600 dark:bg-slate-800 dark:text-slate-300">
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  המנטור חושב...
+                  {MENTOR_NAME} חושב...
                 </div>
               </div>
             )}

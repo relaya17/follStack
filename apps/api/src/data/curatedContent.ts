@@ -71,7 +71,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'HTML5 סמנטי',
         description: 'תגיות משמעותיות במקום div בלתי נגמרים',
         content:
-          'לפי MDN, HTML סמנטי משתמש בתגיות שמתארות תפקיד: header, nav, main, article, section, footer. זה משפר נגישות (קוראי מסך), SEO ותחזוקה. כלל: אם יש תגית שמתארת את התוכן — השתמש בה במקום div.\n\nדוגמה:\n```html\n<main>\n  <article>\n    <h1>כותרת</h1>\n    <p>תוכן...</p>\n  </article>\n</main>\n```',
+          'HTML סמנטי (Semantic HTML) משתמש בתגיות שמתארות את תפקיד התוכן, לא רק את המראה שלו: header לאזור פתיחה, nav לניווט, main לתוכן המרכזי (יחיד בדף), article לתוכן עצמאי שיכול לעמוד בפני עצמו (פוסט, כתבה), section לקיבוץ תמטי של תוכן, aside לתוכן משני, ו-footer לאזור סיום. לפני HTML5 מפתחים בנו הכל מ-<div> עם מחלקות כמו class="header" — אבל דפדפן וקורא-מסך לא יודעים מה זה אומר, כי div הוא אלמנט "עיוור" מבחינת משמעות. יש לכך שלוש השלכות מעשיות: נגישות — קוראי מסך (screen readers) מזהים תגיות סמנטיות ומאפשרים למשתמשים עיוורים לדלג ישירות בין header/nav/main בלי לסרוק את כל הדף; SEO — מנועי חיפוש נותנים משקל רב יותר לתוכן בתוך <article>/<h1> מאשר לאותו טקסט בתוך <div>; ותחזוקה — מפתח אחר (או אתה בעוד חצי שנה) מבין מיד את מבנה הדף בלי לקרוא CSS. הכלל המעשי: אם קיימת תגית שמתארת נכונה את תפקיד התוכן — תמיד עדיף אותה על פני div גנרי.\n\nדוגמה למבנה עמוד מלא:\n```html\n<body>\n  <header>\n    <nav>\n      <a href="/">בית</a>\n      <a href="/about">אודות</a>\n    </nav>\n  </header>\n  <main>\n    <article>\n      <h1>כותרת המאמר</h1>\n      <p>תוכן הפסקה הראשונה...</p>\n    </article>\n    <aside>תוכן משני, כמו קישורים קשורים</aside>\n  </main>\n  <footer>\n    <p>© 2026 כל הזכויות שמורות</p>\n  </footer>\n</body>\n```',
         type: 'text',
         duration: 25,
         order: 1,
@@ -81,7 +81,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'CSS Box Model',
         description: 'איך הדפדפן מחשב גודל ומרווחים',
         content:
-          'כל אלמנט הוא קופסה: content → padding → border → margin. עם `box-sizing: border-box` הרוחב כולל padding ו-border (מומלץ גלובלית). מקור: MDN – The box model.',
+          'כל אלמנט ב-CSS הוא קופסה מלבנית שמורכבת מארבע שכבות, מבפנים החוצה: content (התוכן עצמו — טקסט או תמונה), padding (מרווח פנימי שקוף בין התוכן לגבול), border (הגבול/מסגרת עצמה), ו-margin (מרווח חיצוני שקוף שמפריד בין האלמנט לשכנים שלו). ההבדל הקריטי בין padding למרגין: padding הוא "בפנים" האלמנט ומקבל את אותו רקע/צבע שלו, ואילו margin הוא "בחוץ" ותמיד שקוף. ברירת המחדל של CSS (box-sizing: content-box) מחשבת width רק על ה-content — כך שאם קבעת width: 200px והוספת padding: 20px, האלמנט בפועל תופס 240px ברוחב (200 + 20 + 20), מה שמפתיע ומקשה על חישובי פריסה. הפתרון הסטנדרטי בתעשייה הוא box-sizing: border-box, שגורם ל-width לכלול גם את ה-padding וה-border — כך width: 200px נשאר 200px בפועל, לא משנה כמה padding מוסיפים. בגלל זה כמעט כל פרויקט מודרני מתחיל עם reset גלובלי.\n\n```css\n*, *::before, *::after {\n  box-sizing: border-box;\n}\n\n.card {\n  width: 200px;\n  padding: 20px;\n  border: 2px solid #ccc;\n  margin: 16px;\n  /* עם border-box: הכרטיס תופס בדיוק 200px ברוחב */\n}\n```',
         type: 'text',
         duration: 20,
         order: 2,
@@ -91,7 +91,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'Flexbox',
         description: 'סידור בציר אחד',
         content:
-          '`display: flex` על ההורה. `justify-content` על הציר הראשי, `align-items` על הציר הניצב. מתאים לתפריטים, כרטיסים וסרגלי כלים. מקור: MDN Flexbox.',
+          'Flexbox הוא מודל פריסה חד-ממדי — מסדר אלמנטים לאורך ציר אחד, אופקי (row, ברירת מחדל) או אנכי (column). קובעים display: flex על אלמנט ההורה, וכל הילדים הישירים שלו הופכים אוטומטית ל-"flex items" שמסתדרים זה לצד זה. שני המאפיינים החשובים ביותר: justify-content שולט על היישור לאורך הציר הראשי (main axis) — למשל space-between שדוחף פריטים לקצוות עם רווח שווה ביניהם, או center שממרכז הכל; align-items שולט על היישור לאורך הציר הניצב (cross axis) — למשל center שממרכז אנכית פריטים בגובה שונה. תכונה חשובה נוספת היא gap, שמוסיפה רווח קבוע בין הפריטים בלי צורך ב-margin ידני על כל אחד (ובלי בעיית "margin כפול" בקצוות). Flexbox מתאים במיוחד לתפריטי ניווט, שורות כפתורים, וכרטיסים שצריכים להתפרס בשורה אחת ולהתעטף (flex-wrap: wrap) כשאין מקום.\n\n```css\n.navbar {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  gap: 16px;\n}\n```',
         type: 'interactive',
         duration: 35,
         order: 3,
@@ -101,7 +101,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'CSS Grid',
         description: 'פריסה דו-ממדית',
         content:
-          'Grid לפריסת עמוד (שורות+עמודות). `grid-template-columns`, `gap`. כלל אצבע: Grid לפריסה כללית, Flexbox ליישור בתוך רכיב.',
+          'בעוד ש-Flexbox עובד על ציר אחד, CSS Grid הוא מודל פריסה דו-ממדי — שולט בו-זמנית על שורות ועמודות, ולכן מתאים למבנה עמוד שלם (header/sidebar/main/footer) ולא רק לסידור רכיבים בשורה. מגדירים grid-template-columns כדי לקבוע כמה עמודות יש ואיזה רוחב לכל אחת; יחידת ה-fr ("fraction") מחלקת את השטח הפנוי באופן יחסי — לדוגמה grid-template-columns: 1fr 3fr יוצר שתי עמודות שהשנייה רחבה פי 3 מהראשונה, בלי לחשב פיקסלים ידנית. gap מוסיפה רווח אחיד בין השורות והעמודות. תכונה מתקדמת ושימושית היא grid-template-areas, שמאפשרת "לצייר" את הפריסה בשמות תיאוריים ישירות ב-CSS — כך שמבנה העמוד קריא ויזואלית בקוד עצמו. כלל אצבע לבחירה בין השניים: Grid לפריסה הכללית של העמוד (המבנה החיצוני), Flexbox ליישור פנימי בתוך רכיב בודד (כמו שורת כפתורים בתוך כרטיס).\n\n```css\n.page {\n  display: grid;\n  grid-template-columns: 200px 1fr;\n  grid-template-areas:\n    "sidebar header"\n    "sidebar main";\n  gap: 16px;\n}\n.sidebar { grid-area: sidebar; }\n.header  { grid-area: header; }\n.main    { grid-area: main; }\n```',
         type: 'interactive',
         duration: 40,
         order: 4,
@@ -111,7 +111,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'רספונסיביות',
         description: 'מדיה קווריז ופריסה גמישה',
         content:
-          'השתמש ב-`min-width` media queries, יחידות יחסיות (`rem`, `%`, `clamp`), ו-viewport meta. בדוק נגישות: ניגודיות, פוקוס, וגודל מטרות מגע.',
+          'עיצוב רספונסיבי (Responsive Design) אומר שאותו עמוד נראה ומתפקד טוב במגוון גדלי מסך — מטלפון ועד מסך שולחני רחב. הגישה המומלצת היא Mobile First: כותבים קודם את העיצוב הבסיסי למסך צר, ואז מוסיפים media queries עם min-width שמוסיפות/משנות עיצוב ככל שהמסך גדל — זה נותן ביצועים טובים יותר בטלפון (פחות CSS לטעון) ומכריח לחשוב על התוכן החשוב ביותר קודם. חובה תג <meta name="viewport" content="width=device-width, initial-scale=1"> ב-<head>, אחרת דפדפני מובייל "יזמו" רוחב מסך של 980px ויקטינו את הכל. במקום פיקסלים קשיחים, עדיף יחידות יחסיות: rem לגדלי טקסט ורווחים (יחסי לגודל הפונט הבסיסי, נגיש יותר למשתמשים שמגדילים טקסט בדפדפן), % לרוחבים גמישים, ו-clamp(min, preferred, max) שקובע ערך שגדל עם המסך אבל לא חורג מטווח — שימושי במיוחד לגדלי כותרות בלי הצורך בכמה breakpoints. נגישות היא חלק בלתי נפרד מרספונסיביות: לוודא ניגודיות צבעים מספקת (WCAG AA לפחות), שאפשר לנווט עם מקלדת (מצב :focus גלוי), ושמטרות מגע (כפתורים) גדולות מספיק (44×44px לפחות) לשימוש באצבע.\n\n```css\n.card { padding: 1rem; }\n\n@media (min-width: 768px) {\n  .card { padding: 2rem; }\n}\n\nh1 {\n  font-size: clamp(1.5rem, 4vw, 3rem);\n}\n```',
         type: 'text',
         duration: 30,
         order: 5,
@@ -138,7 +138,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'משתנים וטיפוסים',
         description: 'let, const, והטיפוסים של JS',
         content:
-          '`const` לברירת מחדל, `let` כשצריך שינוי. הימנע מ-`var`. טיפוסים: string, number, boolean, null, undefined, object, symbol, bigint. השוואה: העדף `===` על `==`.',
+          'JavaScript מציעה שלוש מילות מפתח להצהרת משתנים: var (הישנה, נמנעים ממנה היום), let ו-const. הכלל המעשי: התחל תמיד עם const, ועבור ל-let רק כשבאמת צריך לשנות את הערך אחר כך (למשל מונה בלולאה). const לא אומר "קבוע לגמרי" — הוא מונע רק שיוך מחדש של המשתנה עצמו; אם const מצביע על אובייקט או מערך, עדיין אפשר לשנות את התוכן שלהם (obj.name = "חדש" עובד, obj = {} לא). ל-var יש שתי בעיות שגרמו לקהילה לנטוש אותה: scope של פונקציה במקום scope של בלוק (כלומר var בתוך if "בורח" החוצה), ו-hoisting מבלבל שמאפשר להשתמש במשתנה לפני ההצהרה שלו. JavaScript היא שפה עם טיפוסים דינמיים — משתנה יכול להחזיק כל טיפוס, ו-typeof בודק אותו בזמן ריצה. שבעת הטיפוסים הבסיסיים (primitives): string, number (אין הפרדה בין int ל-float), boolean, null (היעדר ערך מכוון), undefined (משתנה שלא קיבל ערך), symbol (ערך ייחודי) ו-bigint (למספרים גדולים מגבול number הרגיל). לגבי השוואות: === (strict equality) בודק גם ערך וגם טיפוס בלי המרה, בעוד == מבצע type coercion שיוצר תוצאות מפתיעות (למשל 0 == "" הוא true) — לכן הכלל הבלתי-כתוב בתעשייה הוא להשתמש תמיד ב-=== ו-!==.\n\n```js\nconst name = "דנה"     // לא ישתנה\nlet age = 25           // ישתנה בהמשך\nage = 26               // תקין\n\nconsole.log(0 == "")   // true — מפתיע!\nconsole.log(0 === "")  // false — צפוי\n```',
         type: 'text',
         duration: 30,
         order: 1,
@@ -148,7 +148,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'פונקציות',
         description: 'הצהרה, ביטוי ו-arrow',
         content:
-          'Function declaration עולה ב-hoisting; arrow functions לא יוצרות `this` משלהן — שימושי ב-callbacks. החזר ערך במפורש או השתמש ב-implicit return ב-arrow קצר.',
+          'ל-JavaScript שלוש דרכים עיקריות להגדיר פונקציה, וההבדלים ביניהן חשובים בפועל. Function Declaration (function greet() {}) עוברת hoisting מלא — אפשר לקרוא לה בקוד לפני שהיא מוגדרת, כי המנוע "מרים" אותה לראש ה-scope. Function Expression (const greet = function() {}) לא עוברת hoisting באותה צורה — המשתנה קיים אבל לא ניתן לקריאה עד שהביצוע מגיע לשורת ההגדרה. Arrow Function (const greet = () => {}), שנוספה ב-ES6, היא התחביר הקצר והנפוץ ביותר כיום — אבל ההבדל המהותי שלה הוא לא רק תחביר: arrow function לא יוצרת this משלה, אלא "יורשת" את ה-this מה-scope שבו היא הוגדרה (lexical this). זה קריטי ב-callbacks: פונקציה רגילה בתוך מתודה של אובייקט או קומפוננטה יכולה "לאבד" את ה-this הנכון, בעוד arrow function שומרת עליו אוטומטית — זו הסיבה שכמעט כל callback מודרני (event handlers, .then(), setTimeout) נכתב כ-arrow function. תחביר קצר נוסף: אם גוף הפונקציה הוא ביטוי יחיד, אפשר להשמיט את הסוגריים המסולסלים ואת ה-return (implicit return) — n => n * 2 שקול ל-n => { return n * 2 }.\n\n```js\n// Declaration — hoisted\ngreet()\nfunction greet() { console.log("שלום") }\n\n// Arrow — שומר this נכון ב-callback\nclass Timer {\n  seconds = 0\n  start() {\n    setInterval(() => {\n      this.seconds++   // this הוא ה-Timer, לא ה-callback\n    }, 1000)\n  }\n}\n\nconst double = n => n * 2   // implicit return\n```',
         type: 'text',
         duration: 30,
         order: 2,
@@ -158,7 +158,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'מערכים',
         description: 'map, filter, reduce',
         content:
-          '`map` ממיר, `filter` מסנן, `reduce` מצמצם לערך יחיד. אל תשנה את המערך המקורי אם אפשר — העדף יצירת מערך חדש (immutable style).',
+          'שלוש המתודות map, filter ו-reduce הן הכלים המרכזיים לעבודה פונקציונלית עם מערכים ב-JavaScript, וכולן משותפות בתכונה חשובה: הן לא משנות את המערך המקורי אלא מחזירות תוצאה חדשה (immutable style) — זה מונע באגים עדינים שנובעים משינוי נתונים "מתחת לרגליים" של קוד אחר שמחזיק הפניה לאותו מערך. map ממירה כל איבר במערך לערך חדש ומחזירה מערך באותו אורך — למשל להמיר מערך משתמשים למערך של השמות שלהם בלבד. filter בודקת כל איבר מול תנאי (פונקציה שמחזירה true/false) ומחזירה מערך חדש עם רק האיברים שעברו את התנאי — האורך יכול להיות קטן יותר. reduce היא הכללית מכולן: היא "מצמצמת" את כל המערך לערך יחיד (מספר, אובייקט, או אפילו מערך אחר) על ידי הרצת פונקציה מצטברת על כל איבר, עם ערך התחלתי — שימושית לסכימה, קיבוץ, או בניית מבנה נתונים חדש לגמרי מהמערך. שלושתן ניתנות לשרשור (chaining) כי כל אחת מחזירה מערך/ערך חדש, מה שמאפשר לבנות pipeline קריא של טרנספורמציות ברצף.\n\n```js\nconst users = [\n  { name: "דנה", age: 28, active: true },\n  { name: "יוסי", age: 17, active: false },\n  { name: "מיכל", age: 34, active: true },\n]\n\n// שרשור: סנן פעילים → קח שמות → הפוך למחרוזת אחת\nconst activeNames = users\n  .filter(u => u.active)\n  .map(u => u.name)\n  .join(", ")   // "דנה, מיכל"\n\n// reduce לסכימת גילאים\nconst totalAge = users.reduce((sum, u) => sum + u.age, 0)  // 79\n```',
         type: 'interactive',
         duration: 40,
         order: 3,
@@ -168,7 +168,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'DOM ואירועים',
         description: 'בחירת אלמנטים והאזנה',
         content:
-          '`document.querySelector` / `querySelectorAll`. `addEventListener` עדיף על onclick ב-HTML. זכור להסיר מאזינים כשצריך (cleanup) כדי למנוע דליפות.',
+          'ה-DOM (Document Object Model) הוא ייצוג עץ-אובייקטים בזיכרון של דף ה-HTML, ו-JavaScript קורא ומשנה אותו כדי ליצור אינטראקטיביות. לבחירת אלמנטים משתמשים ב-document.querySelector (מחזיר את האלמנט הראשון שמתאים לסלקטור CSS — אותו תחביר בדיוק כמו ב-CSS, כולל .class ו-#id) או document.querySelectorAll (מחזיר את כולם כ-NodeList). לאחר שיש הפניה לאלמנט, מוסיפים לו התנהגות עם addEventListener("click", handler) — זו הדרך המומלצת, בניגוד לכתיבת onclick="..." ישירות בתוך ה-HTML, כי היא מפרידה בין המבנה (HTML) להתנהגות (JS), ומאפשרת להוסיף כמה מאזינים לאותו אירוע בלי לדרוס אחד את השני. נקודה חשובה שמפתחים מתחילים מפספסים: מאזיני אירועים לא נעלמים אוטומטית כשהאלמנט מוסר מהדף בצורה מסוימת (למשל בקומפוננטות דינמיות) — אם לא מסירים אותם עם removeEventListener כשהם כבר לא נחוצים, נוצרת "דליפת זיכרון" (memory leak) שמצטברת עם הזמן. לרוב עמודי HTML פשוטים זה לא קריטי, אבל באפליקציות שמוסיפות ומסירות אלמנטים דינמית (כמו SPA) זו הרגל שחשוב לבנות מוקדם.\n\n```js\nconst button = document.querySelector("#save-btn")\n\nfunction handleClick() {\n  console.log("נשמר!")\n}\n\nbutton.addEventListener("click", handleClick)\n\n// כשהאלמנט כבר לא רלוונטי:\nbutton.removeEventListener("click", handleClick)\n```',
         type: 'interactive',
         duration: 35,
         order: 4,
@@ -178,7 +178,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'Async / Await',
         description: 'Promises בצורה קריאה',
         content:
-          '`async` מחזירה Promise. `await` עוצר עד שה-Promise מסתיים. עטוף ב-try/catch. מקור: MDN Using promises / async function.',
+          'JavaScript היא שפה single-threaded (חוט הרצה יחיד) — אבל בעזרת מודל אסינכרוני היא יכולה להתמודד עם פעולות איטיות (בקשות רשת, קריאת קבצים) בלי "לקפוא". Promise הוא אובייקט שמייצג ערך שעדיין לא קיים אבל יגיע בעתיד — הוא נמצא באחד משלושה מצבים: pending (ממתין), fulfilled (הצליח, יש ערך) או rejected (נכשל, יש שגיאה). לפני async/await, עבדו עם Promises דרך שרשור .then()/.catch(), שקריא אבל הופך למסורבל כשיש כמה שלבים תלויים זה בזה ("callback hell" בגרסה מעודנת). התחביר async/await, שנוסף ב-ES2017, פותר את זה: מוסיפים async לפני הצהרת פונקציה כדי לסמן שהיא מחזירה Promise, ובתוכה await עוצר את הביצוע (בלי לחסום את שאר האפליקציה) עד שה-Promise שבצדו מסתיים, ואז ממשיך עם התוצאה — כתיבה שנראית סינכרונית וקריאה בהרבה. טיפול בשגיאות נעשה עם try/catch רגיל סביב ה-await, בדיוק כמו בקוד סינכרוני — הרבה יותר נקי מאשר .catch() בשרשור ארוך. חשוב לזכור: await עובד רק בתוך פונקציה async (או ב-top-level של מודול), ואם יש כמה קריאות בלתי-תלויות שאפשר להריץ במקביל, עדיף Promise.all([...]) על סדרת await נפרדות, כדי לא לחכות לכל אחת בתורה שלא לצורך.\n\n```js\nasync function getUser(id) {\n  try {\n    const res = await fetch(`/api/users/${id}`)\n    if (!res.ok) throw new Error("בקשה נכשלה")\n    const user = await res.json()\n    return user\n  } catch (err) {\n    console.error("שגיאה בטעינת משתמש:", err.message)\n    return null\n  }\n}\n\n// כמה בקשות במקביל, לא בתור:\nconst [user, posts] = await Promise.all([\n  fetch("/api/user").then(r => r.json()),\n  fetch("/api/posts").then(r => r.json()),\n])\n```',
         type: 'text',
         duration: 35,
         order: 5,
@@ -205,7 +205,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'JSX וקומפוננטות',
         description: 'UI כפונקציה של state',
         content:
-          'קומפוננטה היא פונקציה שמחזירה JSX. Props הם קלט לקריאה בלבד. אל תשנה props ישירות — הרם state להורה או השתמש ב-state מקומי.',
+          'React בנוי על רעיון מרכזי אחד: הממשק הוא פונקציה של המצב (UI = f(state)) — כלומר במקום לתאר איך לשנות את המסך שלב-אחר-שלב (jQuery-style: "מצא את האלמנט, שנה את הטקסט שלו"), מתארים איך המסך צריך להיראות עבור נתונים נתונים, ו-React דואג לעדכן את ה-DOM בעצמו כשהנתונים משתנים. קומפוננטה ב-React היא סתם פונקציית JavaScript שמחזירה JSX — תחביר שמערבב HTML בתוך JavaScript (למשל return <h1>שלום</h1>), שמתורגם מאחורי הקלעים לקריאות ל-React.createElement. props (קיצור ל-properties) הם הדרך שבה קומפוננטת-הורה מעבירה נתונים לקומפוננטת-ילד — בדיוק כמו ארגומנטים של פונקציה. חוק ברזל ב-React: props הם read-only מנקודת המבט של הקומפוננטה שמקבלת אותם — אסור לשנות אותם ישירות (props.name = "אחר" הוא שגיאה מושגית, גם אם טכנית אפשר). אם קומפוננטת-ילד צריכה "לשנות" נתון שמגיע מלמעלה, הפתרון הנכון הוא Lifting State Up: ה-state עצמו (ופונקציית העדכון שלו) נשמרים בהורה, והילד מקבל את הערך + callback להפעלה כשהוא רוצה לבקש שינוי — כך תמיד יש "מקור אמת" יחיד לנתון.\n\n```jsx\nfunction Greeting({ name }) {  // name הוא prop, read-only\n  return <h1>שלום, {name}!</h1>\n}\n\nfunction App() {\n  return <Greeting name="דנה" />\n}\n```',
         type: 'text',
         duration: 30,
         order: 1,
@@ -215,7 +215,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'useState',
         description: 'מצב מקומי בקומפוננטה',
         content:
-          '`const [value, setValue] = useState(initial)`. עדכון state גורם ל-re-render. לעדכון מבוסס ערך קודם העדף `setValue(v => v + 1)`.',
+          'useState הוא ה-Hook הבסיסי ביותר ב-React, ומאפשר לקומפוננטה "לזכור" נתון בין רינדורים — משתנה JavaScript רגיל היה מתאפס בכל פעם שהקומפוננטה רצה מחדש. הקריאה const [value, setValue] = useState(initial) מחזירה זוג: value הוא הערך הנוכחי, ו-setValue היא הפונקציה היחידה שדרכה מותר לשנות אותו. הדבר הקריטי להבין: קריאה ל-setValue לא רק משנה את הערך — היא גם מסמנת ל-React שהקומפוננטה (ותתי-הקומפוננטות שלה שתלויות בערך) צריכה להתרנדר מחדש (re-render), כדי שהמסך יתעדכן ויציג את הערך החדש. בעיה נפוצה: אם מעדכנים state על סמך הערך הקודם שלו (למשל להגדיל מונה), עדיף להשתמש בצורת ה-callback setValue(v => v + 1) במקום setValue(value + 1) — כי אם כמה עדכונים קורים ברצף מהיר (למשל בתוך לולאה או אירועים סמוכים), React עשוי לאגד אותם יחד (batching), וה-value שנלכד בסגירה (closure) עלול להיות "מיושן" (stale). צורת ה-callback תמיד מקבלת את הערך העדכני ביותר בפועל, ולכן בטוחה יותר בכל מקרה של עדכון תלוי-ערך-קודם.\n\n```jsx\nfunction Counter() {\n  const [count, setCount] = useState(0)\n\n  function handleClick() {\n    setCount(prev => prev + 1)   // בטוח, גם אם קוראים לזה כמה פעמים ברצף\n  }\n\n  return (\n    <div>\n      <p>{count}</p>\n      <button onClick={handleClick}>+1</button>\n    </div>\n  )\n}\n```',
         type: 'interactive',
         duration: 35,
         order: 2,
@@ -225,7 +225,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'useEffect',
         description: 'תופעות לוואי ו-cleanup',
         content:
-          '`useEffect(() => { ...; return cleanup }, [deps])`. מערך תלויות ריק = פעם אחת אחרי mount. תמיד נקה timers/subscriptions ב-cleanup.',
+          'useEffect הוא ה-Hook שמטפל ב-"תופעות לוואי" (side effects) — כל דבר שקורה מחוץ לתהליך הרגיל של רינדור JSX: קריאות רשת (fetch), הרשמה לאירועי דפדפן, טיימרים, או עדכון כותרת הדף. התחביר useEffect(() => { ... }, [deps]) מקבל פונקציה שרצה אחרי שהקומפוננטה מוצגת, ומערך "תלויות" (dependencies) ששולט מתי היא רצה שוב: מערך ריק [] אומר "רק פעם אחת, אחרי ה-mount הראשוני" (בדומה ל-componentDidMount בקומפוננטות מחלקה הישנות); מערך עם ערכים כמו [userId] אומר "רוץ שוב בכל פעם שה-userId משתנה"; והיעדר מערך תלויות לגמרי אומר "רוץ אחרי כל רינדור" (נדיר שרוצים את זה בפועל). חלק קריטי ולעיתים קרובות נשכח: אם ה-effect פותח משהו שצריך "לסגור" — טיימר עם setInterval, הרשמה עם addEventListener, או subscription לשירות חיצוני — יש להחזיר פונקציית cleanup מתוך ה-effect עצמו. React קורא לה אוטומטית לפני שה-effect רץ שוב, וגם כשהקומפוננטה מוסרת מהעץ (unmount) — בלי זה נוצרות דליפות זיכרון וטיימרים "רפאים" שממשיכים לרוץ אחרי שהקומפוננטה כבר לא קיימת.\n\n```jsx\nfunction Clock() {\n  const [time, setTime] = useState(new Date())\n\n  useEffect(() => {\n    const id = setInterval(() => setTime(new Date()), 1000)\n    return () => clearInterval(id)   // cleanup — חובה!\n  }, [])   // [] = רק פעם אחת\n\n  return <p>{time.toLocaleTimeString()}</p>\n}\n```',
         type: 'text',
         duration: 40,
         order: 3,
@@ -235,7 +235,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'רשימות ומפתחות',
         description: 'key יציב ברשימות',
         content:
-          'כשממפים מערך ל-JSX חובה `key` ייחודי ויציב (לא index אם הרשימה משתנה). זה עוזר ל-React לזהות מה השתנה.',
+          'כשממפים מערך ל-JSX עם `.map()`, ל-React צריך דרך לזהות איזה איבר הוא איזה בין רינדור לרינדור — לשם כך משתמשים בפרופ המיוחד `key`. React משתמש באלגוריתם "reconciliation" (השוואת עץ ה-JSX הישן לחדש) כדי להחליט מה לעדכן בפועל ב-DOM בלי לבנות הכול מחדש. כש-`key` יציב וייחודי (למשל `id` מה-DB), React יודע להתאים כל איבר לעצמו גם אם הרשימה השתנתה, מה שחוסך רינדורים מיותרים ושומר על state פנימי של קומפוננטות (כמו ערך input) צמוד לאיבר הנכון. הבעיה הנפוצה: להשתמש ב-index של המערך כ-key. זה עובד "כאילו בסדר" כשהרשימה קבועה, אבל נשבר ברגע שמוסיפים/מוחקים/ממיינים איברים — כי ה-index של כל איבר משתנה, ו-React מתבלבל בין הזהות הישנה לחדשה. זה יכול לגרום לבאגים עדינים: input עם טקסט שמוקלד "קופץ" לשורה הלא נכונה, אנימציה שרצה על האיבר הלא נכון, או state שנשאר "דבוק" למיקום ולא לפריט. הכלל: אם הרשימה קבועה וסטטית לחלוטין — index בסדר. בכל מקרה אחר (סינון, מיון, הוספה/הסרה) — תמיד key ייחודי ויציב מהנתונים עצמם.\n\n```jsx\nfunction TodoList({ todos }) {\n  // רע: key={index} — ישבר אם המערך משתנה\n  // טוב: key={todo.id} — מזהה יציב מה-DB\n  return (\n    <ul>\n      {todos.map((todo) => (\n        <li key={todo.id}>\n          {todo.text}\n        </li>\n      ))}\n    </ul>\n  )\n}\n```',
         type: 'text',
         duration: 25,
         order: 4,
@@ -245,7 +245,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'טפסים מבוקרים',
         description: 'value + onChange',
         content:
-          'קלט מבוקר: `value={state}` ו-`onChange` שמעדכן state. כך המקור האמת הוא React, לא ה-DOM.',
+          'ב-HTML רגיל, אלמנטים כמו `<input>` שומרים state פנימי משלהם בתוך ה-DOM — הדפדפן זוכר מה הוקלד. ב-React מקובל להפוך את הקלט ל"מבוקר" (controlled input): קושרים את הערך המוצג ל-state של React דרך `value`, וכל הקלדה מעדכנת את ה-state דרך `onChange`, שגורם לרינדור מחדש עם הערך המעודכן. כך React הופך למקור האמת היחיד (single source of truth) לגבי מה שבטופס, ולא ה-DOM. זה חשוב כי זה מאפשר ולידציה בזמן אמת (למשל לחסום תווים לא חוקיים תוך כדי הקלדה), שמירת מספר שדות בבת אחת ב-state אחד, השבתה מותנית של כפתור שליחה, ואיפוס טופס פשוט על ידי איפוס ה-state. החיסרון: כל הקלדה מפעילה רינדור, מה שבטפסים גדולים ומורכבים לפעמים דורש אופטימיזציה (debouncing או ניהול state נפרד לכל שדה). האלטרנטיבה — "uncontrolled input" עם `ref` וקריאת הערך רק בזמן submit — שימושית לטפסים פשוטים או כשמבצעים אינטגרציה עם ספריות חיצוניות שמנהלות את ה-DOM בעצמן, אבל ברוב האפליקציות ב-React עובדים עם controlled inputs כי הם צפויים יותר וקל יותר לבדוק (test) אותם.\n\n```jsx\nfunction LoginForm() {\n  const [email, setEmail] = useState(\'\')\n  const [password, setPassword] = useState(\'\')\n\n  const handleSubmit = (e) => {\n    e.preventDefault() // מונע רענון דף מלא\n    console.log({ email, password })\n  }\n\n  return (\n    <form onSubmit={handleSubmit}>\n      <input\n        type="email"\n        value={email}\n        onChange={(e) => setEmail(e.target.value)}\n      />\n      <input\n        type="password"\n        value={password}\n        onChange={(e) => setPassword(e.target.value)}\n      />\n      <button type="submit" disabled={!email || !password}>\n        התחבר\n      </button>\n    </form>\n  )\n}\n```',
         type: 'interactive',
         duration: 30,
         order: 5,
@@ -272,7 +272,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'מה זה Node.js',
         description: 'JS בצד שרת',
         content:
-          'Node מריץ JavaScript מחוץ לדפדפן (V8). מודל אסינכרוני מבוסס event loop — מתאים ל-I/O כבד (API, קבצים, DB).',
+          'Node.js הוא סביבת ריצה (runtime) שמריצה JavaScript מחוץ לדפדפן, בעזרת מנוע V8 של Google Chrome. זה מה שמאפשר לכתוב שרתים, כלי CLI וסקריפטים ב-JS — שפה שהייתה שייכת רק לצד הלקוח. הלב של Node הוא מודל אסינכרוני מבוסס "event loop" (לולאת אירועים) עם I/O לא חוסם (non-blocking): במקום שכל בקשת קריאה מקובץ, שאילתת DB או קריאת רשת "תעצור" את כל התהליך עד שהיא מסתיימת, Node מפעילה אותה ברקע וממשיכה לטפל בבקשות אחרות, וכשהתוצאה מוכנה — קוראת ל-callback (או פותרת Promise) בתור מתאים. המשמעות המעשית: תהליך Node בודד (single-threaded למודל הביצוע של JS עצמו) יכול לטפל באלפי חיבורים בו-זמנית ביעילות גבוהה, כל עוד העבודה היא בעיקר I/O (קריאה/כתיבה לדיסק, רשת, DB) ולא חישוב כבד ב-CPU. חישוב כבד וסינכרוני (למשל לולאה כבדה בלי await) כן חוסם את הלולאה כולה ומעכב את כל הבקשות האחרות — זו הסיבה שב-Node משתדלים לפרק עבודה כבדה ל-worker threads או שירותים נפרדים. npm (Node Package Manager) המובנה נותן גישה למאגר החבילות הגדול בעולם, מה שהופך את Node לבחירה נפוצה לבניית שרתי API, כלים ל-DevOps, ואפילו סקריפטים לאוטומציה.\n\n```js\n// דוגמה ל-I/O לא חוסם — שתי הבקשות "רצות" יחד\nconsole.log(\'1. מתחיל\')\nsetTimeout(() => console.log(\'3. תוצאה אחרי 0 שניות (בתור המקרו-טאסקים)\'), 0)\nconsole.log(\'2. ממשיך מיד, לא מחכה\')\n// פלט: 1, 2, 3 — למרות ש-setTimeout נכתב שני\n```',
         type: 'text',
         duration: 25,
         order: 1,
@@ -282,7 +282,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'Express בסיסי',
         description: 'app.get / app.post',
         content:
-          '`express()` יוצר אפליקציה. `app.use(express.json())` מפרסר JSON. נתיבים: `app.get("/health", handler)`.',
+          'Express הוא ה-framework הנפוץ ביותר לבניית שרתי HTTP ב-Node — שכבה דקה שמעל מודול ה-`http` המובנה, שמוסיפה ניתוב (routing) נוח, middleware, וטיפול בבקשות/תגובות. קריאה ל-`express()` יוצרת אובייקט אפליקציה שאליו רושמים נתיבים (routes) ו-middleware. `app.use(express.json())` הוא middleware מובנה שהופך את גוף הבקשה (body) מ-JSON גולמי לאובייקט JS זמין תחת `req.body` — בלי זה, `req.body` יהיה `undefined` בבקשות POST/PUT עם payload. כל נתיב מוגדר עם method (get/post/put/delete וכו׳), path, ו-handler שמקבל `(req, res)`: `req` מכיל את פרטי הבקשה (params, query, body, headers), ו-`res` הוא האובייקט שדרכו שולחים תשובה — `res.json(data)`, `res.status(201).json(...)`, `res.send(text)`. הנתיבים יכולים לכלול פרמטרים דינמיים כמו `/users/:id`, שנגישים דרך `req.params.id`. Express גם דואג לזרימת בקשה-תשובה: אם אף handler לא שולח תשובה, הבקשה "נתקעת" — לכן תמיד צריך לוודא שכל נתיב מסתיים ב-`res.send`/`res.json`/`res.end` כלשהו (או קורא ל-`next()` להעברה הלאה).\n\n```js\nimport express from \'express\'\nconst app = express()\napp.use(express.json())\n\napp.get(\'/health\', (req, res) => {\n  res.json({ status: \'ok\' })\n})\n\napp.get(\'/users/:id\', (req, res) => {\n  res.json({ id: req.params.id })\n})\n\napp.listen(3000, () => console.log(\'Server running on port 3000\'))\n```',
         type: 'interactive',
         duration: 35,
         order: 2,
@@ -292,7 +292,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'Middleware',
         description: 'שרשרת בקשות',
         content:
-          'Middleware הוא `(req, res, next) => {}`. סדר חשוב. לטיפול בשגיאות: `(err, req, res, next)`.',
+          'Middleware הוא הרעיון המרכזי שהופך את Express לגמיש: פונקציה בחתימה `(req, res, next) => {}` שרצה בין קבלת הבקשה לבין ה-handler הסופי, ויכולה לבדוק, לשנות, לחסום, או להעשיר את הבקשה לפני שהיא ממשיכה הלאה. קריאה ל-`next()` מעבירה את השליטה ל-middleware הבא (או ל-handler הסופי) בשרשרת; אם `next()` לא נקראת, ואף תשובה לא נשלחה, הבקשה "נתקעת" ללא מענה. הסדר שבו רושמים middleware קריטי — Express מריץ אותם בדיוק לפי סדר ה-`app.use`/הגדרת הנתיב, כך שלמשל middleware של אימות (auth) חייב להירשם *לפני* הנתיבים שהוא אמור להגן עליהם, ו-middleware לניתוח body (`express.json()`) חייב לרוץ לפני handlers שקוראים מ-`req.body`. יש middleware גלובלי (`app.use(fn)` — רץ על כל בקשה), middleware ממוקד-נתיב (`app.get(\'/path\', middlewareFn, handler)`), ומידלוור לטיפול בשגיאות — שמזוהה על ידי חתימה עם ארבעה פרמטרים: `(err, req, res, next)`, ותמיד נרשם *אחרון*, אחרי כל שאר הנתיבים, כך ש-`next(err)` מכל מקום בקוד "יקפוץ" ישירות אליו.\n\n```js\n// middleware ללוגים על כל בקשה\napp.use((req, res, next) => {\n  console.log(`${req.method} ${req.path}`)\n  next() // חובה — אחרת הבקשה נתקעת\n})\n\n// middleware טיפול בשגיאות — תמיד אחרון, 4 פרמטרים\napp.use((err, req, res, next) => {\n  console.error(err)\n  res.status(500).json({ error: \'שגיאת שרת\' })\n})\n```',
         type: 'text',
         duration: 30,
         order: 3,
@@ -302,7 +302,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'REST API',
         description: 'משאבים וקודי סטטוס',
         content:
-          'GET לקריאה, POST ליצירה (201), PUT/PATCH לעדכון, DELETE למחיקה. 400 לשגיאת לקוח, 401 לא מורשה, 404 לא נמצא, 500 שגיאת שרת.',
+          'REST (Representational State Transfer) הוא סגנון ארכיטקטורה לבניית API סביב "משאבים" (resources) — כל ישות בעולם (משתמש, פוסט, מוצר) מיוצגת ככתובת URL, והפעולות עליה נעשות דרך methods סטנדרטיים של HTTP: GET לקריאת משאב (ללא תופעות לוואי, ניתן לבצע שוב ושוב בבטחה — "idempotent" ו-"safe"), POST ליצירת משאב חדש (בדרך כלל מחזיר קוד 201 Created), PUT/PATCH לעדכון משאב קיים (PUT מחליף את כל האובייקט, PATCH מעדכן שדות ספציפיים), ו-DELETE למחיקתו. מוסכמה חשובה: הנתיבים עצמם מתארים משאבים בצורת רבים (`/users`, `/users/:id`), לא פעולות (לא `/getUser` או `/deleteUser`) — הפעולה נקבעת על ידי ה-method, לא על ידי הנתיב. קודי הסטטוס הם חלק בלתי נפרד מהחוזה: 2xx להצלחה (200 OK, 201 Created, 204 No Content לאחר מחיקה מוצלחת), 4xx לשגיאת לקוח (400 Bad Request לקלט לא תקין, 401 Unauthorized לחוסר אימות, 403 Forbidden לחוסר הרשאה, 404 Not Found כשהמשאב לא קיים), ו-5xx לשגיאת שרת (500 Internal Server Error). שימוש נכון בקודים מאפשר ל-client (או לכל צד שלישי) להבין את התוצאה בלי לפרסר את גוף התשובה.\n\n```js\napp.get(\'/api/users/:id\', async (req, res) => {\n  const user = await User.findById(req.params.id)\n  if (!user) return res.status(404).json({ error: \'המשתמש לא נמצא\' })\n  res.status(200).json(user)\n})\n\napp.post(\'/api/users\', async (req, res) => {\n  const user = await User.create(req.body)\n  res.status(201).json(user)\n})\n```',
         type: 'text',
         duration: 35,
         order: 4,
@@ -312,7 +312,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'אבטחה בסיסית',
         description: 'helmet, cors, validation',
         content:
-          'השתמש ב-helmet לכותרות אבטחה, הגבל CORS למקורות מורשים, ואמת קלט (Joi/Zod) לפני שמירה ל-DB.',
+          'שרת Express "חשוף" בברירת מחדל לכמה סוגי התקפות נפוצים, ויש שלוש שכבות הגנה בסיסיות שכל API בפרודקשן צריך: ראשית, חבילת `helmet` מגדירה אוטומטית מספר HTTP headers שמקשים על התקפות נפוצות — למשל מונעת מהדפדפן "לנחש" סוג תוכן (MIME sniffing), חוסמת הטמעה של האתר ב-iframe זר (מניעת clickjacking), ומגבילה מדיניות אבטחת תוכן. שנית, CORS (Cross-Origin Resource Sharing) קובע אילו מקורות (domains) מורשים לקרוא ל-API מהדפדפן — בברירת מחדל דפדפנים חוסמים בקשות בין דומיינים שונים מטעמי אבטחה, וה-header `Access-Control-Allow-Origin` הוא מה שמאפשר לפרוץ את החסימה הזו במכוון ובאופן מבוקר; חשוב להגביל אותו לרשימת מקורות מורשים ולא להשאיר `*` (הכול מותר) בסביבת פרודקשן עם אימות. שלישית — והכי קריטי — ולידציה של קלט: לעולם אין לסמוך על מה שמגיע מה-client. ספריות כמו Zod או Joi מגדירות סכימה (schema) שכל קלט נבדק מולה *לפני* שהוא מגיע ללוגיקת העסק או ל-DB — זה מונע גם באגים (שדות חסרים/מהסוג הלא נכון) וגם וקטורי תקיפה כמו NoSQL injection. שכבות אלה משלימות זו את זו: helmet מגן על התקשורת, CORS מגביל מי יכול לדבר עם השרת, וולידציה מגנה על מה שנכנס בפועל.\n\n```js\nimport helmet from \'helmet\'\nimport cors from \'cors\'\nimport { z } from \'zod\'\n\napp.use(helmet())\napp.use(cors({ origin: \'https://myapp.com\' }))\n\nconst userSchema = z.object({ email: z.string().email(), name: z.string().min(2) })\n\napp.post(\'/api/users\', (req, res) => {\n  const result = userSchema.safeParse(req.body)\n  if (!result.success) return res.status(400).json({ error: result.error })\n  // בטוח להמשיך...\n})\n```',
         type: 'text',
         duration: 30,
         order: 5,
@@ -339,7 +339,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'Documents ו-Collections',
         description: 'איך MongoDB מאחסן נתונים כ-JSON גמיש',
         content:
-          'MongoDB שומר נתונים כמסמכי BSON (דומה ל-JSON) בתוך collections — במקום טבלאות ושורות כמו ב-SQL. הגמישות הזו מאפשרת סכימה משתנה בין מסמכים, אבל בפרויקט אמיתי עדיין כדאי להגדיר Schema קבוע (עם Mongoose) כדי לשמור על עקביות נתונים.',
+          'MongoDB הוא מסד נתונים מסוג NoSQL "מונחה מסמכים" (document-oriented) — במקום טבלאות ושורות קבועות כמו ב-SQL, הנתונים נשמרים כמסמכי BSON (Binary JSON — פורמט בינארי דומה ל-JSON אבל עם טיפוסים נוספים כמו תאריכים ו-ObjectId) בתוך "collections" (המקבילה הרעיונית לטבלה). כל מסמך הוא עצמאי ויכול להכיל שדות מקוננים, מערכים, ואפילו מבנה שונה ממסמך אחר באותה collection — זו הגמישות המרכזית של NoSQL, ומאפשרת לשנות את מבנה הנתונים בלי migration מורכב כמו ב-SQL. עם זאת, גמישות זו היא חרב פיפיות: בפרויקט אמיתי, כתיבה חופשית לגמרי בלי מבנה מוגדר מובילה מהר לבאגים (שדה שנקרא unm במקום name במסמך אחד, למשל). לכן בפועל כמעט תמיד מגדירים Schema קבוע ברמת האפליקציה (עם Mongoose) — גמישות ה-DB עצמו נשמרת, אבל האפליקציה אוכפת מבנה עקבי. ה-`_id` הוא שדה ייחודי שכל מסמך מקבל אוטומטית (מסוג ObjectId) ומשמש כמפתח ראשי.\n\n```js\n// מסמך MongoDB לדוגמה — יכול לכלול שדות מקוננים ומערכים\n{\n  _id: ObjectId("64f..."),\n  name: "דנה כהן",\n  email: "dana@example.com",\n  tags: ["student", "premium"],\n  profile: { bio: "...", joinedAt: ISODate("2024-01-15") }\n}\n```',
         type: 'text',
         duration: 20,
         order: 1,
@@ -349,7 +349,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'CRUD עם Mongoose',
         description: 'create, find, updateOne, deleteOne',
         content:
-          'Mongoose הוא ODM (Object Document Mapper) ל-Node.js שמוסיף Schemas, ולידציה וטיפוסים ל-MongoDB. הפעולות הבסיסיות: Model.create() ליצירה, Model.find()/findById() לקריאה, Model.findByIdAndUpdate() לעדכון, ו-Model.findByIdAndDelete() למחיקה.',
+          'Mongoose הוא ODM (Object Document Mapper) ל-Node.js — שכבה שמעל דרייבר ה-MongoDB הרשמי, שמוסיפה Schemas מוגדרים מראש, ולידציה מובנית, טיפוסים, ו-API נוח יותר לעבודה עם המסד. במקום לכתוב שאילתות גולמיות, מגדירים Schema (מבנה השדות והטיפוסים שלהם) ובונים ממנו Model — מחלקה שמייצגת collection שלמה ומספקת מתודות CRUD (Create-Read-Update-Delete). ליצירה: `Model.create(data)` שומר מסמך חדש ומחזיר אותו כולל ה-`_id` שנוצר. לקריאה: `Model.find(filter)` מחזיר מערך של כל המסמכים התואמים (אובייקט ריק `{}` = הכול), ו-`Model.findById(id)` מחזיר מסמך בודד. לעדכון: `Model.findByIdAndUpdate(id, changes, { new: true })` — הדגל `new: true` חשוב כי בברירת מחדל Mongoose מחזיר את המסמך *לפני* העדכון. למחיקה: `Model.findByIdAndDelete(id)`. כל הפעולות האלה אסינכרוניות ומחזירות Promise, ולכן תמיד נעבוד איתן עם `async/await` ועטופות ב-`try/catch` לטיפול בשגיאות.\n\n```js\nconst user = await User.create({ name: \'דנה\', email: \'dana@example.com\' })\nconst allUsers = await User.find({})\nconst oneUser = await User.findById(user._id)\nawait User.findByIdAndUpdate(user._id, { name: \'דנה כהן\' }, { new: true })\nawait User.findByIdAndDelete(user._id)\n```',
         type: 'interactive',
         duration: 35,
         order: 2,
@@ -359,7 +359,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'Indexes וביצועים',
         description: 'למה שאילתה איטית הופכת למהירה עם אינדקס אחד',
         content:
-          'ללא אינדקס, MongoDB סורק את כל המסמכים בקולקציה (collection scan) כדי למצוא תוצאה — איטי מאוד בקנה מידה. אינדקס על שדה שמחפשים בו הרבה (למשל email או slug) הופך את החיפוש למהיר בסדרי גודל. Schema.index() מגדיר אינדקס ב-Mongoose.',
+          'כשמריצים שאילתה על שדה ללא אינדקס, MongoDB נאלץ לבצע "collection scan" — לעבור מסמך-מסמך על כל הקולקציה ולבדוק כל אחד בנפרד. על קולקציה עם כמה מאות רשומות זה לא מורגש, אבל על מיליוני מסמכים זו הופכת לשאילתה שלוקחת שניות במקום מילישניות. אינדקס הוא מבנה נתונים נוסף (בדרך כלל B-tree) ש-MongoDB בונה ושומר בצד, ממופה מערכי שדה מסוים לכתובות המסמכים המתאימים — כך שהחיפוש הופך מ-O(n) ל-O(log n), שיפור דרמטי בקנה מידה גדול. השדה הכי חשוב לאינדקס הוא כל שדה שמחפשים/ממיינים בו לעיתים קרובות — email להתחברות, slug לזיהוי URL, או שדה תאריך למיון כרונולוגי. ב-Mongoose מגדירים אינדקס ב-Schema עם `field: { index: true }` או `schema.index({ field: 1 })` (1 = עולה, -1 = יורד). המחיר: כל אינדקס תופס מקום נוסף בדיסק ומאט מעט כתיבות (כי צריך לעדכן גם את מבנה האינדקס), ולכן לא מוסיפים אינדקס על כל שדה — רק על שדות שבאמת משתמשים בהם לחיפוש/מיון תדיר.\n\n```js\nconst userSchema = new Schema({\n  email: { type: String, required: true, unique: true, index: true },\n  createdAt: { type: Date, default: Date.now },\n})\nuserSchema.index({ createdAt: -1 }) // מיון יורד לפי תאריך — מהיר\n```',
         type: 'text',
         duration: 25,
         order: 3,
@@ -369,7 +369,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'Schema Validation',
         description: 'required, enum, min/max — ולידציה ברמת מסד הנתונים',
         content:
-          'Mongoose Schema מגדיר טיפוסים, שדות חובה (required), ערכים מותרים (enum), וגבולות (min/max/maxlength) — כך שנתונים לא תקינים נדחים לפני שהם נשמרים. זו שכבת הגנה נוספת מעבר לוולידציה בצד השרת/לקוח.',
+          'למרות ש-MongoDB עצמו לא כופה מבנה קבוע, Mongoose Schema מוסיף שכבת ולידציה חזקה שרצה *לפני* שמסמך נשמר בפועל — כך שנתונים פגומים נדחים מוקדם, לפני שהם "מזהמים" את ה-DB. `required: true` מבטיח ששדה קריטי לא ייעדר; `unique: true` (בשילוב עם אינדקס) מונע כפילויות כמו שני משתמשים עם אותו email; `enum: [\'admin\', \'user\']` מגביל שדה לרשימת ערכים סגורה ומונע ערכים שרירותיים; `min`/`max` מגבילים טווח מספרי (למשל גיל בין 0 ל-120), ו-`minlength`/`maxlength` מגבילים אורך מחרוזת. חשוב להבין: זו לא תחליף לוולידציה בצד הלקוח (UX מיידי) או ולידציה נוספת בצד השרת עם ספריות כמו Zod (שמאפשרות כללים מורכבים יותר) — אלא שכבת הגנה *נוספת* ואחרונה, ממש ליד הדלת של ה-DB. גם אם מישהו עוקף את כל הבדיקות בקוד (למשל בקריאה ישירה למודל מסקריפט תחזוקה), ה-Schema עדיין ימנע שמירת נתונים לא תקינים.\n\n```js\nconst userSchema = new Schema({\n  email: { type: String, required: true, unique: true },\n  age: { type: Number, min: 0, max: 120 },\n  role: { type: String, enum: [\'admin\', \'user\', \'guest\'], default: \'user\' },\n  bio: { type: String, maxlength: 500 },\n})\n```',
         type: 'text',
         duration: 20,
         order: 4,
@@ -379,7 +379,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'Aggregation בסיסי',
         description: '$match, $group, $sort — צבירת נתונים לדוחות',
         content:
-          'Aggregation Pipeline מעבד מסמכים דרך שלבים עוקבים: $match מסנן, $group מקבץ ומחשב (סכום, ממוצע, ספירה), $sort ממיין. זה הכלי ליצירת דוחות וסטטיסטיקות ישירות במסד הנתונים במקום לעבד הכל בקוד השרת.',
+          'ה-Aggregation Pipeline הוא כלי לעיבוד וצבירת נתונים ישירות בתוך MongoDB — במקום למשוך את כל המסמכים לשרת ולעבד אותם ב-JavaScript (מה שאיטי ולא יעיל בקנה מידה גדול), מגדירים "צינור" (pipeline) של שלבים, וכל מסמך עובר דרכם בזה אחר זה, כל שלב מקבל את הפלט של קודמו. השלבים הנפוצים: `$match` מסנן מסמכים לפי תנאי (דומה ל-`find` אבל בתוך pipeline — כדאי להציב אותו כמה שיותר מוקדם כדי לצמצם את כמות הנתונים שממשיכים הלאה); `$group` מקבץ מסמכים לפי מפתח משותף ומחשב צבירות עליהם — סכום (`$sum`), ממוצע (`$avg`), ספירה, מינימום/מקסימום; `$sort` ממיין את התוצאות; `$project` בוחר/משנה אילו שדות מוחזרים. הכוח האמיתי הוא בשרשור השלבים יחד ליצירת דוחות מורכבים — למשל "ממוצע ציון מבחן לכל קטגוריה, רק למבחנים מהחודש האחרון, ממוין מהגבוה לנמוך" — הכול מחושב במסד הנתונים במקום למשוך אלפי רשומות גולמיות לשרת.\n\n```js\nconst report = await QuizAttempt.aggregate([\n  { $match: { submittedAt: { $gte: startOfMonth } } },\n  { $group: { _id: \'$category\', avgScore: { $avg: \'$score\' }, count: { $sum: 1 } } },\n  { $sort: { avgScore: -1 } },\n])\n```',
         type: 'text',
         duration: 30,
         order: 5,
@@ -406,7 +406,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'טיפוסים בסיסיים',
         description: 'string, number, boolean, arrays',
         content:
-          'TypeScript בודק טיפוסים בזמן קומפילציה. העדף טיפוסים מפורשים בממשקים ציבוריים. הימנע מ-`any` — הוא מבטל את היתרון.',
+          'TypeScript הוא "על-קבוצה" (superset) של JavaScript — כל קוד JS תקין הוא גם קוד TS תקין, אבל TS מוסיף עליו שכבת טיפוסים סטטית שנבדקת בזמן קומפילציה (לפני שהקוד רץ בכלל), ולא רק בזמן ריצה כמו ב-JS רגיל. המשמעות המעשית: שגיאות כמו קריאה לפונקציה עם הפרמטרים הלא נכונים, או ניסיון לגשת לשדה שלא קיים באובייקט, נתפסות על ידי ה-compiler (או ה-IDE) *לפני* שהקוד בכלל נשלח לפרודקשן — במקום להתגלות כ-crash אצל משתמש אמיתי. הטיפוסים הבסיסיים דומים לאלה שכבר מכירים מ-JS בזמן ריצה: `string`, `number`, `boolean`, `string[]` (מערך מחרוזות), `boolean[]` וכו׳. חשוב להעדיף טיפוסים מפורשים בממשקים ציבוריים (פרמטרים של פונקציה, ערכי החזרה) — גם אם TS יכול "לנחש" (infer) טיפוס באופן אוטומטי במקרים פשוטים, טיפוס מפורש בגבול של פונקציה משמש כתיעוד חי שגם ה-compiler אוכף. יש להימנע מהטיפוס `any` כמעט תמיד — הוא בעצם "מכבה" את בדיקת הטיפוסים לגמרי עבור אותו משתנה, ומבטל את כל היתרון של TypeScript באותו מקום; אם הטיפוס באמת לא ידוע, `unknown` הוא חלופה בטוחה יותר שמכריחה לבדוק את הטיפוס בפועל לפני שימוש.\n\n```ts\nlet age: number = 28\nlet name: string = \'דנה\'\nlet isActive: boolean = true\nlet scores: number[] = [90, 85, 100]\n\nfunction greet(userName: string): string {\n  return `שלום, ${userName}!`\n}\n```',
         type: 'text',
         duration: 25,
         order: 1,
@@ -416,7 +416,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'Interfaces',
         description: 'צורת אובייקטים',
         content:
-          '`interface User { id: string; name: string }` מתעד ואוכף חוזה. שדות אופציונליים עם `?`.',
+          '`interface` מגדיר "חוזה" — צורה מדויקת שאובייקט חייב לעמוד בה: אילו שדות קיימים ומה הטיפוס של כל אחד. זה משרת שתי מטרות בו-זמנית: תיעוד חי שכל מפתח שקורא את הקוד יכול לראות בדיוק מה מבנה הנתונים, ואכיפה אוטומטית — אם מנסים להעביר אובייקט שלא תואם ל-interface (שדה חסר, טיפוס שגוי, שדה נוסף במקומות מסוימים) ה-compiler יתריע מיד. שדות אופציונליים מסומנים בסימן שאלה (`?`) אחרי השם — למשל `phone?: string` אומר שהשדה יכול להיעדר לגמרי, ולא רק להיות `undefined` באופן מפורש. אפשר גם להגדיר שדות לקריאה בלבד עם `readonly`, שמונע שינוי אחרי היצירה. שני interfaces יכולים "להרחיב" (extend) אחד את השני, כדי לשתף שדות משותפים בלי לחזור עליהם. הבחירה בין `interface` ל-`type` (שנלמד גם הוא) היא בעיקר עניין של סגנון: interfaces נוחים במיוחד לתיאור "צורת אובייקט" ותומכים ב-extend/merge, בעוד ש-type גמיש יותר (יכול לייצג גם union, טיפוס פרימיטיבי, וכו׳).\n\n```ts\ninterface User {\n  id: string\n  name: string\n  phone?: string        // אופציונלי\n  readonly createdAt: Date  // לקריאה בלבד\n}\n\nconst user: User = { id: \'1\', name: \'דנה\', createdAt: new Date() }\n// user.createdAt = new Date() // שגיאת קומפילציה — readonly\n```',
         type: 'text',
         duration: 30,
         order: 2,
@@ -426,7 +426,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'Union Types',
         description: 'ערך מאחד מכמה אפשרויות',
         content:
-          '`status: "pending" | "success" | "error"` מונע typos. השתמש ב-narrowing עם `if` / `switch`.',
+          'Union Type (טיפוס איחוד), בסימון `|`, מבטא "הערך יכול להיות אחד מהאפשרויות הבאות ותו לא" — למשל `status: "pending" | "success" | "error"` אומר שהמשתנה `status` יכול להכיל אך ורק אחת משלוש המחרוזות האלה. זה עדיף בהרבה על `status: string` הרגיל, כי `string` מאפשר כל מחרוזת אפשרית (כולל typo כמו `"pendign"`), בעוד ש-union type סגור אוכף בדיוק את הערכים הלגיטימיים ותופס טעויות הקלדה כבר בזמן כתיבת הקוד. Union types יכולים לשלב גם טיפוסים שונים לגמרי, למשל `id: string | number`. כדי לעבוד בבטחה עם ערך מסוג union, משתמשים ב"צמצום טיפוס" (type narrowing) — בדיקת `if`/`switch` שבודקת באיזו אפשרות ספציפית מדובר, ולאחר הבדיקה TS "יודע" בתוך אותו סניף איזה תת-טיפוס זה, ומאפשר גישה בטוחה לשדות/מתודות שרלוונטיים רק לאותו תת-טיפוס. זה נפוץ במיוחד למידול מצבים (state machines) — למשל תוצאה של קריאת רשת שיכולה להיות טעונה, הצליחה, או נכשלה, כל אחת עם שדות שונים.\n\n```ts\ntype Status = \'pending\' | \'success\' | \'error\'\n\nfunction handleStatus(status: Status) {\n  switch (status) {\n    case \'pending\':\n      return \'טוען...\'\n    case \'success\':\n      return \'הצליח!\'\n    case \'error\':\n      return \'שגיאה\'\n  }\n}\n```',
         type: 'text',
         duration: 25,
         order: 3,
@@ -436,7 +436,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'Generics',
         description: 'קוד לשימוש חוזר עם טיפוסים',
         content:
-          '`function first<T>(arr: T[]): T | undefined` שומר על הטיפוס המדויק של המערך.',
+          'Generics פותרים בעיה מרכזית: איך כותבים פונקציה או קומפוננטה גנרית שעובדת עם *כל* טיפוס, בלי לוותר על בדיקת טיפוסים ובלי להשתמש ב-`any`. במקום לקבע טיפוס ספציפי, מגדירים "פרמטר טיפוס" — בדרך כלל נקרא `T` (קונבנציה, אפשר כל שם) — שנקבע בפועל רק בזמן הקריאה לפונקציה, בהתאם לטיפוס שהועבר בפועל. כך `function first<T>(arr: T[]): T | undefined` אומר: "הפונקציה מקבלת מערך מטיפוס כלשהו T, ומחזירה איבר מאותו T (או undefined אם המערך ריק)" — וכשקוראים לה עם `first([1,2,3])`, TS מסיק אוטומטית ש-`T` הוא `number`, וערך ההחזרה יהיה מטיפוס `number | undefined`, לא `any`. זה שומר על "קשר" בין טיפוס הקלט לטיפוס הפלט לאורך כל הפונקציה — יתרון עצום על פני שימוש ב-`any` שהיה מאבד את המידע הזה לגמרי. Generics נמצאים בכל מקום ב-TypeScript המתקדם: `Array<T>`, `Promise<T>`, `useState<T>` ב-React, ומבני נתונים גנריים כמו תור או מחסנית.\n\n```ts\nfunction first<T>(arr: T[]): T | undefined {\n  return arr[0]\n}\n\nconst num = first([1, 2, 3])        // T = number\nconst name = first([\'א\', \'ב\'])       // T = string\n\ninterface Box<T> {\n  value: T\n}\nconst box: Box<string> = { value: \'שלום\' }\n```',
         type: 'interactive',
         duration: 35,
         order: 4,
@@ -446,7 +446,7 @@ export const CURATED_MODULES: CuratedModule[] = [
         title: 'TypeScript + React',
         description: 'הקלדת props',
         content:
-          'הגדר `type Props = { title: string }` ואז `function Card({ title }: Props)`. ל-state: `useState<User | null>(null)`.',
+          'שילוב TypeScript עם React הוא אחד השימושים הנפוצים ביותר שלו בפרויקטים מודרניים, כי הוא תופס בזמן קומפילציה שכבה שלמה של באגים נפוצים ב-React: props חסרים, props מהטיפוס הלא נכון, או קריאה ל-prop שלא קיים בכלל בקומפוננטה. מגדירים את "צורת" ה-props עם `type` או `interface` (למשל `type Props = { title: string; onClose?: () => void }`), ואז מקלידים את הקומפוננטה עצמה: `function Card({ title, onClose }: Props)`. TS יתריע אם שוכחים להעביר `title` בשימוש ב-`<Card />`, או אם מעבירים לו מספר במקום מחרוזת. עבור hooks, גם הם נהנים מהקלדה — `useState` יכול להסיק את הטיפוס אוטומטית מהערך ההתחלתי (`useState(0)` → `number`), אבל כשהערך ההתחלתי לא חד-משמעי (כמו `null` שעשוי להתמלא מאוחר יותר באובייקט), מקלידים במפורש: `useState<User | null>(null)` — כך TS יודע ששדה זה יכול להיות גם `User` וגם `null`, ויכריח בדיקת null לפני גישה לשדות של `User`. גם `useRef`, אירועי DOM (`React.ChangeEvent<HTMLInputElement>`), וילדים (`children: React.ReactNode`) נהנים מהקלדה דומה.\n\n```tsx\ntype Props = {\n  title: string\n  onClose?: () => void\n}\n\nfunction Card({ title, onClose }: Props) {\n  return (\n    <div>\n      <h2>{title}</h2>\n      {onClose && <button onClick={onClose}>סגור</button>}\n    </div>\n  )\n}\n\nfunction Profile() {\n  const [user, setUser] = useState<User | null>(null)\n  // ...\n}\n```',
         type: 'text',
         duration: 30,
         order: 5,
@@ -5258,4 +5258,78 @@ export const CURATED_GLOSSARY: CuratedGlossaryTerm[] = [
 export function listGlossaryTerms(category?: string): CuratedGlossaryTerm[] {
   if (!category || category === 'all') return CURATED_GLOSSARY
   return CURATED_GLOSSARY.filter((t) => t.category === category)
+}
+
+// --- Lightweight content search (RAG-lite) — used by the AI Mentor to ground its answers
+// in the platform's actual lesson/glossary content instead of only general LLM knowledge. ---
+
+export type ContentSearchResult = {
+  type: 'lesson' | 'glossary'
+  title: string
+  moduleTitle?: string
+  snippet: string
+}
+
+const HEBREW_STOPWORDS = new Set([
+  'את', 'של', 'על', 'עם', 'לא', 'זה', 'זו', 'אני', 'אתה', 'את', 'איך', 'מה', 'למה',
+  'יש', 'אין', 'גם', 'או', 'אם', 'כל', 'הוא', 'היא', 'הם', 'אבל', 'כי', 'רוצה',
+  'תסביר', 'תן', 'לי', 'בבקשה', 'אפשר', 'איפה', 'מתי', 'עוד', 'רק', 'כמו', 'הכי',
+])
+
+function tokenize(text: string): string[] {
+  return text
+    .toLowerCase()
+    .split(/[^\p{L}\p{N}]+/u)
+    .filter((t) => t.length > 1 && !HEBREW_STOPWORDS.has(t))
+}
+
+/**
+ * Finds lessons and glossary terms most relevant to a free-text query, by simple keyword
+ * overlap (no embeddings/vector DB — deliberately simple and dependency-free, but genuinely
+ * reads and scores real course content rather than being decorative).
+ */
+export function findRelevantContent(query: string, limit = 3): ContentSearchResult[] {
+  const queryTokens = new Set(tokenize(query))
+  if (queryTokens.size === 0) return []
+
+  const scored: Array<ContentSearchResult & { score: number }> = []
+
+  for (const module of CURATED_MODULES) {
+    for (const lesson of module.lessons) {
+      const titleTokens = tokenize(lesson.title)
+      const bodyTokens = tokenize(`${lesson.description} ${lesson.content}`)
+      let score = 0
+      for (const t of titleTokens) if (queryTokens.has(t)) score += 3 // title match weighs more
+      for (const t of bodyTokens) if (queryTokens.has(t)) score += 1
+      if (score > 0) {
+        scored.push({
+          type: 'lesson',
+          title: lesson.title,
+          moduleTitle: module.title,
+          snippet: lesson.content.replace(/```[\s\S]*?```/g, '').slice(0, 400).trim(),
+          score,
+        })
+      }
+    }
+  }
+
+  for (const term of CURATED_GLOSSARY) {
+    const tokens = tokenize(`${term.term} ${term.fullForm} ${term.definition}`)
+    let score = 0
+    for (const t of tokens) if (queryTokens.has(t)) score += 1
+    if (tokenize(term.term).some((t) => queryTokens.has(t))) score += 3
+    if (score > 0) {
+      scored.push({
+        type: 'glossary',
+        title: `${term.term} (${term.fullForm})`,
+        snippet: term.definition,
+        score,
+      })
+    }
+  }
+
+  return scored
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit)
+    .map(({ score, ...rest }) => rest)
 }
