@@ -20,8 +20,10 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
     {
+      // Use Chromium mobile profile so CI only needs `playwright install chromium`
+      // (devices['iPhone 13'] defaults to WebKit, which is not installed in CI).
       name: 'mobile',
-      use: { ...devices['iPhone 13'] },
+      use: { ...devices['Pixel 5'] },
     },
   ],
   webServer: [
