@@ -7,6 +7,7 @@ import { ShieldCheck, Loader2 } from 'lucide-react'
 import { Card } from '@follstack/ui'
 import { apiUrl } from '@/lib/api'
 import { useAuth } from '@/lib/auth'
+import { PASSWORD_MIN_LENGTH, validatePassword } from '@/lib/password'
 
 export default function ResetPasswordPage() {
   const params = useParams<{ token: string }>()
@@ -21,8 +22,9 @@ export default function ResetPasswordPage() {
     e.preventDefault()
     setError(null)
 
-    if (password.length < 6) {
-      setError('הסיסמה חייבת להכיל לפחות 6 תווים')
+    const pwdError = validatePassword(password)
+    if (pwdError) {
+      setError(pwdError)
       return
     }
     if (password !== confirm) {
@@ -39,7 +41,7 @@ export default function ResetPasswordPage() {
       })
       const json = await res.json()
       if (!res.ok || !json.success) {
-        setError(json.message ?? 'הטוקן לא תקין או שפג תוקפו')
+        setError(json.message ?? json.error ?? 'הטוקן לא תקין או שפג תוקפו')
         return
       }
       applySession(json.token, {
@@ -61,15 +63,15 @@ export default function ResetPasswordPage() {
   return (
     <div className="page-shell max-w-md">
       <div className="page-hero">
-        <div className="flex items-center justify-center mb-4">
-          <ShieldCheck className="h-10 w-10 text-primary-600 ml-3" aria-hidden="true" />
+        <div className="mb-4 flex items-center justify-center">
+          <ShieldCheck className="ml-3 h-10 w-10 text-primary-600" aria-hidden="true" />
           <h1 className="page-title">איפוס סיסמה</h1>
         </div>
         <p className="page-subtitle">הכנס/י סיסמה חדשה לחשבונך</p>
       </div>
 
       <Card className="p-6">
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4" noValidate>
           <div>
             <label htmlFor="password" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
               סיסמה חדשה
@@ -77,12 +79,17 @@ export default function ResetPasswordPage() {
             <input
               id="password"
               type="password"
+              autoComplete="new-password"
               required
-              minLength={6}
+              minLength={PASSWORD_MIN_LENGTH}
+              aria-describedby="reset-password-hint"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 focus:border-transparent focus:ring-2 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+              className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 focus-visible:border-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
             />
+            <p id="reset-password-hint" className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              לפחות {PASSWORD_MIN_LENGTH} תווים, כולל אות וספרה
+            </p>
           </div>
           <div>
             <label htmlFor="confirm" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -91,11 +98,12 @@ export default function ResetPasswordPage() {
             <input
               id="confirm"
               type="password"
+              autoComplete="new-password"
               required
-              minLength={6}
+              minLength={PASSWORD_MIN_LENGTH}
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 focus:border-transparent focus:ring-2 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+              className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 focus-visible:border-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
             />
           </div>
 

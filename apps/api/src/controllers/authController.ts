@@ -227,8 +227,13 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
     try {
         const user = await User.findOne({ email: req.body.email })
 
+        // Always return the same message to avoid email enumeration
+        const genericMessage =
+            'אם קיים חשבון עם האימייל הזה, נשלח קישור לאיפוס סיסמה (בתוקף לזמן מוגבל).'
+
         if (!user) {
-            throw new AppError('לא נמצא משתמש עם האימייל הזה', 404)
+            res.status(200).json({ success: true, message: genericMessage })
+            return
         }
 
         // Get reset token
@@ -241,33 +246,28 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
             .digest('hex')
 
         // Set expire
-        user.resetPasswordExpire = new Date(Date.now() + 10 * 60 * 1000) // 10 minutes
+        user.resetPasswordExpire = new Date(Date.now() + 10 * 60 * 1000)
 
         await user.save({ validateBeforeSave: false })
 
         // Create reset url
-        const webAppUrl = (process.env.WEB_APP_URL || 'http://localhost:3000').replace(/\/$/, '')
-        const resetUrl = `${webAppUrl}/reset-password/${resetToken}`
-
         try {
+            const webAppUrl = (process.env.WEB_APP_URL || 'http://localhost:3000').replace(/\/$/, '')
+            const resetUrl = `${webAppUrl}/reset-password/${resetToken}`
             await sendEmail({
                 email: user.email,
-                subject: 'איפוס סיסמה - FullStack Learning Hub',
-                message: `שלום ${user.name},\n\nקיבלת בקשה לאיפוס הסיסמה שלך. אנא לחץ על הקישור הבא כדי לאפס את הסיסמה:\n\n${resetUrl}\n\nאם לא ביקשת לאפס את הסיסמה, אנא התעלם מההודעה הזו.\n\nהקישור יפוג תוקף תוך 10 דקות.\n\nבברכה,\nצוות FullStack Learning Hub`
+                subject: 'איפוס סיסמה - follStack',
+                message: `שלום ${user.name},\n\nקיבלנו בקשה לאיפוס סיסמה. לחצו על הקישור (בתוקף 10 דקות):\n\n${resetUrl}\n\nאם לא ביקשתם איפוס — התעלמו מהודעה זו.`,
             })
-
-            res.status(200).json({
-                success: true,
-                message: 'אימייל איפוס סיסמה נשלח'
-            })
+            logger.info(`Password reset email sent to ${user.email}`)
         } catch (error) {
-            logger.error('Error sending reset password email:', error)
+            logger.error('Error sending password reset email:', error)
             user.resetPasswordToken = undefined
             user.resetPasswordExpire = undefined
             await user.save({ validateBeforeSave: false })
-
-            throw new AppError('שגיאה בשליחת אימייל איפוס סיסמה', 500)
         }
+
+        res.status(200).json({ success: true, message: genericMessage })
     } catch (error) {
         next(error)
     }

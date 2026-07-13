@@ -87,7 +87,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       })
       const json = await res.json()
       if (!res.ok || !json.success) {
-        return { success: false, error: json.message ?? 'שגיאה בהתחברות' }
+        return { success: false, error: json.message ?? json.error ?? 'שגיאה בהתחברות' }
       }
       localStorage.setItem('token', json.token)
       setToken(json.token)
@@ -108,7 +108,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         })
         const json = await res.json()
         if (!res.ok || !json.success) {
-          return { success: false, error: json.message ?? 'שגיאה בהרשמה' }
+          return { success: false, error: json.message ?? json.error ?? 'שגיאה בהרשמה' }
         }
         localStorage.setItem('token', json.token)
         setToken(json.token)
@@ -122,6 +122,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   )
 
   const logout = useCallback(() => {
+    const stored = typeof window !== 'undefined' ? localStorage.getItem('token') : null
+    if (stored && stored !== 'null' && stored !== 'undefined') {
+      void fetch(apiUrl('/api/auth/logout'), {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${stored}`, 'Content-Type': 'application/json' },
+      }).catch(() => {
+        /* best-effort */
+      })
+    }
     localStorage.removeItem('token')
     setToken(null)
     setUser(null)

@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import { Heebo, Rubik } from 'next/font/google'
 import { SiteHeader } from '@/components/SiteHeader'
-import { APP_NAME } from '@follstack/shared'
+import { SiteFooter } from '@/components/SiteFooter'
+import { CookieConsentBanner } from '@/components/CookieConsentBanner'
 import { AuthProvider } from '@/lib/auth'
 import './globals.css'
 
@@ -38,13 +39,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main id="main-content" className="relative flex-1" tabIndex={-1}>
             {children}
           </main>
-          <footer className="site-footer">
-            <div className="page-shell !py-0">
-              <p>
-                © {new Date().getFullYear()} {APP_NAME} — פלטפורמת למידה נגישה
-              </p>
-            </div>
-          </footer>
+          <SiteFooter />
+          <CookieConsentBanner />
         </AuthProvider>
       </body>
     </html>

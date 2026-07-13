@@ -34,10 +34,16 @@ pnpm dev:api      # API only
 pnpm build:all
 pnpm typecheck
 pnpm lint
+pnpm test         # API Vitest (SKIP_DB curated paths)
+pnpm test:e2e     # Playwright smoke (needs prior build:all, or running servers)
+pnpm qa:smoke     # quick live checks against :3000 / :3001
+pnpm qa:agent     # Cursor SDK QA audit (needs CURSOR_API_KEY)
 pnpm --filter @follstack/api seed   # populate MongoDB with real learning modules
 ```
 
-The learning pages (`/learning`, `/learning/[id]`) fetch live from the API — without a MongoDB connection (`SKIP_DB=false` + `MONGODB_URI` set) and a run of `pnpm --filter @follstack/api seed`, the learning page will show an empty/error state instead of modules.
+QA mapping (CI vs manual): see **[docs/QA.md](./docs/QA.md)**.
+
+The learning pages (`/learning`, `/learning/[id]`) fetch live from the API — without a MongoDB connection (`SKIP_DB=false` + `MONGODB_URI` set) and a run of `pnpm --filter @follstack/api seed`, the API serves curated modules when Mongo is unavailable.
 
 ## API
 

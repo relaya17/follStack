@@ -15,7 +15,11 @@
     "start:web": "pnpm --filter @follstack/web start",
     "start:all": "pnpm --parallel --filter @follstack/api --filter @follstack/web start",
     "lint": "pnpm --filter @follstack/web lint",
-    "typecheck": "pnpm -r run typecheck"
+    "typecheck": "pnpm -r run typecheck",
+    "test": "pnpm --filter @follstack/api test",
+    "test:e2e": "pnpm --filter @follstack/web test:e2e",
+    "qa:smoke": "node scripts/qa-smoke.mjs",
+    "qa:agent": "tsx scripts/qa-agent.ts"
   },
   "engines": {
     "node": "22.x",
@@ -25,6 +29,8 @@
     "node": "22.14.0"
   },
   "devDependencies": {
+    "@cursor/sdk": "^1.0.1",
+    "tsx": "^4.20.3",
     "typescript": "^5.9.3"
   }
 }

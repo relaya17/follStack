@@ -142,11 +142,11 @@ swaggerSetup(app)
 // Health check endpoint
 app.get('/health', (req, res) => {
     res.status(200).json({
-        status: 'success',
+        status: 'ok',
         message: 'follStack API is running',
         timestamp: new Date().toISOString(),
         environment: process.env.NODE_ENV,
-        version: process.env.npm_package_version || '1.0.0'
+        version: process.env.npm_package_version || '0.1.0'
     })
 })
 
@@ -253,28 +253,34 @@ async function start() {
     })
 }
 
-start().catch((err) => {
-    logger.error('Failed to start API:', err)
-    process.exit(1)
-})
-
-// Graceful shutdown
-process.on('SIGTERM', () => {
-    logger.info('SIGTERM received, shutting down gracefully')
-    stopNewsIngestScheduler()
-    server.close(() => {
-        logger.info('Process terminated')
-        process.exit(0)
+// Only listen when this file is the process entrypoint (not when imported by tests).
+const isDirectRun =
+  process.env.NODE_ENV !== 'test' &&
+  typeof require !== 'undefined' &&
+  require.main === module
+if (isDirectRun) {
+    start().catch((err) => {
+        logger.error('Failed to start API:', err)
+        process.exit(1)
     })
-})
 
-process.on('SIGINT', () => {
-    logger.info('SIGINT received, shutting down gracefully')
-    stopNewsIngestScheduler()
-    server.close(() => {
-        logger.info('Process terminated')
-        process.exit(0)
+    process.on('SIGTERM', () => {
+        logger.info('SIGTERM received, shutting down gracefully')
+        stopNewsIngestScheduler()
+        server.close(() => {
+            logger.info('Process terminated')
+            process.exit(0)
+        })
     })
-})
+
+    process.on('SIGINT', () => {
+        logger.info('SIGINT received, shutting down gracefully')
+        stopNewsIngestScheduler()
+        server.close(() => {
+            logger.info('Process terminated')
+            process.exit(0)
+        })
+    })
+}
 
 export { app, io }

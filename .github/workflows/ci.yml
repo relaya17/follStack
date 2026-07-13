@@ -33,7 +33,23 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      - name: Unit tests (API)
+        run: pnpm test
+        env:
+          SKIP_DB: "true"
+
       - name: Build
         run: pnpm build:all
         env:
           SKIP_DB: "true"
+
+      - name: Install Playwright Chromium
+        run: pnpm --filter @follstack/web exec playwright install chromium --with-deps
+
+      - name: E2E smoke
+        run: pnpm test:e2e
+        env:
+          CI: "true"
+          SKIP_DB: "true"
+          NEXT_PUBLIC_API_URL: http://localhost:3001
+          CORS_ORIGIN: http://localhost:3000

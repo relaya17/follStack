@@ -58,6 +58,7 @@ export const errorHandler = (
 
   res.status(error.statusCode || 500).json({
     success: false,
+    message: error.message || 'שגיאת שרת פנימית',
     error: error.message || 'שגיאת שרת פנימית',
     ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
   })

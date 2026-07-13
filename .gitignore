@@ -36,6 +36,13 @@ Thumbs.db
 # Test / coverage
 coverage/
 .nyc_output/
+test-results/
+playwright-report/
+blob-report/
+apps/web/playwright/.cache/
+
+# QA agent output
+docs/QA-REPORT.md
 
 # Misc
 .vercel

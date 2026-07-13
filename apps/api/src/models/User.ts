@@ -50,8 +50,16 @@ const UserSchema = new Schema<IUser>({
   password: {
     type: String,
     required: [true, 'סיסמה היא שדה חובה'],
-    minlength: [6, 'סיסמה חייבת להכיל לפחות 6 תווים'],
-    select: false
+    minlength: [8, 'סיסמה חייבת להכיל לפחות 8 תווים'],
+    select: false,
+    validate: {
+      validator(value: string) {
+        // Skip when value is already a bcrypt hash (pre-save may re-validate)
+        if (typeof value === 'string' && value.startsWith('$2')) return true
+        return /[A-Za-z\u0590-\u05FF]/.test(value) && /\d/.test(value)
+      },
+      message: 'סיסמה חייבת לכלול לפחות אות אחת וספרה אחת',
+    },
   },
   avatar: {
     type: String,
@@ -157,7 +165,7 @@ UserSchema.virtual('profileUrl').get(function () {
 // Encrypt password using bcrypt
 UserSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
-    next()
+    return next()
   }
 
   const salt = await bcrypt.genSalt(12)
