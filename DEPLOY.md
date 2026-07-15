@@ -38,7 +38,7 @@ Browser → Netlify (apps/web)
 | **Start Command** | `pnpm start` |
 | **Health Check Path** | `/health` |
 
-Root `pnpm build` / `pnpm start` are **API-only** so Render’s defaults work. Full monorepo build is `pnpm build:all` (CI / local). Do **not** build Next on Render — that OOMs (`SIGTERM` on `next build`).
+Root `pnpm build` / `pnpm start` are **API-only** (via Turborepo `--filter=@follstack/api`) so Render’s defaults work. Full monorepo build is `pnpm build:all` (`turbo run build` — CI / local). Do **not** build Next on Render — that OOMs (`SIGTERM` on `next build`).
 
 **Important:** Redeploy the **latest** `main` commit. If the log still shows `@follstack/web` / `next build`, you are on an old Build Command or old commit — set Build to `pnpm install --frozen-lockfile && pnpm build` and **Deploy latest commit**.
 

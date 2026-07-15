@@ -4,19 +4,19 @@
   "version": "0.1.0",
   "packageManager": "pnpm@10.33.2",
   "scripts": {
-    "dev": "pnpm --parallel --filter @follstack/api --filter @follstack/web dev",
-    "dev:web": "pnpm --filter @follstack/web dev",
-    "dev:api": "pnpm --filter @follstack/api dev",
-    "build": "pnpm --filter @follstack/api build",
-    "build:api": "pnpm --filter @follstack/api build",
-    "build:web": "pnpm --filter @follstack/shared --filter @follstack/ui --filter @follstack/web run build",
-    "build:all": "pnpm --filter @follstack/shared --filter @follstack/ui --filter @follstack/api --filter @follstack/web run build",
+    "dev": "turbo run dev --filter=@follstack/api --filter=@follstack/web",
+    "dev:web": "turbo run dev --filter=@follstack/web",
+    "dev:api": "turbo run dev --filter=@follstack/api",
+    "build": "turbo run build --filter=@follstack/api",
+    "build:api": "turbo run build --filter=@follstack/api",
+    "build:web": "turbo run build --filter=@follstack/web...",
+    "build:all": "turbo run build",
     "start": "pnpm --filter @follstack/api start",
     "start:web": "pnpm --filter @follstack/web start",
     "start:all": "pnpm --parallel --filter @follstack/api --filter @follstack/web start",
-    "lint": "pnpm --filter @follstack/web lint",
-    "typecheck": "pnpm -r run typecheck",
-    "test": "pnpm --filter @follstack/api test",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test --filter=@follstack/api",
     "test:e2e": "pnpm --filter @follstack/web test:e2e",
     "qa:smoke": "node scripts/qa-smoke.mjs",
     "qa:agent": "tsx scripts/qa-agent.ts"
@@ -31,6 +31,7 @@
   "devDependencies": {
     "@cursor/sdk": "^1.0.1",
     "tsx": "^4.20.3",
+    "turbo": "^2.10.5",
     "typescript": "^5.9.3"
   }
 }

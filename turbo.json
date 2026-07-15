@@ -1,0 +1,54 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "stream",
+  "globalDependencies": [
+    ".env",
+    ".env.local",
+    ".env.production",
+    "pnpm-lock.yaml",
+    "tsconfig.json"
+  ],
+  "globalEnv": [
+    "NODE_ENV",
+    "CI",
+    "SKIP_DB",
+    "ALLOW_START_WITHOUT_DB",
+    "MONGODB_URI",
+    "PORT",
+    "HOST",
+    "CORS_ORIGIN",
+    "JWT_SECRET",
+    "JWT_REFRESH_SECRET",
+    "OPENAI_API_KEY",
+    "AI_MODEL",
+    "NEXT_PUBLIC_API_URL",
+    "NEXT_PUBLIC_APP_NAME"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**", "!.next/dev/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {
+      "dependsOn": ["^lint"],
+      "outputs": []
+    },
+    "typecheck": {
+      "dependsOn": ["^typecheck"],
+      "outputs": []
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
+    "start": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}

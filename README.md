@@ -28,12 +28,12 @@ cp apps/web/.env.example apps/web/.env.local
 ## Commands
 
 ```bash
-pnpm dev          # web + api together
+pnpm dev          # web + api together (Turborepo)
 pnpm dev:web      # Next only
 pnpm dev:api      # API only
-pnpm build:all
-pnpm typecheck
-pnpm lint
+pnpm build:all    # turbo run build (all packages)
+pnpm typecheck    # turbo run typecheck
+pnpm lint         # turbo run lint
 pnpm test         # API Vitest (SKIP_DB curated paths)
 pnpm test:e2e     # Playwright smoke (needs prior build:all, or running servers)
 pnpm qa:smoke     # quick live checks against :3000 / :3001
